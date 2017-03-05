@@ -92,6 +92,7 @@
     <ClCompile Include="CHead.cpp" />
     <ClCompile Include="CShadowMap.cpp" />
     <ClCompile Include="CDeferred.cpp" />
+    <ClCompile Include="CSSSS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBlur.h" />
@@ -101,10 +102,12 @@
     <ClInclude Include="CHead.h" />
     <ClInclude Include="CShadowMap.h" />
     <ClInclude Include="CDeferred.h" />
+    <ClInclude Include="CSSSS.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shader\Deferred.fx" />
     <None Include="..\shader\GBuffer.fx" />
+    <None Include="..\shader\SSSS.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

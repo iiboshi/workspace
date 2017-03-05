@@ -96,8 +96,10 @@ struct PS_OUTPUT
 	Pixel Shader Function
 ----------------------------------------------------------------------------------------------------*/
 
-float4 PS( PS_INPUT _in ) : SV_Target
+PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 {
+	PS_OUTPUT output = (PS_OUTPUT)0;
+
 	float4 ret = (float4)1.0f;
 
 	// î•ñ‚Ìæ“¾.
@@ -120,12 +122,15 @@ float4 PS( PS_INPUT _in ) : SV_Target
 	ret.xyz = CalcDiffuse( normal ) * albedo;
 
 	// Specular
-	ret.xyz += CalcSpecular( normal, rough, fresnel );
+	float3 spec = (float3)CalcSpecular( normal, rough, fresnel );
 
-	// Adjustment
-	ret.xyz = pow( ret.xyz, (float3)2.0f );
+	// î•ñ‚ğ‘—‚é.
+	output.out0 = float4( ret.xyz, 1.0f );
+	output.out1 = float4( 1.0f, 1.0f, 1.0f, 1.0f );
+	output.out2 = float4( spec, 1.0f );
+	output.out3 = float4( 1.0f, 1.0f, 0.0f, 1.0f );
 
-	return ret;
+	return output;
 }
 
 /*----------------------------------------------------------------------------------------------------

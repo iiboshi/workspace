@@ -142,17 +142,23 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 	}
 
 	// デフォルトのレンダーターゲットビューに切り替え
-	_pContext->OMSetRenderTargets(
-		1, &CDevice::Instance()->m_pRenderTargetView,
-		CDevice::Instance()->m_pDepthStencilView );
+	// _pContext->OMSetRenderTargets(
+	// 	1, &CDevice::Instance()->m_pRenderTargetView,
+	// 	NULL );
 
-	// デバッグ描画シェーダを設定
+	// 自前のレンダーターゲットビューに切り替え
+	_pContext->OMSetRenderTargets( 
+		CShader::enRT_SSNum, 
+		&CShader::Instance()->m_stRenderTarget.m_pRenderTargetView[CShader::enRT_SSStart], 
+		NULL );
+
+	// シェーダを設定
 	_pContext->VSSetShader( m_pVertexShader, NULL, 0 );
 	_pContext->PSSetShader( m_pPixelShader, NULL, 0 );
 
 	// レンダリングテクスチャを設定
 	_pContext->PSSetShaderResources( 
-		CShader::enRT_GBStart, CShader::enRT_GBEnd, 
+		0, CShader::enRT_GBNum, 
 		&CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_GBStart] );
 
 	// サンプラーステートの設定

@@ -23,14 +23,16 @@ public:
 		enRT_GBNormal,
 		enRT_GBDepth,
 		enRT_GBParam,
-		enRT_GBEnd		= 4,
-		enRT_BlStart	= 4,	//< Blur.
-		enRT_BlDest		= 4,
-		enRT_BlSSSColor,
-		enRT_BlSpec,
-		enRT_BlSSS,
-		enRT_BlEnd		= 6,
-		enRT_Max		= 6,
+		enRT_GBEnd,
+		enRT_GBNum		= 4,
+		enRT_SSStart	= 4,	//< SSSS.
+		enRT_SSDest		= 4,
+		enRT_SSColor,
+		enRT_SSSpec,
+		enRT_SSParam,
+		enRT_SSEnd,
+		enRT_SSNum		= 4,
+		enRT_Max		= 8,
 	};
 	struct StVertexShader
 	{
