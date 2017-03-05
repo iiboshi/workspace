@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CGBuffer.cpp" />
+    <ClCompile Include="CShadowMap.cpp" />
+    <ClCompile Include="CBlur.cpp" />
+    <ClCompile Include="CGround.cpp" />
+    <ClCompile Include="CBox.cpp" />
+    <ClCompile Include="CDeferred.cpp" />
+    <ClCompile Include="CHead.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CGBuffer.h" />
+    <ClInclude Include="CShadowMap.h" />
+    <ClInclude Include="CBlur.h" />
+    <ClInclude Include="CGround.h" />
+    <ClInclude Include="CBox.h" />
+    <ClInclude Include="CDeferred.h" />
+    <ClInclude Include="CHead.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="shader">
+      <UniqueIdentifier>{82ca3065-1336-491b-861f-7a5a57e0692c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shader\Deferred.fx">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\shader\GBuffer.fx">
+      <Filter>shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
