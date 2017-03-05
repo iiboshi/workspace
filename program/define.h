@@ -3,6 +3,8 @@
 #ifndef H_DEFINE
 #define H_DEFINE
 
+#define TEST 0
+
 // Simd
 #undef _XM_SSE_INTRINSICS_
 #define _XM_NO_INTRINSICS_
