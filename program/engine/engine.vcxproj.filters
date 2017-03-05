@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CWindow.cpp" />
+    <ClCompile Include="CDevice.cpp" />
+    <ClCompile Include="CPreRenderThread.cpp" />
+    <ClCompile Include="CShader.cpp" />
+    <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CMouse.cpp" />
+    <ClCompile Include="CXFileLoder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CWindow.h" />
+    <ClInclude Include="CDevice.h" />
+    <ClInclude Include="CPreRenderThread.h" />
+    <ClInclude Include="CShader.h" />
+    <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CMouse.h" />
+    <ClInclude Include="IMath.h" />
+    <ClInclude Include="CXFileLoder.h" />
+  </ItemGroup>
+</Project>
