@@ -1,0 +1,201 @@
+/* Deferred Shader */
+
+/*----------------------------------------------------------------------------------------------------
+	Define
+----------------------------------------------------------------------------------------------------*/
+
+#define PI			( 3.14159265359f )
+#define LIGNTNUM	2
+#define WEIGHTNUM	8
+
+/*----------------------------------------------------------------------------------------------------
+	Buffer
+----------------------------------------------------------------------------------------------------*/
+
+// Texture
+Texture2D	g_tex0 : register( t0 );	//< Albedo.
+Texture2D	g_tex1 : register( t1 );	//< Normal.
+Texture2D	g_tex2 : register( t2 );	//< Depth.
+Texture2D	g_tex3 : register( t3 );	//< Param.
+Texture2D	g_tex4 : register( t4 );	//< None.
+Texture2D	g_tex5 : register( t5 );	//< None.
+Texture2D	g_tex6 : register( t6 );	//< None.
+Texture2D	g_tex7 : register( t7 );	//< None.
+
+// Sampler
+SamplerState g_sampWorp : register( s0 );
+SamplerState g_sampMirr : register( s1 );
+
+// Cbuffer
+cbuffer cbViewProjection : register( b0 )
+{
+	float4	g_f4TexSize;
+	float4	g_f4CameraPos;
+	matrix	g_mView;
+	matrix	g_mProjection;
+};
+
+// Deferred
+cbuffer cbDeferred : register( b1 )
+{
+	float4	g_f4ViewVec;
+	float4	g_f4MainCol;
+	float4	g_f4LightVec[LIGNTNUM];
+	float4	g_f4LightCol[LIGNTNUM];
+	float4	g_f4Weight[WEIGHTNUM];
+};
+
+/*----------------------------------------------------------------------------------------------------
+	Struct
+----------------------------------------------------------------------------------------------------*/
+
+struct VS_INPUT
+{
+	float3 pos	: POSITION;
+	float2 uv	: TEXCOORD;
+};
+
+struct PS_INPUT
+{
+	float4 pos	: SV_POSITION;
+	float2 uv	: TEXCOORD0;
+};
+
+/*----------------------------------------------------------------------------------------------------
+	Front Function
+----------------------------------------------------------------------------------------------------*/
+
+float G1V( float dotNV, float k );										// V
+float GGX( float3 N, float3 V, float3 L, float roughness, float F0 );	// GGX
+float Lambert( float3 normal, float3 lightVec );						// Lambert
+float HalfLambert( float3 normal, float3 lightVec );					// Half Lambert
+float3 CalcDiffuse( float3 normal );									// Calc Diffuse.
+float3 CalcSpecular( float3 normal, float rough, float F0 );			// Calc Specular.
+
+/*----------------------------------------------------------------------------------------------------
+	Vertex Shader
+----------------------------------------------------------------------------------------------------*/
+
+PS_INPUT VS( VS_INPUT _in )
+{
+	PS_INPUT _out = (PS_INPUT)0;
+	_out.pos = float4( _in.pos, 1.0f );
+	_out.uv = _in.uv;
+	return _out;
+}
+
+struct PS_OUTPUT
+{
+	float4 out0 : SV_TARGET0;	//< Dst.
+	float4 out1 : SV_TARGET1;	//< SSSColor.
+	float4 out2 : SV_TARGET2;	//< Spec.
+	float4 out3 : SV_TARGET2;	//< SSS.
+};
+
+/*----------------------------------------------------------------------------------------------------
+	Pixel Shader Function
+----------------------------------------------------------------------------------------------------*/
+
+float4 PS( PS_INPUT _in ) : SV_Target
+{
+	float4 ret = (float4)1.0f;
+
+	// 情報の取得.
+	float4 in0 = g_tex0.Sample( g_sampWorp, _in.uv );
+	float4 in1 = g_tex1.Sample( g_sampWorp, _in.uv );
+	float4 in2 = g_tex2.Sample( g_sampWorp, _in.uv );
+	float4 in3 = g_tex3.Sample( g_sampWorp, _in.uv );
+	float3 albedo	= in0.xyz;
+	float3 normal	= in1.xyz;
+	float depth		= in2.x;
+	float draw		= in2.y;
+	float rough		= in3.x;
+	float fresnel	= in3.y;
+	float sss		= in3.z;
+
+	// Normal
+	normal = ( normal * (float3)2.0f ) - (float3)1.0f;
+
+	// Lambert
+	ret.xyz = CalcDiffuse( normal ) * albedo;
+
+	// Specular
+	ret.xyz += CalcSpecular( normal, rough, fresnel );
+
+	// Adjustment
+	ret.xyz = pow( ret.xyz, (float3)2.0f );
+
+	return ret;
+}
+
+/*----------------------------------------------------------------------------------------------------
+	Function
+----------------------------------------------------------------------------------------------------*/
+
+// V
+float G1V( float dotNV, float k )
+{
+	return 1.0f / ( dotNV * ( 1.0f - k ) + k );
+}
+
+// GGX
+float GGX( float3 N, float3 V, float3 L, float roughness, float F0 )
+{
+	// α = ラフネス^2
+	float alpha = roughness * roughness;
+	// ハーフベクトル
+	float3 H = normalize( V + L );
+	// ベクトルの内積関連
+	float dotNL = saturate( dot( N , L ) );
+	float dotNV = saturate( dot( N , V ) );
+	float dotNH = saturate( dot( N , H ) );
+	float dotLH = saturate( dot( L , H ) );
+	float F, D, vis;
+	// D
+	float alphaSqr	= alpha * alpha;
+	float pi		= 3.14159f;
+	float denom		= dotNH * dotNH * ( alphaSqr - 1.0 ) + 1.0f;
+	D				= alphaSqr / ( pi * denom * denom );
+	// F
+	float dotLH5	= pow( 1.0f - dotLH, 5 );
+	F				= F0 + ( 1.0 - F0 ) * ( dotLH5 );
+	// V
+	float k			= alpha / 2.0f;
+	vis				= G1V( dotNL, k ) * G1V( dotNV, k);
+	return dotNL * D * F * vis;
+}
+
+// Lambert
+float Lambert( float3 normal, float3 lightVec )
+{
+	return max( 0.0f, dot( normal, lightVec ) ) * ( 1.0f / PI );
+}
+
+// Half Lambert
+float HalfLambert( float3 normal, float3 lightVec )
+{
+	float light = max( 0.0f, dot( normal, lightVec ) );
+	light = light * 0.5f + 0.5f;
+	light = light * light;
+	return light * ( 1.0f / PI );
+}
+
+// Diffuse.
+float3 CalcDiffuse( float3 normal )
+{
+	float3 ret =	(float3)HalfLambert( normal, normalize( g_f4ViewVec.xyz ) ) * g_f4MainCol.xyz +
+					(float3)HalfLambert( normal, normalize( g_f4LightVec[0].xyz ) ) * g_f4LightCol[0].xyz + 
+					(float3)HalfLambert( normal, normalize( g_f4LightVec[1].xyz ) ) * g_f4LightCol[1].xyz;
+	return ret;
+}
+
+// Diffuse.
+float3 CalcSpecular( float3 normal, float rough, float F0 )
+{
+	float3 view = normalize( g_f4ViewVec.xyz );
+	float ret =	GGX( normal, view, view, rough, F0 ) * g_f4MainCol.w +
+				GGX( normal, view, normalize( g_f4LightVec[0].xyz ), rough, F0 ) * g_f4LightCol[0].w +
+				GGX( normal, view, normalize( g_f4LightVec[1].xyz ), rough, F0 ) * g_f4LightCol[1].w;
+	return (float3)ret;
+}
+
