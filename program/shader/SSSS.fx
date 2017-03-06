@@ -125,8 +125,8 @@ float4 PS( PS_INPUT _in ) : SV_Target
 	float depth	= in3.y;
 
 	// Blur
-	float4 f4X = (float4)0.0f;
-	float4 f4Y = (float4)0.0f;
+	float4 f4X, f4Y;
+	f4X = f4Y = (float4)0.0f;
 	if( sss )
 	{
 		int offsetX = 0;
@@ -138,7 +138,6 @@ float4 PS( PS_INPUT _in ) : SV_Target
 		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv5.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv2.x + offsetX, _in.uv2.y ) * depth ) ) * g_f4Weight[5];
 		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv6.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv1.x + offsetX, _in.uv1.y ) * depth ) ) * g_f4Weight[6];
 		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv7.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv0.x + offsetX, _in.uv0.y ) * depth ) ) * g_f4Weight[7];
-
 		int offsetY = 0;
 		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv0.zw * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv7.z, _in.uv7.w + offsetY ) * depth ) ) * g_f4Weight[0];
 		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv1.zw * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv6.z, _in.uv6.w + offsetY ) * depth ) ) * g_f4Weight[1];
@@ -148,16 +147,12 @@ float4 PS( PS_INPUT _in ) : SV_Target
 		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv5.zw * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv2.z, _in.uv2.w + offsetY ) * depth ) ) * g_f4Weight[5];
 		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv6.zw * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv1.z, _in.uv1.w + offsetY ) * depth ) ) * g_f4Weight[6];
 		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv7.zw * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv0.z, _in.uv0.w + offsetY ) * depth ) ) * g_f4Weight[7];
+		float4 f4Blur = f4X * 0.5f + f4Y * 0.5f;
+		diff = lerp( diff, f4Blur.xyz, sss );
 	}
 
-	// Blur Blend
-	float4 f4Blur = f4X * 0.5f + f4Y * 0.5f;
-	ret.xyz = lerp( diff, f4Blur.xyz, sss );
-
-	// Spec
-	ret.xyz += spec;
-
 	// Final
+	ret.xyz = diff + spec;
 	ret.xyz = pow( ret.xyz, (float3)2.0f );
 
 	return ret;
