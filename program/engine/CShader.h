@@ -59,6 +59,11 @@ public:
 		ID3D11Texture2D*			m_pTexture[enRT_Max];
 		ID3D11RenderTargetView*		m_pRenderTargetView[enRT_Max];
 		ID3D11ShaderResourceView*	m_pShaderResourceView[enRT_Max];
+		#if defined( USE_MSAA )
+		ID3D11Texture2D*			m_pResolveTexture[enRT_Max];
+		ID3D11ShaderResourceView*	m_pRenderTextureSRV[enRT_Max];
+		DXGI_FORMAT					m_resolveFormat;
+		#endif
 	};
 	CShader();
 	~CShader();

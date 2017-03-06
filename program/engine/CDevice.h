@@ -26,6 +26,9 @@ public:
 	ID3D11DepthStencilView*	m_pDepthStencilView;
 	D3D11_VIEWPORT			m_ViewPort;
 	CShader*				m_pcShader;
+	DXGI_SAMPLE_DESC		m_sampleDesc;
+	UINT					m_uWidth;
+	UINT					m_uHeight;
 };
 
 #endif

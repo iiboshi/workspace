@@ -6,13 +6,13 @@
 #include "engine\CDevice.h"
 
 CDeferred::CDeferred()
-	: m_pQuadVB			( nullptr )
-	, m_pUpdateBuffer	( nullptr )
-	, m_uQuadStride		( 0 )
-	, m_uOffset			( 0 )
-	, m_pVertexShader	( nullptr )
-	, m_pPixelShader	( nullptr )
-	, m_pInputLayout	( nullptr )
+	: m_pQuadVB				( nullptr )
+	, m_pUpdateBuffer		( nullptr )
+	, m_uQuadStride			( 0 )
+	, m_uOffset				( 0 )
+	, m_pVertexShader		( nullptr )
+	, m_pPixelShader		( nullptr )
+	, m_pInputLayout		( nullptr )
 {
 	for( int ii = 0; ii < enWeight; ii++ )
 	{
@@ -141,11 +141,6 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 		m_stUpdateBuffer.m_f4Weight[ii] = XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
 	}
 
-	// デフォルトのレンダーターゲットビューに切り替え
-	// _pContext->OMSetRenderTargets(
-	// 	1, &CDevice::Instance()->m_pRenderTargetView,
-	// 	NULL );
-
 	// 自前のレンダーターゲットビューに切り替え
 	_pContext->OMSetRenderTargets( 
 		CShader::enRT_SSNum, 
@@ -157,9 +152,28 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 	_pContext->PSSetShader( m_pPixelShader, NULL, 0 );
 
 	// レンダリングテクスチャを設定
-	_pContext->PSSetShaderResources( 
-		0, CShader::enRT_GBNum, 
-		&CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_GBStart] );
+	#if defined( USE_MSAA )
+	if( CDevice::Instance()->m_sampleDesc.Count > 1 )
+	{
+		CShader* pcShader = CShader::Instance();
+		for( int ii = CShader::enRT_GBStart; ii < CShader::enRT_GBEnd; ii++ )
+		{
+			_pContext->ResolveSubresource( 
+				pcShader->m_stRenderTarget.m_pResolveTexture[ii], 0, 
+				pcShader->m_stRenderTarget.m_pTexture[ii], 0, 
+				pcShader->m_stRenderTarget.m_resolveFormat );
+		}
+		_pContext->PSSetShaderResources( 
+			0, CShader::enRT_GBNum, 
+			&CShader::Instance()->m_stRenderTarget.m_pRenderTextureSRV[CShader::enRT_GBStart] );
+	}
+	else
+	#endif
+	{
+		_pContext->PSSetShaderResources( 
+			0, CShader::enRT_GBNum, 
+			&CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_GBStart] );
+	}
 
 	// サンプラーステートの設定
 	_pContext->PSSetSamplers( 0, CShader::enState_Max, CShader::Instance()->m_pSamplerState );

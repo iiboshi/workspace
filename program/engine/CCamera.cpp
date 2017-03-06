@@ -103,8 +103,8 @@ void CCamera::Update( ID3D11DeviceContext* _pContext )
 	m_mView			= XMMatrixLookAtLH( Eye, At, Up );
 	
 	// ÉrÉÖÅ[èÓïÒ
-	m_stViewProjections.m_f4TexSize.x	= WIDTH;
-	m_stViewProjections.m_f4TexSize.y	= HEIGHT;
+	m_stViewProjections.m_f4TexSize.x	= static_cast<FLOAT>( CDevice::Instance()->m_uWidth );
+	m_stViewProjections.m_f4TexSize.y	= static_cast<FLOAT>( CDevice::Instance()->m_uHeight );
 	m_stViewProjections.m_mView			= XMMatrixTranspose( m_mView );
 
 	// Initialize the projection matrix

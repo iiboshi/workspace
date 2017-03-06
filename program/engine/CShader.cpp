@@ -21,6 +21,10 @@ CShader::CShader()
 		m_stRenderTarget.m_pTexture[ii]				= nullptr;
 		m_stRenderTarget.m_pRenderTargetView[ii]	= nullptr;
 		m_stRenderTarget.m_pShaderResourceView[ii]	= nullptr;
+		#if defined( USE_MASS )
+		m_stRenderTarget.m_pResolveTexture[ii]		= nullptr;
+		m_stRenderTarget.m_pRenderTextureSRV[ii]	= nullptr;
+		#endif
 	}
 	CreateSampler();
 	CreateRenderTarget();
@@ -57,6 +61,10 @@ void CShader::Release()
 		I_RELEASE( m_stRenderTarget.m_pTexture[ii] );
 		I_RELEASE( m_stRenderTarget.m_pRenderTargetView[ii] );
 		I_RELEASE( m_stRenderTarget.m_pShaderResourceView[ii] );
+		#if defined( USE_MSAA )
+		I_RELEASE( m_stRenderTarget.m_pResolveTexture[ii] );
+		I_RELEASE( m_stRenderTarget.m_pRenderTextureSRV[ii] );
+		#endif
 	}
 }
 
@@ -104,24 +112,24 @@ HRESULT CShader::CreateRenderTarget()
 	texDesc.CPUAccessFlags		= 0;
 	texDesc.MipLevels			= 1;
 	texDesc.ArraySize			= 1;
-	texDesc.SampleDesc.Count	= 1;
-	texDesc.SampleDesc.Quality	= 0;
 
 	// レンダーターゲットビューの設定
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 	memset( &rtvDesc, 0, sizeof( rtvDesc ) );
 	rtvDesc.Format			= DXGI_FORMAT_R8G8B8A8_UNORM;
-	rtvDesc.ViewDimension	= D3D11_RTV_DIMENSION_TEXTURE2D;
 
 	// シェーダリソースビューの設定
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	memset( &srvDesc, 0, sizeof( srvDesc ) );
 	srvDesc.Format				= rtvDesc.Format;
-	srvDesc.ViewDimension		= D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels	= 1;
 
-	for( int ii = 0; ii < enRT_Max; ii++ )
+	for( int ii = enRT_GBStart; ii < enRT_GBEnd; ii++ )
 	{
+		texDesc.SampleDesc		= pcDevice->m_sampleDesc;
+		rtvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
+		srvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
+
 		// 2次元テクスチャの生成
 		I_RETURN_M( pcDevice->m_pd3dDevice->CreateTexture2D( 
 			&texDesc, NULL, 
@@ -140,6 +148,59 @@ HRESULT CShader::CreateRenderTarget()
 			&m_stRenderTarget.m_pShaderResourceView[ii] ),
 			"ID3D11Device::CreateShaderResourceView() Failed." );
 	}
+
+	for( int ii = enRT_SSStart; ii < enRT_Max; ii++ )
+	{
+		texDesc.SampleDesc.Count	= 1;
+		texDesc.SampleDesc.Quality	= 0;
+		rtvDesc.ViewDimension		= D3D11_RTV_DIMENSION_TEXTURE2D;
+		srvDesc.ViewDimension		= D3D11_SRV_DIMENSION_TEXTURE2D;
+
+		// 2次元テクスチャの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateTexture2D( 
+			&texDesc, NULL, 
+			&m_stRenderTarget.m_pTexture[ii] ),
+			"Error : ID3D11Device::CreateTexture2D() Failed." );
+
+		// レンダーターゲットビューの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateRenderTargetView( 
+			m_stRenderTarget.m_pTexture[ii], &rtvDesc, 
+			&m_stRenderTarget.m_pRenderTargetView[ii] ),
+			"ID3D11Device::CreateRenderTargetView() Failed." );
+	
+		// シェーダリソースビューの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateShaderResourceView( 
+			m_stRenderTarget.m_pTexture[ii], &srvDesc,
+			&m_stRenderTarget.m_pShaderResourceView[ii] ),
+			"ID3D11Device::CreateShaderResourceView() Failed." );
+	}
+
+	#if defined( USE_MSAA )
+	if ( pcDevice->m_sampleDesc.Count > 1 )
+	{
+		D3D11_TEXTURE2D_DESC descTex = texDesc;
+		descTex.SampleDesc.Count = 1;
+		descTex.SampleDesc.Quality = 0;
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC resolveSRVDesc;
+		resolveSRVDesc.Format = rtvDesc.Format;
+		resolveSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		resolveSRVDesc.Texture2D.MostDetailedMip = 0;
+		resolveSRVDesc.Texture2D.MipLevels = static_cast<UINT>(-1);
+
+		for( int ii = 0; ii < enRT_Max; ii++ )
+		{
+			pcDevice->m_pd3dDevice->CreateTexture2D(
+				&descTex, NULL, &m_stRenderTarget.m_pResolveTexture[ii] );
+
+			pcDevice->m_pd3dDevice->CreateShaderResourceView(
+				m_stRenderTarget.m_pResolveTexture[ii], &resolveSRVDesc, 
+				&m_stRenderTarget.m_pRenderTextureSRV[ii] );
+		}
+
+		m_stRenderTarget.m_resolveFormat = rtvDesc.Format;
+	}
+	#endif
 
 	return hr;
 }

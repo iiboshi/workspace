@@ -45,18 +45,18 @@ public:
 	void CalGaussWeight( float num );
 	void Render( ID3D11DeviceContext* _pContext );
 private:
-	ID3D11Buffer*		m_pQuadVB;
-	ID3D11Buffer*		m_pUpdateBuffer;
-	UINT				m_uQuadStride;
-	UINT				m_uOffset;
-	ID3D11VertexShader*	m_pVertexShader;
-	ID3D11PixelShader*	m_pPixelShader;
-	ID3D11InputLayout*	m_pInputLayout;
-	StUpdateBuffer		m_stUpdateBuffer;
-	float				m_fTable[enWeight];
-	XMFLOAT4			m_f4MainCol;
-	XMFLOAT4			m_f4LightVec[enLightNum];
-	XMFLOAT4			m_f4LightCol[enLightNum];
+	ID3D11Buffer*				m_pQuadVB;
+	ID3D11Buffer*				m_pUpdateBuffer;
+	UINT						m_uQuadStride;
+	UINT						m_uOffset;
+	ID3D11VertexShader*			m_pVertexShader;
+	ID3D11PixelShader*			m_pPixelShader;
+	ID3D11InputLayout*			m_pInputLayout;
+	StUpdateBuffer				m_stUpdateBuffer;
+	float						m_fTable[enWeight];
+	XMFLOAT4					m_f4MainCol;
+	XMFLOAT4					m_f4LightVec[enLightNum];
+	XMFLOAT4					m_f4LightCol[enLightNum];
 };
 
 #endif
