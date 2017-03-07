@@ -35,5 +35,11 @@
     <None Include="..\shader\SSSS.fx">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\shader\BlurX.fx">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\shader\BlurY.fx">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

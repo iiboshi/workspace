@@ -15,7 +15,14 @@ public:
 	enum
 	{
 		enLightNum	= 2,
-		enWeight	= 8,
+		enWeight	= 6,
+	};
+	enum EnShader
+	{
+		enShader_BlurX,
+		enShader_BlurY,
+		enShader_SSSS,
+		enShader_Max,
 	};
 	struct StUpdateBuffer
 	{
@@ -49,9 +56,9 @@ private:
 	ID3D11Buffer*		m_pUpdateBuffer;
 	UINT				m_uQuadStride;
 	UINT				m_uOffset;
-	ID3D11VertexShader*	m_pVertexShader;
-	ID3D11PixelShader*	m_pPixelShader;
-	ID3D11InputLayout*	m_pInputLayout;
+	ID3D11VertexShader*	m_pVertexShader[enShader_Max];
+	ID3D11PixelShader*	m_pPixelShader[enShader_Max];
+	ID3D11InputLayout*	m_pInputLayout[enShader_Max];
 	StUpdateBuffer		m_stUpdateBuffer;
 	float				m_fTable[enWeight];
 	XMFLOAT4			m_f4MainCol;

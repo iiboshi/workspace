@@ -105,6 +105,8 @@
     <ClInclude Include="CSSSS.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\shader\BlurX.fx" />
+    <None Include="..\shader\BlurY.fx" />
     <None Include="..\shader\Deferred.fx" />
     <None Include="..\shader\GBuffer.fx" />
     <None Include="..\shader\SSSS.fx" />

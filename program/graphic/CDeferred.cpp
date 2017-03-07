@@ -91,7 +91,7 @@ HRESULT CDeferred::Init()
 	I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pUpdateBuffer ) );
 
 	// Light
-	m_f4MainCol = XMFLOAT4( 4.0f, 4.0f, 4.0f, 1.0f );
+	m_f4MainCol = XMFLOAT4( 3.0f, 3.0f, 3.0f, 1.0f );
 	m_f4LightVec[0] = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 	m_f4LightVec[1] = XMFLOAT4( -1.0f, 1.0f, -1.0f, 1.0f );
 	m_f4LightCol[0] = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -121,10 +121,7 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 {
 	CCamera::Instance()->Update( _pContext );
 
-	// ガウス defo 5 カメラ距離によって変化
-	float workLong	=	abs( CCamera::Instance()->m_f4Lookat.x - CCamera::Instance()->m_f4Lookat.x );
-	workLong		+=	abs( CCamera::Instance()->m_f4Lookat.y - CCamera::Instance()->m_f4Lookat.y );
-	workLong		+=	abs( CCamera::Instance()->m_f4Lookat.z - CCamera::Instance()->m_f4Lookat.z );
+	// ガウス defo 5
 	CalGaussWeight( 5 );
 
 	// Light
