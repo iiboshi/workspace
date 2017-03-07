@@ -15,7 +15,7 @@ public:
 	enum
 	{
 		enLightNum	= 2,
-		enWeight	= 6,
+		enWeight	= 8,
 	};
 	struct StUpdateBuffer
 	{
