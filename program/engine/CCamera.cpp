@@ -1,13 +1,13 @@
 /* Camera class */
 
-#include "CWindow.h"
 #include "CCamera.h"
+#include "CWindow.h"
 #include "CDevice.h"
 #include "CMouse.h"
 
 namespace
 {
-	const XMFLOAT4 g_f4DefPos	= XMFLOAT4( 5.0f, 3.0f, 5.0f, 0.0f );
+	const DirectX::XMFLOAT4 g_f4DefPos	= DirectX::XMFLOAT4( 5.0f, 3.0f, 5.0f, 0.0f );
 	const float g_fDefRot		= 0.0f;
 	const float g_fDefZoom		= 1.0f;
 }
@@ -20,11 +20,11 @@ CCamera::CCamera()
 	, m_uHeight				( 0 )
 	, m_bRotation			( false )
 {
-	m_mView			= XMMatrixIdentity();
-	m_mProjection	= XMMatrixIdentity();
-	m_f4CalPos		= XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4CamPos		= XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4Lookat		= XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	m_mView			= DirectX::XMMatrixIdentity();
+	m_mProjection	= DirectX::XMMatrixIdentity();
+	m_f4CalPos		= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	m_f4CamPos		= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	m_f4Lookat		= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	// Set
 	m_f4CalPos.x	= g_f4DefPos.x;
@@ -94,29 +94,29 @@ HRESULT CCamera::Init( ID3D11DeviceContext* _pContext )
 void CCamera::Update( ID3D11DeviceContext* _pContext )
 {
 	// Initialize the view matrix
-	m_f4CamPos.x	= sin( m_fRot ) * m_f4CalPos.x * m_fZoom;
-	m_f4CamPos.y	= m_f4CalPos.y * m_fZoom;
-	m_f4CamPos.z	= cos( m_fRot ) * m_f4CalPos.z * m_fZoom;
-	XMVECTOR Eye	= XMVectorSet( m_f4CamPos.x, m_f4CamPos.y, m_f4CamPos.z, 0.0f );
-	XMVECTOR At		= XMVectorSet( m_f4Lookat.x, m_f4Lookat.y, m_f4Lookat.z, 0.0f );
-	XMVECTOR Up		= XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-	m_mView			= XMMatrixLookAtLH( Eye, At, Up );
+	m_f4CamPos.x			= static_cast<float>( sin( m_fRot ) * m_f4CalPos.x * m_fZoom );
+	m_f4CamPos.y			= m_f4CalPos.y * m_fZoom;
+	m_f4CamPos.z			= static_cast<float>( cos( m_fRot ) * m_f4CalPos.z * m_fZoom );
+	DirectX::XMVECTOR Eye	= DirectX::XMVectorSet( m_f4CamPos.x, m_f4CamPos.y, m_f4CamPos.z, 0.0f );
+	DirectX::XMVECTOR At	= DirectX::XMVectorSet( m_f4Lookat.x, m_f4Lookat.y, m_f4Lookat.z, 0.0f );
+	DirectX::XMVECTOR Up	= DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+	m_mView					= DirectX::XMMatrixLookAtLH( Eye, At, Up );
 	
 	// ÉrÉÖÅ[èÓïÒ
 	m_stViewProjections.m_f4TexSize.x	= static_cast<FLOAT>( CDevice::Instance()->m_uWidth );
 	m_stViewProjections.m_f4TexSize.y	= static_cast<FLOAT>( CDevice::Instance()->m_uHeight );
-	m_stViewProjections.m_mView			= XMMatrixTranspose( m_mView );
+	m_stViewProjections.m_mView			= DirectX::XMMatrixTranspose( m_mView );
 
 	// Initialize the projection matrix
-	m_mProjection = XMMatrixPerspectiveFovLH( 
-		XM_PIDIV4, 
+	m_mProjection = DirectX::XMMatrixPerspectiveFovLH(
+		DirectX::XM_PIDIV4,
 		static_cast<FLOAT>( m_uWidth ) / static_cast<FLOAT>( m_uHeight ), 
 		0.01f, 
 		100.0f );	
-	m_stViewProjections.m_mProjection = XMMatrixTranspose( m_mProjection );
+	m_stViewProjections.m_mProjection = DirectX::XMMatrixTranspose( m_mProjection );
 
 	// Camera Pos
-	m_stViewProjections.m_fCameraPos = XMFLOAT4( m_f4CamPos.x, m_f4CamPos.y, m_f4CamPos.z, m_f4CamPos.w );
+	m_stViewProjections.m_fCameraPos = DirectX::XMFLOAT4( m_f4CamPos.x, m_f4CamPos.y, m_f4CamPos.z, m_f4CamPos.w );
 
 	// Update
 	_pContext->UpdateSubresource( 

@@ -33,8 +33,8 @@ HRESULT CGBuffer::Init()
 	HRESULT hr = S_OK;
 	CDevice* pcDevice = CDevice::Instance();
 
-	CShader::Instance()->CreateVertexShader( "gbuffer", "../shader/GBuffer.fx" );
-	CShader::Instance()->CreatePixelShader( "gbuffer", "../shader/GBuffer.fx" );
+	CShader::Instance()->CreateVertexShader( "gbuffer", L"../shader/GBuffer.fx" );
+	CShader::Instance()->CreatePixelShader( "gbuffer", L"../shader/GBuffer.fx" );
 
 	// Set
 	m_pVertexShader	= CShader::Instance()->GetVertexShader( "gbuffer" );
@@ -115,7 +115,7 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 		_pContext->PSSetShaderResources( 0, CModel::enTexType_Max, ( *obj )->m_pShaderResourceView );
 
 		// World Matrix
-		m_stUpdateBuffer.m_mWorld = XMMatrixTranspose( ( *obj )->m_mWorldMatrix );
+		m_stUpdateBuffer.m_mWorld = DirectX::XMMatrixTranspose( ( *obj )->m_mWorldMatrix );
 
 		// Param.
 		m_stUpdateBuffer.m_f4Param0 = ( *obj )->m_fParam0;

@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <d3d11.h>
 
 class CShader
 {
@@ -71,12 +72,12 @@ public:
 	HRESULT CreateSampler();
 	HRESULT CreateRenderTarget();
 	HRESULT CompileShaderFromFile(
-		LPCSTR szFileName,
+		LPCWSTR szFileName,
 		LPCSTR szEntryPoint,
 		LPCSTR szShaderModel,
 		ID3DBlob** ppBlobOut );
-	HRESULT CreateVertexShader( char* _filename, char* _filePath );
-	HRESULT CreatePixelShader( char* _filename, char* _filePath );
+	HRESULT CreateVertexShader( char* _filename, LPCWSTR _filePath );
+	HRESULT CreatePixelShader( char* _filename, LPCWSTR _filePath );
 	ID3D11InputLayout*	GetInputLayout( char* _filename );
 	ID3D11VertexShader*	GetVertexShader( char* _filename );
 	ID3D11PixelShader*	GetPixelShader( char* _filename );

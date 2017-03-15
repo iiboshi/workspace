@@ -188,9 +188,9 @@ float HalfLambert( float3 normal, float3 lightVec )
 // Diffuse.
 float3 CalcDiffuse( float3 normal )
 {
-	float3 ret =	(float3)HalfLambert( normal, normalize( g_f4ViewVec.xyz ) ) * g_f4MainCol.xyz +
-					(float3)HalfLambert( normal, normalize( g_f4LightVec[0].xyz ) ) * g_f4LightCol[0].xyz + 
-					(float3)HalfLambert( normal, normalize( g_f4LightVec[1].xyz ) ) * g_f4LightCol[1].xyz;
+	float3 ret =	(float3)Lambert( normal, normalize( g_f4ViewVec.xyz ) ) * g_f4MainCol.xyz +
+					(float3)Lambert( normal, normalize( g_f4LightVec[0].xyz ) ) * g_f4LightCol[0].xyz +
+					(float3)Lambert( normal, normalize( g_f4LightVec[1].xyz ) ) * g_f4LightCol[1].xyz;
 	return ret;
 }
 

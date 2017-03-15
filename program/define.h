@@ -157,13 +157,13 @@ namespace NDefine
 	};
 	static const char* g_pcTexPath[] = 
 	{
-		"../../Media/Textures/wood.jpg",
-		"../../Media/Textures/floor.jpg",
-		"../../Media/Textures/concrete.bmp",
+		"../../Media/Textures/wood.dds",
+		"../../Media/Textures/floor.dds",
+		"../../Media/Textures/concrete.dds",
 		"../../Media/Textures/Particle.dds",
-		"../../Media/Textures/rocks.jpg",
-		"../../Media/Textures/stones.bmp",
-		"../../Media/Textures/wall.jpg",
+		"../../Media/Textures/rocks.dds",
+		"../../Media/Textures/stones.dds",
+		"../../Media/Textures/wall.dds",
 	};
 	enum EnNrmPath
 	{

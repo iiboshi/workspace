@@ -2,7 +2,7 @@
 
 #include "CGround.h"
 #include "engine\CDevice.h"
-#include <d3dx11.h>
+#include "engine\DDSTextureLoader.h"
 
 CGround::CGround()
 {
@@ -38,10 +38,10 @@ HRESULT CGround::Create()
 	SimpleVertex vertices[] =
 	{
 		// POSITION							// TEXCOORD				// NORMAL							// TANGENT						// COLOR
-		{ XMFLOAT3( -TNUM, -1.8f, -TNUM ),	XMFLOAT2( UNUM, 0.0f ),	XMFLOAT3( -KATA, 1.0f, -KATA ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3(  TNUM, -1.8f, -TNUM ),	XMFLOAT2( 0.0f, 0.0f ),	XMFLOAT3(  KATA, 1.0f, -KATA ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3(  TNUM, -1.8f,  TNUM ),	XMFLOAT2( 0.0f, UNUM ),	XMFLOAT3(  KATA, 1.0f,  KATA ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3( -TNUM, -1.8f,  TNUM ),	XMFLOAT2( UNUM, UNUM ),	XMFLOAT3( -KATA, 1.0f,  KATA ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -TNUM, -1.8f, -TNUM ),	DirectX::XMFLOAT2( UNUM, 0.0f ),	DirectX::XMFLOAT3( -KATA, 1.0f, -KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  TNUM, -1.8f, -TNUM ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3(  KATA, 1.0f, -KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  TNUM, -1.8f,  TNUM ),	DirectX::XMFLOAT2( 0.0f, UNUM ),	DirectX::XMFLOAT3(  KATA, 1.0f,  KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -TNUM, -1.8f,  TNUM ),	DirectX::XMFLOAT2( UNUM, UNUM ),	DirectX::XMFLOAT3( -KATA, 1.0f,  KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
 	};
 
 	ZeroMemory( &bd, sizeof(bd) );

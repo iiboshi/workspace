@@ -3,7 +3,7 @@
 #include "CHead.h"
 #include "engine\CDevice.h"
 #include "engine\CXFileLoder.h"
-#include <d3dx11.h>
+#include "engine\DDSTextureLoader.h"
 #include <process.h>
 
 HANDLE CHead::m_hThread;
@@ -39,8 +39,8 @@ unsigned int WINAPI CHead::Load( LPVOID lpParameter )
 	CDevice* pcDevice = CDevice::Instance();
 
 	// Matrix
-	XMMATRIX mMatrixScale = XMMatrixScaling( 0.009f, 0.009f, 0.009f );
-	XMMATRIX mMatrixRot = XMMatrixRotationY( I_PI );
+	DirectX::XMMATRIX mMatrixScale = DirectX::XMMatrixScaling( 0.009f, 0.009f, 0.009f );
+	DirectX::XMMATRIX mMatrixRot = DirectX::XMMatrixRotationY( I_PI );
 	pcHead->m_mWorldMatrix *= mMatrixScale;
 	pcHead->m_mWorldMatrix *= mMatrixRot;
 	pcHead->m_mWorldMatrix._42 += 1.0f;

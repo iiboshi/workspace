@@ -1,45 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="CGBuffer.cpp" />
-    <ClCompile Include="CShadowMap.cpp" />
-    <ClCompile Include="CGround.cpp" />
+    <ClCompile Include="CBlur.cpp" />
     <ClCompile Include="CBox.cpp" />
     <ClCompile Include="CDeferred.cpp" />
+    <ClCompile Include="CGBuffer.cpp" />
+    <ClCompile Include="CGround.cpp" />
     <ClCompile Include="CHead.cpp" />
-    <ClCompile Include="CBlur.cpp" />
+    <ClCompile Include="CShadowMap.cpp" />
     <ClCompile Include="CSSSS.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CGBuffer.h" />
-    <ClInclude Include="CShadowMap.h" />
-    <ClInclude Include="CGround.h" />
+    <ClInclude Include="CBlur.h" />
     <ClInclude Include="CBox.h" />
     <ClInclude Include="CDeferred.h" />
+    <ClInclude Include="CGBuffer.h" />
+    <ClInclude Include="CGround.h" />
     <ClInclude Include="CHead.h" />
-    <ClInclude Include="CBlur.h" />
+    <ClInclude Include="CShadowMap.h" />
     <ClInclude Include="CSSSS.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="shader">
-      <UniqueIdentifier>{82ca3065-1336-491b-861f-7a5a57e0692c}</UniqueIdentifier>
+      <UniqueIdentifier>{1d440298-5421-43ef-a56e-802b91293838}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\shader\Deferred.fx">
+    <FxCompile Include="..\shader\BlurX.fx">
       <Filter>shader</Filter>
-    </None>
-    <None Include="..\shader\GBuffer.fx">
+    </FxCompile>
+    <FxCompile Include="..\shader\BlurY.fx">
       <Filter>shader</Filter>
-    </None>
-    <None Include="..\shader\SSSS.fx">
+    </FxCompile>
+    <FxCompile Include="..\shader\Deferred.fx">
       <Filter>shader</Filter>
-    </None>
-    <None Include="..\shader\BlurX.fx">
+    </FxCompile>
+    <FxCompile Include="..\shader\GBuffer.fx">
       <Filter>shader</Filter>
-    </None>
-    <None Include="..\shader\BlurY.fx">
+    </FxCompile>
+    <FxCompile Include="..\shader\SSSS.fx">
       <Filter>shader</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

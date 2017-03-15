@@ -5,7 +5,7 @@
 
 #include "object\CRender.h"
 #include <d3d11.h>
-#include <xnamath.h>
+#include <DirectXMath.h>
 
 #define GAUSS_WEIGHT	0.01f
 
@@ -26,23 +26,23 @@ public:
 	};
 	struct StUpdateBuffer
 	{
-		XMFLOAT4 m_f4ViewVec;
-		XMFLOAT4 m_f4MainCol;
-		XMFLOAT4 m_f4LightVec[enLightNum];
-		XMFLOAT4 m_f4LightCol[enLightNum];
-		XMFLOAT4 m_f4Weight[enWeight];
+		DirectX::XMFLOAT4 m_f4ViewVec;
+		DirectX::XMFLOAT4 m_f4MainCol;
+		DirectX::XMFLOAT4 m_f4LightVec[enLightNum];
+		DirectX::XMFLOAT4 m_f4LightCol[enLightNum];
+		DirectX::XMFLOAT4 m_f4Weight[enWeight];
 		StUpdateBuffer()
 		{
-			m_f4ViewVec = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-			m_f4MainCol = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+			m_f4ViewVec = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+			m_f4MainCol = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 			for( int ii = 0; ii < enLightNum; ii++ )
 			{
-				m_f4LightVec[ii] = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-				m_f4LightCol[ii] = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+				m_f4LightVec[ii] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+				m_f4LightCol[ii] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 			}
 			for( int ii = 0; ii < enWeight; ii++ )
 			{
-				m_f4Weight[ii] = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+				m_f4Weight[ii] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 			}
 		}
 	};
@@ -61,9 +61,9 @@ private:
 	ID3D11InputLayout*	m_pInputLayout[enShader_Max];
 	StUpdateBuffer		m_stUpdateBuffer;
 	float				m_fTable[enWeight];
-	XMFLOAT4			m_f4MainCol;
-	XMFLOAT4			m_f4LightVec[enLightNum];
-	XMFLOAT4			m_f4LightCol[enLightNum];
+	DirectX::XMFLOAT4			m_f4MainCol;
+	DirectX::XMFLOAT4			m_f4LightVec[enLightNum];
+	DirectX::XMFLOAT4			m_f4LightCol[enLightNum];
 };
 
 #endif

@@ -2,7 +2,6 @@
 
 #include "CModel.h"
 #include "engine\CDevice.h"
-#include <d3dx11.h>
 
 CModel::CModel()
 	: m_pVertexBuffer		( nullptr )
@@ -18,9 +17,9 @@ CModel::CModel()
 	{
 		m_pShaderResourceView[ii] = nullptr;
 	}
-	m_mWorldMatrix = XMMatrixIdentity();
-	m_fParam0 = XMFLOAT4( -1.0f, 0.0f, 0.0f, 0.0f );
-	m_fParam1 = XMFLOAT4( 0.5f, 0.1f, 0.0f, 0.0f );
+	m_mWorldMatrix = DirectX::XMMatrixIdentity();
+	m_fParam0 = DirectX::XMFLOAT4( -1.0f, 0.0f, 0.0f, 0.0f );
+	m_fParam1 = DirectX::XMFLOAT4( 0.5f, 0.1f, 0.0f, 0.0f );
 }
 
 CModel::~CModel()

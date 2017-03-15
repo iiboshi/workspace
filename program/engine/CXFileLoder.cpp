@@ -144,7 +144,7 @@ namespace
 		return v;
 	}
 
-	void Vec3Normalize( XMFLOAT3* out, XMFLOAT3* in )
+	void Vec3Normalize( DirectX::XMFLOAT3* out, DirectX::XMFLOAT3* in )
 	{
 		float nrm = pow( 
 			( in->x * in->x ) + 
@@ -155,7 +155,7 @@ namespace
 		out->z = in->z / nrm;
 	}
 
-	void Vec3Cross( XMFLOAT3* out, XMFLOAT3* v0, XMFLOAT3* v1 )
+	void Vec3Cross( DirectX::XMFLOAT3* out, DirectX::XMFLOAT3* v0, DirectX::XMFLOAT3* v1 )
 	{
 		out->x = ( v0->y * v1->z ) - ( v0->z * v1->y );
 		out->y = ( v0->z * v1->x ) - ( v0->x * v1->z );
@@ -163,44 +163,44 @@ namespace
 	}
 
 	void CalcTangent(
-		XMFLOAT3* p0,	XMFLOAT3* p1,	XMFLOAT3* p2,
-		XMFLOAT2* uv0,	XMFLOAT2* uv1,	XMFLOAT2* uv2,
-		XMFLOAT3* outTangent )
+		DirectX::XMFLOAT3* p0,	DirectX::XMFLOAT3* p1,	DirectX::XMFLOAT3* p2,
+		DirectX::XMFLOAT2* uv0,	DirectX::XMFLOAT2* uv1,	DirectX::XMFLOAT2* uv2,
+		DirectX::XMFLOAT3* outTangent )
 	{
-		XMFLOAT3 CP0[ 3 ] = {
-			XMFLOAT3( p0->x, uv0->x, uv0->y ),
-			XMFLOAT3( p0->y, uv0->x, uv0->y ),
-			XMFLOAT3( p0->z, uv0->x, uv0->y ),
+		DirectX::XMFLOAT3 CP0[ 3 ] = {
+			DirectX::XMFLOAT3( p0->x, uv0->x, uv0->y ),
+			DirectX::XMFLOAT3( p0->y, uv0->x, uv0->y ),
+			DirectX::XMFLOAT3( p0->z, uv0->x, uv0->y ),
 		};
-		XMFLOAT3 CP1[ 3 ] = {
-			XMFLOAT3( p1->x, uv1->x, uv1->y ),
-			XMFLOAT3( p1->y, uv1->x, uv1->y ),
-			XMFLOAT3( p1->z, uv1->x, uv1->y ),
+		DirectX::XMFLOAT3 CP1[ 3 ] = {
+			DirectX::XMFLOAT3( p1->x, uv1->x, uv1->y ),
+			DirectX::XMFLOAT3( p1->y, uv1->x, uv1->y ),
+			DirectX::XMFLOAT3( p1->z, uv1->x, uv1->y ),
 		};
-		XMFLOAT3 CP2[ 3 ] = {
-			XMFLOAT3( p2->x, uv2->x, uv2->y ),
-			XMFLOAT3( p2->y, uv2->x, uv2->y ),
-			XMFLOAT3( p2->z, uv2->x, uv2->y ),
+		DirectX::XMFLOAT3 CP2[ 3 ] = {
+			DirectX::XMFLOAT3( p2->x, uv2->x, uv2->y ),
+			DirectX::XMFLOAT3( p2->y, uv2->x, uv2->y ),
+			DirectX::XMFLOAT3( p2->z, uv2->x, uv2->y ),
 		};
 
 		float ret[3];
 		for ( int ii = 0; ii < 3; ii++ )
 		{
-			XMFLOAT3 V1;
+			DirectX::XMFLOAT3 V1;
 			V1.x = CP1[ii].x - CP0[ii].x;
 			V1.y = CP1[ii].y - CP0[ii].y;
 			V1.z = CP1[ii].z - CP0[ii].z;
-			XMFLOAT3 V2;
+			DirectX::XMFLOAT3 V2;
 			V2.x = CP2[ii].x - CP1[ii].x;
 			V2.y = CP2[ii].y - CP1[ii].y;
 			V2.z = CP2[ii].z - CP1[ii].z;
-			XMFLOAT3 work;
+			DirectX::XMFLOAT3 work;
 			Vec3Cross( &work, &V1, &V2 );
 
 			if ( work.x == 0.0f )
 			{
 				_ASSERT( 0 );
-				memset( outTangent, 0, sizeof( XMFLOAT3 ) );
+				memset( outTangent, 0, sizeof( DirectX::XMFLOAT3 ) );
 				return;
 			}
 			ret[ii] = - work.y / work.x;
@@ -276,8 +276,8 @@ bool CXFileLoder::Load( const char *_path )
 				{
 					fgets( cBuff, iCnt, pFile );
 					m_iVertexNum = std::atoi( cBuff );
-					m_pVertex = I_NEW( XMFLOAT3[m_iVertexNum] );
-					memset( m_pVertex, 0, sizeof( XMFLOAT3 ) * m_iVertexNum );
+					m_pVertex = I_NEW( DirectX::XMFLOAT3[m_iVertexNum] );
+					memset( m_pVertex, 0, sizeof( DirectX::XMFLOAT3 ) * m_iVertexNum );
 					bMesh = true;
 				}
 			}
@@ -490,8 +490,8 @@ bool CXFileLoder::Load( const char *_path )
 				{
 					fgets( cBuff, iCnt, pFile );
 					m_iNormalNum = std::atoi( cBuff );
-					m_pNormal = I_NEW( XMFLOAT3[m_iNormalNum] );
-					memset( m_pNormal, 0, sizeof( XMFLOAT3 ) * m_iNormalNum );
+					m_pNormal = I_NEW( DirectX::XMFLOAT3[m_iNormalNum] );
+					memset( m_pNormal, 0, sizeof( DirectX::XMFLOAT3 ) * m_iNormalNum );
 					bMeshNormals = true;
 				}
 			}
@@ -595,8 +595,8 @@ bool CXFileLoder::Load( const char *_path )
 				{
 					fgets( cBuff, 256, pFile );
 					m_iMeshTextureCoordsNum = atoi( cBuff );
-					m_pMeshTextureCoords = I_NEW( XMFLOAT2[m_iMeshTextureCoordsNum] );
-					memset( m_pMeshTextureCoords, 0, sizeof( XMFLOAT2 ) * m_iMeshTextureCoordsNum );
+					m_pMeshTextureCoords = I_NEW( DirectX::XMFLOAT2[m_iMeshTextureCoordsNum] );
+					memset( m_pMeshTextureCoords, 0, sizeof( DirectX::XMFLOAT2 ) * m_iMeshTextureCoordsNum );
 					bMeshTextureCoords = true;
 				}
 			}
@@ -627,8 +627,8 @@ bool CXFileLoder::Load( const char *_path )
 				{
 					fgets( cBuff, 256, pFile );
 					m_iMeshVertexColorsNum = atoi( cBuff );
-					m_pMeshVertexColors = I_NEW( XMFLOAT4[m_iMeshVertexColorsNum] );
-					memset( m_pMeshVertexColors, 0, sizeof( XMFLOAT2 ) * m_iMeshVertexColorsNum );
+					m_pMeshVertexColors = I_NEW( DirectX::XMFLOAT4[m_iMeshVertexColorsNum] );
+					memset( m_pMeshVertexColors, 0, sizeof( DirectX::XMFLOAT2 ) * m_iMeshVertexColorsNum );
 					bMeshVertexColors = true;
 				}
 			}
@@ -657,7 +657,7 @@ bool CXFileLoder::Load( const char *_path )
 	{
 		int indexCnt = 0;
 		m_iTangentNum = m_iVertexNum;
-		m_pTangent = I_NEW( XMFLOAT3[m_iVertexNum] );
+		m_pTangent = I_NEW( DirectX::XMFLOAT3[m_iVertexNum] );
 		for( int ii = 0; ii < m_iSurfaceNum; ii++ )
 		{
 			// Find
@@ -677,7 +677,7 @@ bool CXFileLoder::Load( const char *_path )
 				m_pMeshTextureCoords[index[1]].y += 0.0004f;
 				m_pMeshTextureCoords[index[2]].y += 0.0005f;
 
-				XMFLOAT3 f3Cal;
+				DirectX::XMFLOAT3 f3Cal;
 				CalcTangent(
 					&m_pVertex[index[0]], 
 					&m_pVertex[index[1]], 

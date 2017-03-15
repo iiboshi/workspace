@@ -4,17 +4,17 @@
 #define H_CXFILELODER
 
 #include <d3d11.h>
-#include <xnamath.h>
+#include <DirectXMath.h>
 
 class CXFileLoder
 {
 public:
 	struct StMaterial
 	{
-		XMFLOAT4	m_vColor;
+		DirectX::XMFLOAT4	m_vColor;
 		float		m_fPower;
-		XMFLOAT3	m_fSpecular;
-		XMFLOAT3	m_fEmissive;
+		DirectX::XMFLOAT3	m_fSpecular;
+		DirectX::XMFLOAT3	m_fEmissive;
 		char		m_cTexName[STRNUM];
 	};
 	CXFileLoder( char* _path );
@@ -33,15 +33,15 @@ public:
 	int			m_iMeshTextureCoordsNum;	//< “o˜^UV‚Ì”.
 	int			m_iMeshVertexColorsNum;		//< “o˜^’¸“_ƒJƒ‰[‚Ì”.
 	int			m_iTangentNum;				//< –Ê‚Ì”.
-	XMFLOAT3*	m_pVertex;
+	DirectX::XMFLOAT3*	m_pVertex;
 	WORD*		m_pIndex;
 	int*		m_pMaterialList;
 	StMaterial*	m_pMaterial;
-	XMFLOAT3*	m_pNormal;
+	DirectX::XMFLOAT3*	m_pNormal;
 	WORD*		m_pNormalIndex;
-	XMFLOAT2*	m_pMeshTextureCoords;
-	XMFLOAT4*	m_pMeshVertexColors;
-	XMFLOAT3*	m_pTangent;
+	DirectX::XMFLOAT2*	m_pMeshTextureCoords;
+	DirectX::XMFLOAT4*	m_pMeshVertexColors;
+	DirectX::XMFLOAT3*	m_pTangent;
 };
 
 #endif

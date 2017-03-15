@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="CObject.cpp" />
-    <ClCompile Include="CRender.cpp" />
-    <ClCompile Include="CUpdate.cpp" />
-    <ClCompile Include="CSequence.cpp" />
-    <ClCompile Include="CPreRender.cpp" />
     <ClCompile Include="CModel.cpp" />
+    <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="CPreRender.cpp" />
+    <ClCompile Include="CRender.cpp" />
+    <ClCompile Include="CSequence.cpp" />
+    <ClCompile Include="CUpdate.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CObject.h" />
-    <ClInclude Include="CRender.h" />
-    <ClInclude Include="CUpdate.h" />
-    <ClInclude Include="CSequence.h" />
-    <ClInclude Include="CPreRender.h" />
     <ClInclude Include="CModel.h" />
+    <ClInclude Include="CObject.h" />
+    <ClInclude Include="CPreRender.h" />
+    <ClInclude Include="CRender.h" />
+    <ClInclude Include="CSequence.h" />
+    <ClInclude Include="CUpdate.h" />
   </ItemGroup>
 </Project>

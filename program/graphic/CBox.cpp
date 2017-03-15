@@ -2,7 +2,7 @@
 
 #include "CBox.h"
 #include "engine\CDevice.h"
-#include <d3dx11.h>
+#include "engine\DDSTextureLoader.h"
 
 CBox::CBox()
 {
@@ -18,7 +18,7 @@ HRESULT CBox::Create()
 	HRESULT hr;
 	CDevice* pcDevice = CDevice::Instance();
 
-	m_mWorldMatrix = XMMatrixRotationX( I_PI );
+	m_mWorldMatrix = DirectX::XMMatrixRotationX( I_PI );
 	m_mWorldMatrix._41 -= 4.0f;
 	m_mWorldMatrix._43 -= 4.0f;
 
@@ -37,35 +37,35 @@ HRESULT CBox::Create()
 	SimpleVertex vertices[] =
 	{
 		// POSITION							// TEXCOORD				// NORMAL							// TANGENT						// COLOR
-		{ XMFLOAT3( -SIZE, SIZE, -SIZE ),	XMFLOAT2( 1.0f, 0.0f ),	XMFLOAT3( -TASU, 1.0f, -TASU ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE, SIZE, -SIZE ),	XMFLOAT2( 0.0f, 0.0f ),	XMFLOAT3(  TASU, 1.0f, -TASU ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE, SIZE,  SIZE ),	XMFLOAT2( 0.0f, 1.0f ),	XMFLOAT3(  TASU, 1.0f,  TASU ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3( -SIZE, SIZE,  SIZE ),	XMFLOAT2( 1.0f, 1.0f ),	XMFLOAT3( -TASU, 1.0f,  TASU ),		XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE, SIZE, -SIZE ),	DirectX::XMFLOAT2( 1.0f, 0.0f ),	DirectX::XMFLOAT3( -TASU, 1.0f, -TASU ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE, SIZE, -SIZE ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3(  TASU, 1.0f, -TASU ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE, SIZE,  SIZE ),	DirectX::XMFLOAT2( 0.0f, 1.0f ),	DirectX::XMFLOAT3(  TASU, 1.0f,  TASU ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE, SIZE,  SIZE ),	DirectX::XMFLOAT2( 1.0f, 1.0f ),	DirectX::XMFLOAT3( -TASU, 1.0f,  TASU ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
 
-		{ XMFLOAT3( -SIZE, -SIZE, -SIZE ),	XMFLOAT2( 0.0f, 0.0f ),	XMFLOAT3( -TASU, -1.0f, -TASU ),	XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE, -SIZE, -SIZE ),	XMFLOAT2( 1.0f, 0.0f ),	XMFLOAT3(  TASU, -1.0f, -TASU ),	XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE, -SIZE,  SIZE ),	XMFLOAT2( 1.0f, 1.0f ),	XMFLOAT3(  TASU, -1.0f,  TASU ),	XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3( -SIZE, -SIZE,  SIZE ),	XMFLOAT2( 0.0f, 1.0f ),	XMFLOAT3( -TASU, -1.0f,  TASU ),	XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE, -SIZE, -SIZE ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3( -TASU, -1.0f, -TASU ),	DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE, -SIZE, -SIZE ),	DirectX::XMFLOAT2( 1.0f, 0.0f ),	DirectX::XMFLOAT3(  TASU, -1.0f, -TASU ),	DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE, -SIZE,  SIZE ),	DirectX::XMFLOAT2( 1.0f, 1.0f ),	DirectX::XMFLOAT3(  TASU, -1.0f,  TASU ),	DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE, -SIZE,  SIZE ),	DirectX::XMFLOAT2( 0.0f, 1.0f ),	DirectX::XMFLOAT3( -TASU, -1.0f,  TASU ),	DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) },
 
-		{ XMFLOAT3( -SIZE, -SIZE,  SIZE ),	XMFLOAT2( 1.0f, 0.0f ),	XMFLOAT3( -1.0f, -TASU,  TASU ),	XMFLOAT3( 0.0f, 0.0f, -1.0f ),	XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3( -SIZE, -SIZE, -SIZE ),	XMFLOAT2( 0.0f, 0.0f ),	XMFLOAT3( -1.0f, -TASU, -TASU ),	XMFLOAT3( 0.0f, 0.0f, -1.0f ),	XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3( -SIZE,  SIZE, -SIZE ),	XMFLOAT2( 0.0f, 1.0f ),	XMFLOAT3( -1.0f,  TASU, -TASU ),	XMFLOAT3( 0.0f, 0.0f, -1.0f ),	XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3( -SIZE,  SIZE,  SIZE ),	XMFLOAT2( 1.0f, 1.0f ),	XMFLOAT3( -1.0f,  TASU,  TASU ),	XMFLOAT3( 0.0f, 0.0f, -1.0f ),	XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE, -SIZE,  SIZE ),	DirectX::XMFLOAT2( 1.0f, 0.0f ),	DirectX::XMFLOAT3( -1.0f, -TASU,  TASU ),	DirectX::XMFLOAT3( 0.0f, 0.0f, -1.0f ),	DirectX::XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE, -SIZE, -SIZE ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3( -1.0f, -TASU, -TASU ),	DirectX::XMFLOAT3( 0.0f, 0.0f, -1.0f ),	DirectX::XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE,  SIZE, -SIZE ),	DirectX::XMFLOAT2( 0.0f, 1.0f ),	DirectX::XMFLOAT3( -1.0f,  TASU, -TASU ),	DirectX::XMFLOAT3( 0.0f, 0.0f, -1.0f ),	DirectX::XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE,  SIZE,  SIZE ),	DirectX::XMFLOAT2( 1.0f, 1.0f ),	DirectX::XMFLOAT3( -1.0f,  TASU,  TASU ),	DirectX::XMFLOAT3( 0.0f, 0.0f, -1.0f ),	DirectX::XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) },
 
-		{ XMFLOAT3( SIZE, -SIZE,  SIZE ),	XMFLOAT2( 0.0f, 0.0f ),	XMFLOAT3( 1.0f, -TASU,  TASU ),		XMFLOAT3( 0.0f, 0.0f, 1.0f ),	XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3( SIZE, -SIZE, -SIZE ),	XMFLOAT2( 1.0f, 0.0f ),	XMFLOAT3( 1.0f, -TASU, -TASU ),		XMFLOAT3( 0.0f, 0.0f, 1.0f ),	XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3( SIZE,  SIZE, -SIZE ),	XMFLOAT2( 1.0f, 1.0f ),	XMFLOAT3( 1.0f,  TASU, -TASU ),		XMFLOAT3( 0.0f, 0.0f, 1.0f ),	XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
-		{ XMFLOAT3( SIZE,  SIZE,  SIZE ),	XMFLOAT2( 0.0f, 1.0f ),	XMFLOAT3( 1.0f,  TASU,  TASU ),		XMFLOAT3( 0.0f, 0.0f, 1.0f ),	XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( SIZE, -SIZE,  SIZE ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3( 1.0f, -TASU,  TASU ),		DirectX::XMFLOAT3( 0.0f, 0.0f, 1.0f ),	DirectX::XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( SIZE, -SIZE, -SIZE ),	DirectX::XMFLOAT2( 1.0f, 0.0f ),	DirectX::XMFLOAT3( 1.0f, -TASU, -TASU ),		DirectX::XMFLOAT3( 0.0f, 0.0f, 1.0f ),	DirectX::XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( SIZE,  SIZE, -SIZE ),	DirectX::XMFLOAT2( 1.0f, 1.0f ),	DirectX::XMFLOAT3( 1.0f,  TASU, -TASU ),		DirectX::XMFLOAT3( 0.0f, 0.0f, 1.0f ),	DirectX::XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( SIZE,  SIZE,  SIZE ),	DirectX::XMFLOAT2( 0.0f, 1.0f ),	DirectX::XMFLOAT3( 1.0f,  TASU,  TASU ),		DirectX::XMFLOAT3( 0.0f, 0.0f, 1.0f ),	DirectX::XMFLOAT4( 1.0f, 1.0f, 0.0f, 1.0f ) },
 
-		{ XMFLOAT3( -SIZE, -SIZE, -SIZE ),	XMFLOAT2( 1.0f, 0.0f ),	XMFLOAT3( -TASU, -TASU, -1.0f ),	XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE, -SIZE, -SIZE ),	XMFLOAT2( 0.0f, 0.0f ),	XMFLOAT3(  TASU, -TASU, -1.0f ),	XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE,  SIZE, -SIZE ),	XMFLOAT2( 0.0f, 1.0f ),	XMFLOAT3(  TASU,  TASU, -1.0f ),	XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3( -SIZE,  SIZE, -SIZE ),	XMFLOAT2( 1.0f, 1.0f ),	XMFLOAT3( -TASU,  TASU, -1.0f ),	XMFLOAT3( 1.0f, 0.0f, 0.0f ),	XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE, -SIZE, -SIZE ),	DirectX::XMFLOAT2( 1.0f, 0.0f ),	DirectX::XMFLOAT3( -TASU, -TASU, -1.0f ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE, -SIZE, -SIZE ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3(  TASU, -TASU, -1.0f ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE,  SIZE, -SIZE ),	DirectX::XMFLOAT2( 0.0f, 1.0f ),	DirectX::XMFLOAT3(  TASU,  TASU, -1.0f ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE,  SIZE, -SIZE ),	DirectX::XMFLOAT2( 1.0f, 1.0f ),	DirectX::XMFLOAT3( -TASU,  TASU, -1.0f ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
 
-		{ XMFLOAT3( -SIZE, -SIZE, SIZE ),	XMFLOAT2( 0.0f, 0.0f ),	XMFLOAT3( -TASU, -TASU, 1.0f ),		XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE, -SIZE, SIZE ),	XMFLOAT2( 1.0f, 0.0f ),	XMFLOAT3(  TASU, -TASU, 1.0f ),		XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3(  SIZE,  SIZE, SIZE ),	XMFLOAT2( 1.0f, 1.0f ),	XMFLOAT3(  TASU,  TASU, 1.0f ),		XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) },
-		{ XMFLOAT3( -SIZE,  SIZE, SIZE ),	XMFLOAT2( 0.0f, 1.0f ),	XMFLOAT3( -TASU,  TASU, 1.0f ),		XMFLOAT3( -1.0f, 0.0f, 0.0f ),	XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) }
+		{ DirectX::XMFLOAT3( -SIZE, -SIZE, SIZE ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3( -TASU, -TASU, 1.0f ),		DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE, -SIZE, SIZE ),	DirectX::XMFLOAT2( 1.0f, 0.0f ),	DirectX::XMFLOAT3(  TASU, -TASU, 1.0f ),		DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  SIZE,  SIZE, SIZE ),	DirectX::XMFLOAT2( 1.0f, 1.0f ),	DirectX::XMFLOAT3(  TASU,  TASU, 1.0f ),		DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -SIZE,  SIZE, SIZE ),	DirectX::XMFLOAT2( 0.0f, 1.0f ),	DirectX::XMFLOAT3( -TASU,  TASU, 1.0f ),		DirectX::XMFLOAT3( -1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 1.0f, 1.0f ) }
 	};
 
 	ZeroMemory( &bd, sizeof(bd) );

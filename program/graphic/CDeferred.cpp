@@ -32,26 +32,26 @@ HRESULT CDeferred::Init()
 	HRESULT hr = S_OK;
 	CDevice* pcDevice = CDevice::Instance();
 
-	CShader::Instance()->CreateVertexShader( "deferred", "../shader/Deferred.fx" );
-	CShader::Instance()->CreatePixelShader( "deferred", "../shader/Deferred.fx" );
+	CShader::Instance()->CreateVertexShader( "deferred", L"../shader/Deferred.fx" );
+	CShader::Instance()->CreatePixelShader( "deferred", L"../shader/Deferred.fx" );
 
 	// 矩形描画用頂点
 	struct QuadVertex
 	{
-		XMFLOAT3 Pos;
-		XMFLOAT2 Uv;
+		DirectX::XMFLOAT3 Pos;
+		DirectX::XMFLOAT2 Uv;
 	};
 
 	// 頂点データの設定
 	QuadVertex vertices[] =
 	{
-		{ XMFLOAT3( 1.0f, 1.0f, 0.0f ),		XMFLOAT2( 1.0f, 0.0f ) },
-		{ XMFLOAT3( 1.0f, -1.0f, 0.0f ),	XMFLOAT2( 1.0f, 1.0f ) },
-		{ XMFLOAT3( -1.0f, -1.0f, 0.0f ),	XMFLOAT2( 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( 1.0f, 1.0f, 0.0f ),		DirectX::XMFLOAT2( 1.0f, 0.0f ) },
+		{ DirectX::XMFLOAT3( 1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 1.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 0.0f, 1.0f ) },
 
-		{ XMFLOAT3( 1.0, 1.0f, 0.0f ),		XMFLOAT2( 1.0f, 0.0f ) },
-		{ XMFLOAT3( -1.0f, -1.0f, 0.0f ),	XMFLOAT2( 0.0f, 1.0f ) },
-		{ XMFLOAT3( -1.0f, 1.0f, 0.0f ),	XMFLOAT2( 0.0f, 0.0f ) },
+		{ DirectX::XMFLOAT3( 1.0, 1.0f, 0.0f ),		DirectX::XMFLOAT2( 1.0f, 0.0f ) },
+		{ DirectX::XMFLOAT3( -1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -1.0f, 1.0f, 0.0f ),	DirectX::XMFLOAT2( 0.0f, 0.0f ) },
 	};
 
 	// ストライドの設定
@@ -91,11 +91,11 @@ HRESULT CDeferred::Init()
 	I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pUpdateBuffer ) );
 
 	// Light
-	m_f4MainCol = XMFLOAT4( 3.0f, 3.0f, 3.0f, 1.0f );
-	m_f4LightVec[0] = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-	m_f4LightVec[1] = XMFLOAT4( -1.0f, 1.0f, -1.0f, 1.0f );
-	m_f4LightCol[0] = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4LightCol[1] = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	m_f4MainCol = DirectX::XMFLOAT4( 3.0f, 3.0f, 3.0f, 1.0f );
+	m_f4LightVec[0] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+	m_f4LightVec[1] = DirectX::XMFLOAT4( -1.0f, 1.0f, -1.0f, 1.0f );
+	m_f4LightCol[0] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	m_f4LightCol[1] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	return hr;
 }
@@ -135,7 +135,7 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 
 	for( int ii = 0; ii < enWeight; ii++ )
 	{
-		m_stUpdateBuffer.m_f4Weight[ii] = XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
+		m_stUpdateBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
 	}
 
 	// 自前のレンダーターゲットビューに切り替え

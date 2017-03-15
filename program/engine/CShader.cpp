@@ -3,8 +3,6 @@
 #include <windows.h>
 #include <tchar.h>
 #include <vector>
-#include <d3d11.h>
-#include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <D3Dcommon.h>
 #include "CShader.h"
@@ -206,7 +204,7 @@ HRESULT CShader::CreateRenderTarget()
 }
 
 HRESULT CShader::CompileShaderFromFile(
-	LPCSTR szFileName,
+	LPCWSTR szFileName,
 	LPCSTR szEntryPoint,
 	LPCSTR szShaderModel,
 	ID3DBlob** ppBlobOut )
@@ -220,8 +218,8 @@ HRESULT CShader::CompileShaderFromFile(
 	#endif
 
 	ID3DBlob* pErrorBlob;
-	hr = D3DX11CompileFromFile( szFileName, NULL, NULL, szEntryPoint, szShaderModel, 
-		dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
+	hr = D3DCompileFromFile( (LPCWSTR)szFileName, NULL, NULL, szEntryPoint, szShaderModel,
+		dwShaderFlags, 0, ppBlobOut, &pErrorBlob );
 	if( FAILED(hr) )
 	{
 		if( pErrorBlob != NULL )
@@ -234,7 +232,7 @@ HRESULT CShader::CompileShaderFromFile(
 	return S_OK;
 }
 
-HRESULT CShader::CreateVertexShader( char* _filename, char* _filePath )
+HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 {
 	HRESULT hr;
 	CDevice* pcDevice = CDevice::Instance();
@@ -384,7 +382,7 @@ HRESULT CShader::CreateVertexShader( char* _filename, char* _filePath )
 	return hr;
 }
 
-HRESULT CShader::CreatePixelShader( char* _filename, char* _filePath )
+HRESULT CShader::CreatePixelShader( char* _filename, LPCWSTR _filePath )
 {
 	HRESULT hr;
 	CDevice* pcDevice = CDevice::Instance();
