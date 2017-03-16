@@ -1,4 +1,4 @@
-/* Blur X Shader */
+/* Blur Y Shader */
 
 /*----------------------------------------------------------------------------------------------------
 	Define
@@ -8,12 +8,12 @@
 #define LIGNTNUM	2
 #define WEIGHTNUM	8
 
-#define WCOL0 float4( 0.233f,	0.455f,	0.649f,	1.0f )
-#define WCOL1 float4( 0.1f,		0.336f,	0.344f,	1.0f )
-#define WCOL2 float4( 0.118f,	0.198f,	0.0f,	1.0f )
-#define WCOL3 float4( 0.113f,	0.007f,	0.007f,	1.0f )
-#define WCOL4 float4( 0.358f,	0.004f,	0.0f,	1.0f )
-#define WCOL5 float4( 0.078f,	0.0f,	0.0f,	1.0f )
+#define WCOL0 ( float4( 0.233f,	0.455f,	0.649f,	1.0f ) * 0.5f )
+#define WCOL1 ( float4( 0.1f,	0.336f,	0.344f,	1.0f ) * 0.5f )
+#define WCOL2 ( float4( 0.118f,	0.198f,	0.0f,	1.0f ) * 0.5f )
+#define WCOL3 ( float4( 0.113f,	0.007f,	0.007f,	1.0f ) * 0.5f )
+#define WCOL4 ( float4( 0.358f,	0.004f,	0.0f,	1.0f ) * 0.5f )
+#define WCOL5 ( float4( 0.078f,	0.0f,	0.0f,	1.0f ) * 0.5f )
 
 /*----------------------------------------------------------------------------------------------------
 	Buffer
@@ -73,8 +73,6 @@ struct PS_INPUT
 	float4 uv3	: TEXCOORD4;
 	float4 uv4	: TEXCOORD5;
 	float4 uv5	: TEXCOORD6;
-	float4 uv6	: TEXCOORD7;
-	float4 uv7	: TEXCOORD8;
 };
 
 /*----------------------------------------------------------------------------------------------------
@@ -92,14 +90,13 @@ PS_INPUT VS( VS_INPUT _in )
 	_out.uv = _in.uv;
 
 	// à íuç¿ïW
-	_out.uv0.xy = _in.uv + float2(-1.0f / g_f4TexSize.x, 0.0f);
-	_out.uv1.xy = _in.uv + float2(-3.0f / g_f4TexSize.x, 0.0f);
-	_out.uv2.xy = _in.uv + float2(-5.0f / g_f4TexSize.x, 0.0f);
-	_out.uv3.xy = _in.uv + float2(-7.0f / g_f4TexSize.x, 0.0f);
-	_out.uv4.xy = _in.uv + float2(-9.0f / g_f4TexSize.x, 0.0f);
-	_out.uv5.xy = _in.uv + float2(-11.0f / g_f4TexSize.x, 0.0f);
-	_out.uv6.xy = _in.uv + float2(-13.0f / g_f4TexSize.x, 0.0f);
-	_out.uv7.xy = _in.uv + float2( -15.0f / g_f4TexSize.x, 0.0f );
+	float pix = 8.0f / g_f4TexSize.x;
+	_out.uv0.xy = float2( 0.0f, pix * 0.0064f );
+	_out.uv1.xy = float2( 0.0f, pix * 0.0484f );
+	_out.uv2.xy = float2( 0.0f, pix * 0.187f );
+	_out.uv3.xy = float2( 0.0f, pix * 0.567f );
+	_out.uv4.xy = float2( 0.0f, pix * 1.99f );
+	_out.uv5.xy = float2( 0.0f, pix * 7.41f );
 
 	return _out;
 }
@@ -118,22 +115,20 @@ float4 PS( PS_INPUT _in ) : SV_Target
 	float4 in2 = g_tex2.Sample( g_sampWorp, _in.uv );
 	float4 in3 = g_tex3.Sample( g_sampWorp, _in.uv );
 	float3 diff	= in0.xyz;
-	float blur = in3.x;
+	float sss	= in3.x;
+	float depth	= in3.y;
 
 	// Blur
-	if( blur )
+	if( sss )
 	{
 		float4 f4X = (float4)0.0f;
-		int offsetX = 16.0f / g_f4TexSize.x;
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv0.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv7.x + offsetX, _in.uv7.y ) ) ) * g_f4Weight[0];
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv1.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv6.x + offsetX, _in.uv6.y ) ) ) * g_f4Weight[1];
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv2.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv5.x + offsetX, _in.uv5.y ) ) ) * g_f4Weight[2];
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv3.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv4.x + offsetX, _in.uv4.y ) ) ) * g_f4Weight[3];
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv4.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv3.x + offsetX, _in.uv3.y ) ) ) * g_f4Weight[4];
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv5.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv2.x + offsetX, _in.uv2.y ) ) ) * g_f4Weight[5];
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv6.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv1.x + offsetX, _in.uv1.y ) ) ) * g_f4Weight[6];
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv7.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv0.x + offsetX, _in.uv0.y ) ) ) * g_f4Weight[7];
-		diff = lerp( diff, f4X.xyz, blur );
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv0.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv0.xy ) * depth ) ) * WCOL0;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv1.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv1.xy ) * depth ) ) * WCOL1;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv2.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv2.xy ) * depth ) ) * WCOL2;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv3.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv3.xy ) * depth ) ) * WCOL3;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv4.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv4.xy ) * depth ) ) * WCOL4;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv5.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv5.xy ) * depth ) ) * WCOL5;
+		diff = lerp( diff, f4X.xyz, sss );
 	}
 
 	// Final

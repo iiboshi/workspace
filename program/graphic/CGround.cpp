@@ -19,7 +19,7 @@ HRESULT CGround::Create()
 	CDevice* pcDevice = CDevice::Instance();
 
 	// Param
-	m_fParam1.x = 0.6f;
+	m_fParam1.x = 0.4f;
 	m_fParam1.y = 0.05f;
 
 	// バッファーデスク
@@ -32,7 +32,7 @@ HRESULT CGround::Create()
 	// バイトサイズ
 	m_iIndexNum = 6;
 
-	#define TNUM	100.0f
+	#define TNUM	10.0f
 	#define UNUM	TNUM / 2.0f
 	#define KATA	0.0f
 	SimpleVertex vertices[] =

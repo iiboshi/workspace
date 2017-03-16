@@ -92,14 +92,14 @@ PS_INPUT VS( VS_INPUT _in )
 	_out.uv = _in.uv;
 
 	// à íuç¿ïW
-	_out.uv0.xy = float2( 0.0f, -1.0f / g_f4TexSize.y );
-	_out.uv1.xy = float2( 0.0f, -3.0f / g_f4TexSize.y );
-	_out.uv2.xy = float2( 0.0f, -5.0f / g_f4TexSize.y );
-	_out.uv3.xy = float2( 0.0f, -7.0f / g_f4TexSize.y );
-	_out.uv4.xy = float2( 0.0f, -9.0f / g_f4TexSize.y );
-	_out.uv5.xy = float2( 0.0f, -11.0f / g_f4TexSize.y );
-	_out.uv6.xy = float2( 0.0f, -13.0f / g_f4TexSize.y );
-	_out.uv7.xy = float2( 0.0f, -15.0f / g_f4TexSize.y );
+	_out.uv0.xy = _in.uv + float2(0.0f, -1.0f / g_f4TexSize.y);
+	_out.uv1.xy = _in.uv + float2(0.0f, -3.0f / g_f4TexSize.y);
+	_out.uv2.xy = _in.uv + float2(0.0f, -5.0f / g_f4TexSize.y);
+	_out.uv3.xy = _in.uv + float2(0.0f, -7.0f / g_f4TexSize.y);
+	_out.uv4.xy = _in.uv + float2(0.0f, -9.0f / g_f4TexSize.y);
+	_out.uv5.xy = _in.uv + float2(0.0f, -11.0f / g_f4TexSize.y);
+	_out.uv6.xy = _in.uv + float2(0.0f, -13.0f / g_f4TexSize.y);
+	_out.uv7.xy = _in.uv + float2( 0.0f, -15.0f / g_f4TexSize.y );
 
 	return _out;
 }
@@ -118,23 +118,22 @@ float4 PS( PS_INPUT _in ) : SV_Target
 	float4 in2 = g_tex2.Sample( g_sampWorp, _in.uv );
 	float4 in3 = g_tex3.Sample( g_sampWorp, _in.uv );
 	float3 diff	= in0.xyz;
-	float sss	= in3.x;
-	float depth	= in3.y;
+	float blur = in3.x;
 
 	// Blur
-	if( sss )
+	if( blur )
 	{
 		float4 f4Y = (float4)0.0f;
 		int offsetY = 16.0f / g_f4TexSize.y;
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv0.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv7.x, _in.uv7.y + offsetY ) * depth ) ) * g_f4Weight[0];
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv1.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv6.x, _in.uv6.y + offsetY ) * depth ) ) * g_f4Weight[1];
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv2.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv5.x, _in.uv5.y + offsetY ) * depth ) ) * g_f4Weight[2];
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv3.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv4.x, _in.uv4.y + offsetY ) * depth ) ) * g_f4Weight[3];
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv4.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv3.x, _in.uv3.y + offsetY ) * depth ) ) * g_f4Weight[4];
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv5.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv2.x, _in.uv2.y + offsetY ) * depth ) ) * g_f4Weight[5];
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv6.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv1.x, _in.uv1.y + offsetY ) * depth ) ) * g_f4Weight[6];
-		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv7.xy * depth ) + g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv0.x, _in.uv0.y + offsetY ) * depth ) ) * g_f4Weight[7];
-		diff = lerp( diff, f4Y.xyz, sss );
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv0.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv7.x, _in.uv7.y + offsetY ) ) ) * g_f4Weight[0];
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv1.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv6.x, _in.uv6.y + offsetY ) ) ) * g_f4Weight[1];
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv2.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv5.x, _in.uv5.y + offsetY ) ) ) * g_f4Weight[2];
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv3.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv4.x, _in.uv4.y + offsetY ) ) ) * g_f4Weight[3];
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv4.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv3.x, _in.uv3.y + offsetY ) ) ) * g_f4Weight[4];
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv5.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv2.x, _in.uv2.y + offsetY ) ) ) * g_f4Weight[5];
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv6.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv1.x, _in.uv1.y + offsetY ) ) ) * g_f4Weight[6];
+		f4Y += ( g_tex0.Sample( g_sampMirr, _in.uv7.xy ) + g_tex0.Sample( g_sampMirr, float2( _in.uv0.x, _in.uv0.y + offsetY ) ) ) * g_f4Weight[7];
+		diff = lerp( diff, f4Y.xyz, blur );
 	}
 
 	// Final

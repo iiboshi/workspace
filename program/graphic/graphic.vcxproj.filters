@@ -38,7 +38,13 @@
     <FxCompile Include="..\shader\GBuffer.fx">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="..\shader\SSSS.fx">
+    <FxCompile Include="..\shader\SSSSBlurX.fx">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shader\SSSSBlurY.fx">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shader\SSSSFinal.fx">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>
