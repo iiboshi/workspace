@@ -35,6 +35,11 @@ public:
 		enRT_SSNum		= 4,
 		enRT_Max		= 8,
 	};
+	enum EnWorkRT
+	{
+		enWorkRT0		= 0,
+		enWorkRTmax,
+	};
 	struct StVertexShader
 	{
 		std::string name;
@@ -87,6 +92,9 @@ public:
 	std::vector<StPixelShader*>		m_listPixelShader;
 	ID3D11SamplerState*				m_pSamplerState[enState_Max];
 	StRenderTarget					m_stRenderTarget;
+	ID3D11Texture2D*				m_pWorkTexture[enWorkRTmax];
+	ID3D11RenderTargetView*			m_pWorkRenderTargetView[enWorkRTmax];
+	ID3D11ShaderResourceView*		m_pWorkShaderResourceView[enWorkRTmax];
 };
 
 #endif

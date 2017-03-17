@@ -8,12 +8,12 @@
 #define LIGNTNUM	2
 #define WEIGHTNUM	8
 
-#define WCOL0 ( float4( 0.233f,	0.455f,	0.649f,	1.0f ) * 0.5f )
-#define WCOL1 ( float4( 0.1f,	0.336f,	0.344f,	1.0f ) * 0.5f )
-#define WCOL2 ( float4( 0.118f,	0.198f,	0.0f,	1.0f ) * 0.5f )
-#define WCOL3 ( float4( 0.113f,	0.007f,	0.007f,	1.0f ) * 0.5f )
-#define WCOL4 ( float4( 0.358f,	0.004f,	0.0f,	1.0f ) * 0.5f )
-#define WCOL5 ( float4( 0.078f,	0.0f,	0.0f,	1.0f ) * 0.5f )
+#define WCOL0 float4( 0.233f,	0.455f,	0.649f,	1.0f )
+#define WCOL1 float4( 0.1f,		0.336f,	0.344f,	1.0f )
+#define WCOL2 float4( 0.118f,	0.198f,	0.0f,	1.0f )
+#define WCOL3 float4( 0.113f,	0.007f,	0.007f,	1.0f )
+#define WCOL4 float4( 0.358f,	0.004f,	0.0f,	1.0f )
+#define WCOL5 float4( 0.078f,	0.0f,	0.0f,	1.0f )
 
 /*----------------------------------------------------------------------------------------------------
 	Buffer
@@ -122,12 +122,12 @@ float4 PS( PS_INPUT _in ) : SV_Target
 	if( sss )
 	{
 		float4 f4X = (float4)0.0f;
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv0.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv0.xy ) * depth ) ) * WCOL0;
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv1.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv1.xy ) * depth ) ) * WCOL1;
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv2.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv2.xy ) * depth ) ) * WCOL2;
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv3.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv3.xy ) * depth ) ) * WCOL3;
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv4.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv4.xy ) * depth ) ) * WCOL4;
-		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv5.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv5.xy ) * depth ) ) * WCOL5;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv0.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv0.xy ) * depth ) ) * WCOL0 * 0.5f;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv1.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv1.xy ) * depth ) ) * WCOL1 * 0.5f;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv2.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv2.xy ) * depth ) ) * WCOL2 * 0.5f;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv3.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv3.xy ) * depth ) ) * WCOL3 * 0.5f;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv4.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv4.xy ) * depth ) ) * WCOL4 * 0.5f;
+		f4X += ( g_tex0.Sample( g_sampMirr, _in.uv + float2( _in.uv5.xy ) * depth ) + g_tex0.Sample( g_sampMirr, _in.uv - float2( _in.uv5.xy ) * depth ) ) * WCOL5 * 0.5f;
 		diff = lerp( diff, f4X.xyz, sss );
 	}
 

@@ -16,7 +16,7 @@ CGBuffer::CGBuffer()
 	, m_pCbUpdateBuffer	( nullptr )
 {
 	m_listModel.push_back( I_NEW( CGround ) );
-	// m_listModel.push_back( I_NEW( CBox ) );
+	m_listModel.push_back( I_NEW( CBox ) );
 	m_listModel.push_back( I_NEW( CHead ) );
 	Init();
 }

@@ -155,7 +155,7 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 	{
 		// デフォルトのレンダーターゲットビューに切り替え
 		_pContext->OMSetRenderTargets( 1, 
-			&CShader::Instance()->m_stRenderTarget.m_pRenderTargetView[CShader::enRT_GBAlbed], NULL );
+			&CShader::Instance()->m_pWorkRenderTargetView[CShader::enWorkRT0], NULL );
 		// シェーダを設定
 		_pContext->VSSetShader( m_pVertexShader[enShader_BlurX], NULL, 0 );
 		_pContext->PSSetShader( m_pPixelShader[enShader_BlurX], NULL, 0 );
@@ -190,7 +190,7 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		_pContext->VSSetShader( m_pVertexShader[enShader_BlurY], NULL, 0 );
 		_pContext->PSSetShader( m_pPixelShader[enShader_BlurY], NULL, 0 );
 		// レンダリングテクスチャを設定
-		_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_GBAlbed] );
+		_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_pWorkShaderResourceView[CShader::enWorkRT0] );
 		_pContext->PSSetShaderResources( 1, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_SSColor] );
 		_pContext->PSSetShaderResources( 2, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_SSSpec] );
 		_pContext->PSSetShaderResources( 3, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_SSParam] );

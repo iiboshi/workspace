@@ -4,6 +4,8 @@
 	Define
 ----------------------------------------------------------------------------------------------------*/
 
+// #define SSSSTEST
+
 #define PI			( 3.14159265359f )
 #define LIGNTNUM	2
 #define WEIGHTNUM	8
@@ -130,6 +132,15 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	output.out2 = float4( spec, 1.0f );
 	output.out3 = float4( sss, depth, 0.0f, 1.0f );
 
+	#if defined( SSSSTEST )
+	if( _in.pos.x < g_f4TexSize.x * 0.5f ){
+		output.out3 = float4( 0.0f, depth, 0.0f, 1.0f );
+	}
+	if( _in.pos.x > g_f4TexSize.x * 0.5f - 1.0f && _in.pos.x < g_f4TexSize.x * 0.5f + 1.0f ){
+		output.out0 = float4( 1.0f, 1.0f, 1.0f, 1.0f );
+	}
+	#endif
+
 	return output;
 }
 
@@ -188,9 +199,9 @@ float HalfLambert( float3 normal, float3 lightVec )
 // Diffuse.
 float3 CalcDiffuse( float3 normal )
 {
-	float3 ret =	(float3)HalfLambert( normal, normalize( g_f4ViewVec.xyz ) ) * g_f4MainCol.xyz +
-					(float3)HalfLambert( normal, normalize( g_f4LightVec[0].xyz ) ) * g_f4LightCol[0].xyz +
-					(float3)HalfLambert( normal, normalize( g_f4LightVec[1].xyz ) ) * g_f4LightCol[1].xyz;
+	float3 ret =	(float3)Lambert( normal, normalize( g_f4ViewVec.xyz ) ) * g_f4MainCol.xyz +
+					(float3)Lambert( normal, normalize( g_f4LightVec[0].xyz ) ) * g_f4LightCol[0].xyz +
+					(float3)Lambert( normal, normalize( g_f4LightVec[1].xyz ) ) * g_f4LightCol[1].xyz;
 	return ret;
 }
 

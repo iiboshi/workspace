@@ -55,7 +55,7 @@ void CCamera::Update()
 	}
 	if( m_bRotation )
 	{
-		m_fRot += 0.001f;
+		m_fRot += 0.002f;
 	}
 	m_fZoom -= (float)CMouse::Instance()->m_iRot * 0.0005f;
 	m_fZoom = ( m_fZoom < 0.1f )?		0.1f		: m_fZoom;
