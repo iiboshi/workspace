@@ -19,8 +19,8 @@ HRESULT CGround::Create()
 	CDevice* pcDevice = CDevice::Instance();
 
 	// Param
-	m_fParam1.x = 0.4f;
-	m_fParam1.y = 0.05f;
+	m_fParam1.x = 0.8f;
+	m_fParam1.y = 0.02f;
 
 	// バッファーデスク
 	D3D11_BUFFER_DESC		bd;

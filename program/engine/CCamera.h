@@ -35,7 +35,7 @@ public:
 	ID3D11Buffer*				m_pCbViewProjection;
 	DirectX::XMMATRIX			m_mView;
 	DirectX::XMMATRIX			m_mProjection;
-	DirectX::XMFLOAT4			m_f4CalPos;	//< ŒvŽZ—p.
+	DirectX::XMFLOAT4			m_f4CalPos;	//!< ŒvŽZ—p.
 	DirectX::XMFLOAT4			m_f4CamPos;
 	DirectX::XMFLOAT4			m_f4Lookat;
 	float				m_fRot;

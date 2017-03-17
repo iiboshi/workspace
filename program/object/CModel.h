@@ -35,9 +35,9 @@ public:
 	UINT						m_uOffset;
 	D3D_PRIMITIVE_TOPOLOGY		m_eTopology;
 	ID3D11RasterizerState*		m_hpRasterizerState;
-	DirectX::XMFLOAT4			m_fParam0;	//< x:Normal•â³.
-	DirectX::XMFLOAT4			m_fParam1;	//< x:Roughness y:Fresnel z:SSS.
-	bool						m_bDraw;	//< ÅŒã‚É m_bDraw ‚ð true.
+	DirectX::XMFLOAT4			m_fParam0;	//!< x:Normal•â³.
+	DirectX::XMFLOAT4			m_fParam1;	//!< x:Roughness y:Fresnel z:SSS.
+	bool						m_bDraw;	//!< ÅŒã‚É m_bDraw ‚ð true.
 };
 
 #endif

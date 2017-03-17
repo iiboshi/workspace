@@ -1,6 +1,7 @@
 /* GBuffer class */
 
 #include "CGBuffer.h"
+#include "CModelManager.h"
 #include "engine\CShader.h"
 #include "engine\CDevice.h"
 #include "engine\CCamera.h"
@@ -15,16 +16,14 @@ CGBuffer::CGBuffer()
 	, m_pInputLayout	( nullptr )
 	, m_pCbUpdateBuffer	( nullptr )
 {
-	m_listModel.push_back( I_NEW( CGround ) );
-	m_listModel.push_back( I_NEW( CBox ) );
-	m_listModel.push_back( I_NEW( CHead ) );
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHead ) );
 	Init();
 }
 
 CGBuffer::~CGBuffer()
 {
-	I_LISTDELETE( m_listModel );
-	m_listModel.clear();
 	I_RELEASE( m_pCbUpdateBuffer );
 }
 
@@ -93,7 +92,7 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 	_pContext->RSSetViewports( 1, &CDevice::Instance()->m_ViewPort );
 
 	// Draw
-	for( auto obj = m_listModel.begin(); obj != m_listModel.end(); obj++ )
+	for( auto obj = CModelManager::Instance()->m_listModel.begin(); obj != CModelManager::Instance()->m_listModel.end(); obj++ )
 	{
 		if( *obj == nullptr )
 		{

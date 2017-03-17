@@ -163,6 +163,7 @@
     <ClCompile Include="CGBuffer.cpp" />
     <ClCompile Include="CGround.cpp" />
     <ClCompile Include="CHead.cpp" />
+    <ClCompile Include="CModelManager.cpp" />
     <ClCompile Include="CShadowMap.cpp" />
     <ClCompile Include="CSSSS.cpp" />
   </ItemGroup>
@@ -173,6 +174,7 @@
     <ClInclude Include="CGBuffer.h" />
     <ClInclude Include="CGround.h" />
     <ClInclude Include="CHead.h" />
+    <ClInclude Include="CModelManager.h" />
     <ClInclude Include="CShadowMap.h" />
     <ClInclude Include="CSSSS.h" />
   </ItemGroup>

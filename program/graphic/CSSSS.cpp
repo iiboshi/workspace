@@ -7,14 +7,9 @@
 
 CSSSS::CSSSS()
 	: m_pQuadVB			( nullptr )
-	, m_pUpdateBuffer	( nullptr )
 	, m_uQuadStride		( 0 )
 	, m_uOffset			( 0 )
 {
-	for( int ii = 0; ii < enWeight; ii++ )
-	{
-		m_fTable[ii] = 0.0f;
-	}
 	for( int ii = 0; ii < enShader_Max; ii++ )
 	{
 		m_pVertexShader[ii]	= nullptr;
@@ -27,7 +22,6 @@ CSSSS::CSSSS()
 CSSSS::~CSSSS()
 {
 	I_RELEASE( m_pQuadVB );
-	I_RELEASE( m_pUpdateBuffer );
 }
 
 HRESULT CSSSS::Init()
@@ -100,9 +94,6 @@ HRESULT CSSSS::Init()
 	bd.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags	= 0;
 
-	bd.ByteWidth		= sizeof( StUpdateBuffer );
-	I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pUpdateBuffer ) );
-
 	// Light
 	m_f4MainCol = DirectX::XMFLOAT4( 4.0f, 4.0f, 4.0f, 1.0f );
 	m_f4LightVec[0] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -113,43 +104,10 @@ HRESULT CSSSS::Init()
 	return hr;
 }
 
-void CSSSS::CalGaussWeight( float num )
-{
-	float total	= 0.0f;
-	
-	for( int i = 0; i < enWeight; i++ )
-	{
-		m_fTable[i]	= pow( 3.14f, -i / ( num + GAUSS_WEIGHT ) );
-		total		+= m_fTable[i] * 2.0f;
-	}
-	
-	// 規格化
-	for( int i = 0; i < enWeight; i++ )
-	{
-		m_fTable[i]	/= total;
-	}
-}
-
 void CSSSS::Render( ID3D11DeviceContext* _pContext )
 {
 	CCamera::Instance()->Update( _pContext );
 
-	// ガウス defo 5
-	CalGaussWeight( 5 );
-
-	// Light
-	m_stUpdateBuffer.m_f4ViewVec = CCamera::Instance()->m_f4CamPos;
-	m_stUpdateBuffer.m_f4MainCol = m_f4MainCol;
-	for( int ii = 0; ii < enLightNum; ii++ )
-	{
-		m_stUpdateBuffer.m_f4LightVec[ii] = m_f4LightVec[ii];
-		m_stUpdateBuffer.m_f4LightCol[ii] = m_f4LightCol[ii];
-	}
-
-	for( int ii = 0; ii < enWeight; ii++ )
-	{
-		m_stUpdateBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
-	}
 
 	// Blur X
 	{
@@ -168,11 +126,6 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// 頂点バッファを設定
 		_pContext->IASetVertexBuffers( 0, 1, &m_pQuadVB, &m_uQuadStride, &m_uOffset );
 		_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-		// Const Buffer
-		_pContext->VSSetConstantBuffers( 1, 1, &m_pUpdateBuffer );
-		_pContext->PSSetConstantBuffers( 1, 1, &m_pUpdateBuffer );
-		// Update
-		_pContext->UpdateSubresource( m_pUpdateBuffer, 0, NULL, &m_stUpdateBuffer, 0, 0 );
 		// Setup the viewport
 		_pContext->RSSetViewports( 1, &CDevice::Instance()->m_ViewPort );
 		// 矩形描画
@@ -201,11 +154,6 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// 頂点バッファを設定
 		_pContext->IASetVertexBuffers( 0, 1, &m_pQuadVB, &m_uQuadStride, &m_uOffset );
 		_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-		// Const Buffer
-		_pContext->VSSetConstantBuffers( 1, 1, &m_pUpdateBuffer );
-		_pContext->PSSetConstantBuffers( 1, 1, &m_pUpdateBuffer );
-		// Update
-		_pContext->UpdateSubresource( m_pUpdateBuffer, 0, NULL, &m_stUpdateBuffer, 0, 0 );
 		// Setup the viewport
 		_pContext->RSSetViewports( 1, &CDevice::Instance()->m_ViewPort );
 		// 矩形描画
@@ -230,11 +178,6 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// 頂点バッファを設定
 		_pContext->IASetVertexBuffers( 0, 1, &m_pQuadVB, &m_uQuadStride, &m_uOffset );
 		_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-		// Const Buffer
-		_pContext->VSSetConstantBuffers( 1, 1, &m_pUpdateBuffer );
-		_pContext->PSSetConstantBuffers( 1, 1, &m_pUpdateBuffer );
-		// Update
-		_pContext->UpdateSubresource( m_pUpdateBuffer, 0, NULL, &m_stUpdateBuffer, 0, 0 );
 		// Setup the viewport
 		_pContext->RSSetViewports( 1, &CDevice::Instance()->m_ViewPort );
 		// 矩形描画

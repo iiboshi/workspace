@@ -294,7 +294,7 @@ HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 	unsigned char* bufptr = (unsigned char*)pVSBlob->GetBufferPointer();
  
 	//入力構造体の情報ある位置へのポインタを取得
-	unsigned char* pInStruct = nullptr;	//<入力構造体の情報がある位置へのポインタ
+	unsigned char* pInStruct = nullptr;	//!<入力構造体の情報がある位置へのポインタ
 	for( unsigned long ii = 0L; ii < pVSBlob->GetBufferSize() - 4; ii++ )
 	{
 		if( memcmp( bufptr + ii, "ISGN", 4 ) == NULL )
@@ -309,11 +309,11 @@ HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 	}
  
 	//入力構造体の情報を取得
-	int cntvariable = pInStruct[8];						//< 変数の数
-	int cntvariablesystem = 0;							//< システム値セマンティクスが割り当てられた変数の数
-	std::vector<char*> semanticsname( cntvariable );	//< セマンティクス名
-	std::vector<UINT> semanticsindex( cntvariable );	//< セマンティクスインデックス
-	std::vector<DXGI_FORMAT> format( cntvariable );		//< 変数の型
+	int cntvariable = pInStruct[8];						//!< 変数の数
+	int cntvariablesystem = 0;							//!< システム値セマンティクスが割り当てられた変数の数
+	std::vector<char*> semanticsname( cntvariable );	//!< セマンティクス名
+	std::vector<UINT> semanticsindex( cntvariable );	//!< セマンティクスインデックス
+	std::vector<DXGI_FORMAT> format( cntvariable );		//!< 変数の型
 	unsigned char *str=&pInStruct[16];
 	for( int ii= 0; ii < cntvariable; ii++ )
 	{
@@ -383,7 +383,7 @@ HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 				break;
 		}
 	}
-	cntvariable -= cntvariablesystem;	//< 変数の数からシステム値セマンティクスが付いている変数の数を引いて無かったものとする
+	cntvariable -= cntvariablesystem;	//!< 変数の数からシステム値セマンティクスが付いている変数の数を引いて無かったものとする
  
 	//入力レイアウトオブジェクトを作成
 	std::vector<D3D11_INPUT_ELEMENT_DESC> hInElementDesc(cntvariable);

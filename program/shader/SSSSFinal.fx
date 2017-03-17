@@ -13,14 +13,14 @@
 ----------------------------------------------------------------------------------------------------*/
 
 // Texture
-Texture2D	g_tex0 : register( t0 );	//< Albedo.
-Texture2D	g_tex1 : register( t1 );	//< Normal.
-Texture2D	g_tex2 : register( t2 );	//< Depth.
-Texture2D	g_tex3 : register( t3 );	//< Param.
-Texture2D	g_tex4 : register( t4 );	//< None.
-Texture2D	g_tex5 : register( t5 );	//< None.
-Texture2D	g_tex6 : register( t6 );	//< None.
-Texture2D	g_tex7 : register( t7 );	//< None.
+Texture2D	g_tex0 : register( t0 );	//!< Albedo.
+Texture2D	g_tex1 : register( t1 );	//!< Normal.
+Texture2D	g_tex2 : register( t2 );	//!< Depth.
+Texture2D	g_tex3 : register( t3 );	//!< Param.
+Texture2D	g_tex4 : register( t4 );	//!< None.
+Texture2D	g_tex5 : register( t5 );	//!< None.
+Texture2D	g_tex6 : register( t6 );	//!< None.
+Texture2D	g_tex7 : register( t7 );	//!< None.
 
 // Sampler
 SamplerState g_sampWorp : register( s0 );
@@ -33,16 +33,6 @@ cbuffer cbViewProjection : register( b0 )
 	float4	g_f4CameraPos;
 	matrix	g_mView;
 	matrix	g_mProjection;
-};
-
-// Deferred
-cbuffer cbDeferred : register( b1 )
-{
-	float4	g_f4ViewVec;
-	float4	g_f4MainCol;
-	float4	g_f4LightVec[LIGNTNUM];
-	float4	g_f4LightCol[LIGNTNUM];
-	float4	g_f4Weight[WEIGHTNUM];
 };
 
 /*----------------------------------------------------------------------------------------------------

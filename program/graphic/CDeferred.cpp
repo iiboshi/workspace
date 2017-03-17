@@ -90,13 +90,6 @@ HRESULT CDeferred::Init()
 	bd.ByteWidth		= sizeof( StUpdateBuffer );
 	I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pUpdateBuffer ) );
 
-	// Light
-	m_f4MainCol = DirectX::XMFLOAT4( 3.0f, 3.0f, 3.0f, 1.0f );
-	m_f4LightVec[0] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-	m_f4LightVec[1] = DirectX::XMFLOAT4( -1.0f, 1.0f, -1.0f, 1.0f );
-	m_f4LightCol[0] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4LightCol[1] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-
 	return hr;
 }
 
@@ -123,19 +116,18 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 
 	// ガウス defo 5
 	CalGaussWeight( 5 );
-
-	// Light
-	m_stUpdateBuffer.m_f4ViewVec = CCamera::Instance()->m_f4CamPos;
-	m_stUpdateBuffer.m_f4MainCol = m_f4MainCol;
-	for( int ii = 0; ii < enLightNum; ii++ )
-	{
-		m_stUpdateBuffer.m_f4LightVec[ii] = m_f4LightVec[ii];
-		m_stUpdateBuffer.m_f4LightCol[ii] = m_f4LightCol[ii];
-	}
-
 	for( int ii = 0; ii < enWeight; ii++ )
 	{
 		m_stUpdateBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
+	}
+
+	// Light
+	m_stUpdateBuffer.m_f4ViewVec = CCamera::Instance()->m_f4CamPos;
+	m_stUpdateBuffer.m_f4MainCol = CLight::Instance()->m_f4MainCol;
+	for( int ii = 0; ii < CLight::enLightNum; ii++ )
+	{
+		m_stUpdateBuffer.m_f4LightVec[ii] = CLight::Instance()->m_f4LightVec[ii];
+		m_stUpdateBuffer.m_f4LightCol[ii] = CLight::Instance()->m_f4LightCol[ii];
 	}
 
 	// 自前のレンダーターゲットビューに切り替え

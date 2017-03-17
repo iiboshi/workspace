@@ -4,7 +4,6 @@
 #define H_CGBUFFER
 
 #include "object\CPreRender.h"
-#include <vector>
 #include <d3d11.h>
 #include <DirectXMath.h>
 
@@ -16,8 +15,8 @@ public:
 	struct StUpdateBuffer
 	{
 		DirectX::XMMATRIX m_mWorld;
-		DirectX::XMFLOAT4 m_f4Param0;	//< x:Normal•â³.
-		DirectX::XMFLOAT4 m_f4Param1;	//< x:Roughness y:Fresnel z:SSS.
+		DirectX::XMFLOAT4 m_f4Param0;	//!< x:Normal•â³.
+		DirectX::XMFLOAT4 m_f4Param1;	//!< x:Roughness y:Fresnel z:SSS.
 		StUpdateBuffer()
 		{
 			m_mWorld = DirectX::XMMatrixIdentity();
@@ -35,7 +34,6 @@ private:
 	ID3D11PixelShader*		m_pPixelShader;
 	ID3D11InputLayout*		m_pInputLayout;
 	ID3D11Buffer*			m_pCbUpdateBuffer;
-	std::vector<CModel*>	m_listModel;
 };
 
 #endif

@@ -28,8 +28,8 @@ cbuffer cbViewProjection : register( b0 )
 cbuffer cbGBuffer : register( b1 )
 {
 	matrix	g_mWorld;
-	float4	g_f4Param0;	//< x:Normal•â³.
-	float4	g_f4Param1;	//< x:Roughness y:Fresnel z:SSS.
+	float4	g_f4Param0;	//!< x:Normal•â³.
+	float4	g_f4Param1;	//!< x:Roughness y:Fresnel z:SSS.
 };
 
 /*----------------------------------------------------------------------------------------------------
@@ -57,10 +57,10 @@ struct PS_INPUT
 
 struct PS_OUTPUT
 {
-	float4 out0 : SV_TARGET0;	//< xyz:Albedo.
-	float4 out1 : SV_TARGET1;	//< xyz:Normal.
-	float4 out2 : SV_TARGET2;	//< x:Depth y:Draw.
-	float4 out3 : SV_TARGET2;	//< x:Roughness y:Fresnel z:SSS.
+	float4 out0 : SV_TARGET0;	//!< xyz:Albedo.
+	float4 out1 : SV_TARGET1;	//!< xyz:Normal.
+	float4 out2 : SV_TARGET2;	//!< x:Depth y:Draw.
+	float4 out3 : SV_TARGET2;	//!< x:Roughness y:Fresnel z:SSS.
 };
 
 /*----------------------------------------------------------------------------------------------------

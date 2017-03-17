@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CDevice.cpp" />
+    <ClCompile Include="CLight.cpp" />
     <ClCompile Include="CMouse.cpp" />
     <ClCompile Include="CPreRenderThread.cpp" />
     <ClCompile Include="CShader.cpp" />
@@ -177,6 +178,7 @@
   <ItemGroup>
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CDevice.h" />
+    <ClInclude Include="CLight.h" />
     <ClInclude Include="CMouse.h" />
     <ClInclude Include="CPreRenderThread.h" />
     <ClInclude Include="CShader.h" />

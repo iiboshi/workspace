@@ -9,6 +9,7 @@
     <ClCompile Include="CWindow.cpp" />
     <ClCompile Include="CXFileLoder.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="CLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCamera.h" />
@@ -20,5 +21,6 @@
     <ClInclude Include="CXFileLoder.h" />
     <ClInclude Include="IMath.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="CLight.h" />
   </ItemGroup>
 </Project>
