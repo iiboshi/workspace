@@ -125,6 +125,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 
 	// Specular
 	float3 spec = (float3)CalcSpecular( normal, rough, fresnel );
+	spec = lerp( 0.0f, spec, trunc( draw ) );	//!< アンチエリアス自の淵の白いライン制御.
 
 	// 情報を送る.
 	output.out0 = float4( ret.xyz, 1.0f );
