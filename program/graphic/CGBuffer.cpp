@@ -6,9 +6,6 @@
 #include "engine\CDevice.h"
 #include "engine\CCamera.h"
 #include "object\CModel.h"
-#include "CGround.h"
-#include "CBox.h"
-#include "CHead.h"
 
 CGBuffer::CGBuffer()
 	: m_pVertexShader	( nullptr )
@@ -16,9 +13,6 @@ CGBuffer::CGBuffer()
 	, m_pInputLayout	( nullptr )
 	, m_pCbUpdateBuffer	( nullptr )
 {
-	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
-	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
-	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHead ) );
 	Init();
 }
 

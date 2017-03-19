@@ -1,6 +1,10 @@
 /* GraphicDemo class */
 
 #include "CGraphicsDemo.h"
+#include "graphic\CGround.h"
+#include "graphic\CBox.h"
+#include "graphic\CHead.h"
+#include "graphic\CModelManager.h"
 #include "graphic\CGBuffer.h"
 #include "graphic\CShadowMap.h"
 #include "graphic\CDeferred.h"
@@ -13,6 +17,9 @@ CGraphicsDemo::CGraphicsDemo()
 	, m_pcDeferred	( nullptr )
 	, m_pcBlur		( nullptr )
 {
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHead ) );
 	m_pcGBuffer		= I_NEW( CGBuffer );
 	m_pcShadowMap	= I_NEW( CShadowMap );
 	m_pcDeferred	= I_NEW( CDeferred );

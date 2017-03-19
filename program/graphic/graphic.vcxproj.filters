@@ -49,5 +49,11 @@
     <FxCompile Include="..\shader\SSSSFinal.fx">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="..\shader\Shadow.fx">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shader\ShadowMap.fx">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

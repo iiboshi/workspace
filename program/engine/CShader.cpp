@@ -159,12 +159,37 @@ HRESULT CShader::CreateRenderTarget()
 			"ID3D11Device::CreateShaderResourceView() Failed." );
 	}
 
-	for( int ii = enRT_SSStart; ii < enRT_Max; ii++ )
+	for( int ii = enRT_SSStart; ii < enRT_SSEnd; ii++ )
 	{
 		texDesc.SampleDesc.Count	= 1;
 		texDesc.SampleDesc.Quality	= 0;
 		rtvDesc.ViewDimension		= D3D11_RTV_DIMENSION_TEXTURE2D;
 		srvDesc.ViewDimension		= D3D11_SRV_DIMENSION_TEXTURE2D;
+
+		// 2次元テクスチャの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateTexture2D( 
+			&texDesc, NULL, 
+			&m_stRenderTarget.m_pTexture[ii] ),
+			"Error : ID3D11Device::CreateTexture2D() Failed." );
+
+		// レンダーターゲットビューの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateRenderTargetView( 
+			m_stRenderTarget.m_pTexture[ii], &rtvDesc, 
+			&m_stRenderTarget.m_pRenderTargetView[ii] ),
+			"ID3D11Device::CreateRenderTargetView() Failed." );
+	
+		// シェーダリソースビューの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateShaderResourceView( 
+			m_stRenderTarget.m_pTexture[ii], &srvDesc,
+			&m_stRenderTarget.m_pShaderResourceView[ii] ),
+			"ID3D11Device::CreateShaderResourceView() Failed." );
+	}
+
+	for( int ii = enRT_ShadowStart; ii < enRT_ShadowEnd; ii++ )
+	{
+		texDesc.SampleDesc		= pcDevice->m_sampleDesc;
+		rtvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
+		srvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
 
 		// 2次元テクスチャの生成
 		I_RETURN_M( pcDevice->m_pd3dDevice->CreateTexture2D( 

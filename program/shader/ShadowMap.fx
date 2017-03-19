@@ -1,4 +1,4 @@
-/* Name Shader */
+/* ShadowMap Shader */
 
 /*----------------------------------------------------------------------------------------------------
 	Define
@@ -8,26 +8,34 @@
 	Buffer
 ----------------------------------------------------------------------------------------------------*/
 
+// Cbuffer
+cbuffer cbViewProjection : register( b0 )
+{
+	matrix g_mWorld;
+	matrix g_mView;
+	matrix g_mProjection;
+};
+
 /*----------------------------------------------------------------------------------------------------
 	Struct
 ----------------------------------------------------------------------------------------------------*/
 
 struct VS_INPUT
 {
-	float3 Pos : POSITION;
-	float2 Tex : TEXCOORD0;
-	float3 Nrm : NORMAL0;
-	float3 Tan : TANGENT0;
-	float4 Col : COLOR0;
+	float3 pos : POSITION;
+	float2 tex : TEXCOORD0;
+	float3 nrm : NORMAL0;
+	float3 tan : TANGENT0;
+	float4 col : COLOR0;
 };
 
 struct PS_INPUT
 {
-	float4 Pos : SV_POSITION;
-	float2 Tex : TEXCOORD0;
-	float3 Nrm : NORMAL0;
-	float3 Tan : TANGENT0;
-	float4 Col : COLOR1;
+	float4 pos : SV_POSITION;
+	float2 tex : TEXCOORD0;
+	float3 nrm : NORMAL0;
+	float3 tan : TANGENT0;
+	float4 col : COLOR1;
 };
 
 /*----------------------------------------------------------------------------------------------------
@@ -41,6 +49,9 @@ struct PS_INPUT
 PS_INPUT VS( VS_INPUT input )
 {
 	PS_INPUT output = (PS_INPUT)0;
+	output.pos = mul( float4( input.pos.xyz, 1.0f ), g_mWorld );
+	output.pos = mul( output.pos, g_mView );
+	output.pos = mul( output.pos, g_mProjection );
 	return output;
 }
 
@@ -50,8 +61,8 @@ PS_INPUT VS( VS_INPUT input )
 
 float4 PS( PS_INPUT input) : SV_Target
 {
-	float4 ret = (float4)1.0f;
-	return ret;
+	float depth = input.pos.z / input.pos.w;
+	return float4( (float3)depth, 1.0f );
 }
 
 /*----------------------------------------------------------------------------------------------------

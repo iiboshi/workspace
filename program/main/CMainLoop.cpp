@@ -75,6 +75,10 @@ int CMainLoop::MainLoop()
 					TRUE, INFINITE );
 				for( int ii = 0; ii < pcPreRenderThrea->m_iCnt; ii++ )
 				{
+					if( pcPreRenderThrea->m_pCommandList[ii] == nullptr )
+					{
+						break;
+					}
 					pcDevice->m_pImmediateContext->ExecuteCommandList(
 						pcPreRenderThrea->m_pCommandList[ii], false );
 					I_RELEASE( pcPreRenderThrea->m_pCommandList[ii] );

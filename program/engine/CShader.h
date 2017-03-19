@@ -19,22 +19,26 @@ public:
 	};
 	enum EnRT
 	{
-		enRT_GBStart	= 0,	//!< GBuffer.
-		enRT_GBAlbed	= 0,
+		enRT_GBStart		= 0,	//!< GBuffer.
+		enRT_GBAlbed		= 0,
 		enRT_GBNormal,
 		enRT_GBDepth,
 		enRT_GBParam,
 		enRT_GBEnd,
-		enRT_GBNum		= 4,
-		enRT_SSStart	= 4,	//!< SSSS.
-		enRT_SSDest		= 4,
+		enRT_GBNum			= 4,
+		enRT_SSStart		= 4,	//!< SSSS.
+		enRT_SSDest			= 4,
 		enRT_SSColor,
 		enRT_SSSpec,
 		enRT_SSParam,
 		enRT_SSEnd,
-		enRT_SSNum		= 4,
-		enRT_ShadowMap	= 4,	//!< ShadowMap.
-		enRT_Max		= 9,
+		enRT_SSNum			= 4,
+		enRT_ShadowStart	= 8,	//!< Shadow
+		enRT_ShadowMap		= 8,
+		enRT_Shadow,
+		enRT_ShadowEnd,
+		enRT_ShadowNum		= 2,
+		enRT_Max			= 10,
 	};
 	enum EnWorkRT
 	{
