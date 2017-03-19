@@ -7,27 +7,28 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-struct StViewProjection
-{
-	DirectX::XMFLOAT4 m_f4TexSize;
-	DirectX::XMFLOAT4 m_fCameraPos;
-	DirectX::XMMATRIX m_mView;
-	DirectX::XMMATRIX m_mProjection;
-	StViewProjection()
-	{
-		m_f4TexSize = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-		m_fCameraPos = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-		m_mView = DirectX::XMMatrixIdentity();
-		m_mProjection = DirectX::XMMatrixIdentity();
-	}
-};
-
 class CCamera : public CUpdate
 {
 I_SINGLETON( CCamera )
+private:
+	struct StViewProjection
+	{
+		DirectX::XMFLOAT4 m_f4TexSize;
+		DirectX::XMFLOAT4 m_fCameraPos;
+		DirectX::XMMATRIX m_mView;
+		DirectX::XMMATRIX m_mProjection;
+		StViewProjection()
+		{
+			m_f4TexSize = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+			m_fCameraPos = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+			m_mView = DirectX::XMMatrixIdentity();
+			m_mProjection = DirectX::XMMatrixIdentity();
+		}
+	};
 public:
 	CCamera();
 	~CCamera();
+	void Change();
 	void Update();
 	HRESULT Init( ID3D11DeviceContext* _pContext );
 	void Update( ID3D11DeviceContext* _pContext );

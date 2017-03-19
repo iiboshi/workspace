@@ -15,16 +15,22 @@ CGraphicsDemo::CGraphicsDemo()
 	: m_pcGBuffer	( nullptr )
 	, m_pcShadowMap	( nullptr )
 	, m_pcDeferred	( nullptr )
+	, m_pcSSSS		( nullptr )
 	, m_pcBlur		( nullptr )
 {
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHead ) );
-	m_pcGBuffer		= I_NEW( CGBuffer );
+
+	#if defined( USE_SHADOW )
 	m_pcShadowMap	= I_NEW( CShadowMap );
+	#endif
+	#if !defined( SHADOWMAPTEST ) && !defined( SHADOWTEST )
+	m_pcGBuffer		= I_NEW( CGBuffer );
 	m_pcDeferred	= I_NEW( CDeferred );
 	m_pcSSSS		= I_NEW( CSSSS );
 	m_pcBlur		= I_NEW( CBlur );
+	#endif
 }
 
 CGraphicsDemo::~CGraphicsDemo()

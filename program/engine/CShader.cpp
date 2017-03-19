@@ -19,7 +19,7 @@ CShader::CShader()
 		m_stRenderTarget.m_pTexture[ii]				= nullptr;
 		m_stRenderTarget.m_pRenderTargetView[ii]	= nullptr;
 		m_stRenderTarget.m_pShaderResourceView[ii]	= nullptr;
-		#if defined( USE_MASS )
+		#if defined( USE_MSAA )
 		m_stRenderTarget.m_pResolveTexture[ii]		= nullptr;
 		m_stRenderTarget.m_pRenderTextureSRV[ii]	= nullptr;
 		#endif

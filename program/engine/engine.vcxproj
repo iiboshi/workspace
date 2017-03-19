@@ -171,6 +171,7 @@
     <ClCompile Include="CMouse.cpp" />
     <ClCompile Include="CPreRenderThread.cpp" />
     <ClCompile Include="CShader.cpp" />
+    <ClCompile Include="CShadowCamera.cpp" />
     <ClCompile Include="CWindow.cpp" />
     <ClCompile Include="CXFileLoder.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="CMouse.h" />
     <ClInclude Include="CPreRenderThread.h" />
     <ClInclude Include="CShader.h" />
+    <ClInclude Include="CShadowCamera.h" />
     <ClInclude Include="CWindow.h" />
     <ClInclude Include="CXFileLoder.h" />
     <ClInclude Include="DDSTextureLoader.h" />

@@ -91,7 +91,7 @@ HRESULT CCamera::Init( ID3D11DeviceContext* _pContext )
 	return hr;
 }
 
-void CCamera::Update( ID3D11DeviceContext* _pContext )
+void CCamera::Change()
 {
 	// Initialize the view matrix
 	m_f4CamPos.x			= static_cast<float>( sin( m_fRot ) * m_f4CalPos.x * m_fZoom );
@@ -117,6 +117,11 @@ void CCamera::Update( ID3D11DeviceContext* _pContext )
 
 	// Camera Pos
 	m_stViewProjections.m_fCameraPos = DirectX::XMFLOAT4( m_f4CamPos.x, m_f4CamPos.y, m_f4CamPos.z, m_f4CamPos.w );
+}
+
+void CCamera::Update( ID3D11DeviceContext* _pContext )
+{
+	Change();
 
 	// Update
 	_pContext->UpdateSubresource( 

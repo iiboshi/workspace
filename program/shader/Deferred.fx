@@ -19,7 +19,7 @@ Texture2D	g_tex0 : register( t0 );	//!< Albedo.
 Texture2D	g_tex1 : register( t1 );	//!< Normal.
 Texture2D	g_tex2 : register( t2 );	//!< Depth.
 Texture2D	g_tex3 : register( t3 );	//!< Param.
-Texture2D	g_tex4 : register( t4 );	//!< None.
+Texture2D	g_tex4 : register( t4 );	//!< Shadow.
 Texture2D	g_tex5 : register( t5 );	//!< None.
 Texture2D	g_tex6 : register( t6 );	//!< None.
 Texture2D	g_tex7 : register( t7 );	//!< None.
@@ -109,6 +109,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float4 in1 = g_tex1.Sample( g_sampWorp, _in.uv );
 	float4 in2 = g_tex2.Sample( g_sampWorp, _in.uv );
 	float4 in3 = g_tex3.Sample( g_sampWorp, _in.uv );
+	float4 in4 = g_tex4.Sample( g_sampWorp, _in.uv );
 	float3 albedo	= in0.xyz;
 	float3 normal	= in1.xyz;
 	float depth		= in2.x;
@@ -116,15 +117,16 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float rough		= in3.x;
 	float fresnel	= in3.y;
 	float sss		= in3.z;
+	float shw		= in4.x;
 
 	// Normal
 	normal = ( normal * (float3)2.0f ) - (float3)1.0f;
 
 	// Lambert
-	ret.xyz = CalcDiffuse( normal ) * albedo;
+	ret.xyz = CalcDiffuse( normal ) * shw * albedo;
 
 	// Specular
-	float3 spec = (float3)CalcSpecular( normal, rough, fresnel );
+	float3 spec = (float3)CalcSpecular( normal, rough, fresnel ) * shw;
 	spec = lerp( 0.0f, spec, trunc( draw ) );	//!< アンチエリアス自の淵の白いライン制御.
 
 	// 情報を送る.

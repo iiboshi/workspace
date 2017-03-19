@@ -11,9 +11,9 @@
 // Cbuffer
 cbuffer cbViewProjection : register( b0 )
 {
-	matrix g_mWorld;
 	matrix g_mView;
 	matrix g_mProjection;
+	matrix g_mWorld;
 };
 
 /*----------------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ struct PS_INPUT
 PS_INPUT VS( VS_INPUT input )
 {
 	PS_INPUT output = (PS_INPUT)0;
-	output.pos = mul( float4( input.pos.xyz, 1.0f ), g_mWorld );
+	output.pos = mul( float4( input.pos, 1.0f ), g_mWorld );
 	output.pos = mul( output.pos, g_mView );
 	output.pos = mul( output.pos, g_mProjection );
 	return output;

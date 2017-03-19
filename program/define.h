@@ -4,6 +4,9 @@
 #define H_DEFINE
 
 #define USE_MSAA
+#define USE_SHADOW
+// #define SHADOWMAPTEST
+// #define SHADOWTEST
 
 // Simd
 #undef _XM_SSE_INTRINSICS_
