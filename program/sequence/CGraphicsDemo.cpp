@@ -19,7 +19,7 @@ CGraphicsDemo::CGraphicsDemo()
 	, m_pcBlur		( nullptr )
 {
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
-	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
+	// CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHead ) );
 
 	#if defined( USE_SHADOW )

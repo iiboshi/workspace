@@ -7,7 +7,8 @@
 
 namespace
 {
-	const DirectX::XMFLOAT4 g_f4DefPos	= DirectX::XMFLOAT4( 5.0f, 3.0f, 5.0f, 0.0f );
+	const DirectX::XMFLOAT4 g_f4DefPos	= DirectX::XMFLOAT4( 5.0f, 1.5f, 5.0f, 0.0f );
+	const DirectX::XMFLOAT4 g_f4DefLat	= DirectX::XMFLOAT4( 0.0f, 0.25f, 0.0f, 0.0f );
 	const float g_fDefRot		= 0.0f;
 	const float g_fDefZoom		= 1.0f;
 }
@@ -27,9 +28,8 @@ CCamera::CCamera()
 	m_f4Lookat		= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	// Set
-	m_f4CalPos.x	= g_f4DefPos.x;
-	m_f4CalPos.y	= g_f4DefPos.y;
-	m_f4CalPos.z	= g_f4DefPos.z;
+	m_f4CalPos		= g_f4DefPos;
+	m_f4Lookat		= g_f4DefLat;
 }
 
 CCamera::~CCamera()

@@ -8,7 +8,7 @@
 #define LIGNTNUM	2
 #define WEIGHTNUM	8
 
-#define POW 2.0f	//<! ブラー強度.
+#define POW 1.0f	//<! ブラー強度.
 
 #define WCOL0 float4( 0.233f,	0.455f,	0.649f,	1.0f )
 #define WCOL1 float4( 0.1f,		0.336f,	0.344f,	1.0f )
