@@ -87,12 +87,6 @@ HRESULT CSSSS::Init()
 	m_pPixelShader[enShader_SSSS]	= CShader::Instance()->GetPixelShader( "ssss" );
 	m_pInputLayout[enShader_SSSS]	= CShader::Instance()->GetInputLayout( "ssss" );
 
-	// Buffer
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory( &bd, sizeof(bd) );
-	bd.Usage			= D3D11_USAGE_DEFAULT;
-	bd.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags	= 0;
 
 	// Light
 	m_f4MainCol = DirectX::XMFLOAT4( 4.0f, 4.0f, 4.0f, 1.0f );
@@ -131,8 +125,8 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// ‹éŒ`•`‰æ
 		_pContext->Draw( 6, 0 );
 		// •Ð‚Ã‚¯
-		ID3D11ShaderResourceView* reset[CShader::enRT_SSNum] = { NULL, NULL, NULL, NULL };
-		_pContext->PSSetShaderResources( 0, CShader::enRT_SSNum, reset );
+		ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+		_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
 	}
 	// Blur Y
 	{
@@ -159,8 +153,8 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// ‹éŒ`•`‰æ
 		_pContext->Draw( 6, 0 );
 		// •Ð‚Ã‚¯
-		ID3D11ShaderResourceView* reset[CShader::enRT_SSNum] = { NULL, NULL, NULL, NULL };
-		_pContext->PSSetShaderResources( 0, CShader::enRT_SSNum, reset );
+		ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+		_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
 	}
 	// SSSS Final
 	{
@@ -183,7 +177,7 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// ‹éŒ`•`‰æ
 		_pContext->Draw( 6, 0 );
 		// •Ð‚Ã‚¯
-		ID3D11ShaderResourceView* reset[CShader::enRT_SSNum] = { NULL, NULL, NULL, NULL };
-		_pContext->PSSetShaderResources( 0, CShader::enRT_SSNum, reset );
+		ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+		_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
 	}
 }

@@ -10,6 +10,13 @@
 class CCamera : public CUpdate
 {
 I_SINGLETON( CCamera )
+public:
+	CCamera();
+	~CCamera();
+	void Change();
+	void Update();
+	HRESULT Init( ID3D11DeviceContext* _pContext );
+	void Update( ID3D11DeviceContext* _pContext );
 private:
 	struct StViewProjection
 	{
@@ -25,13 +32,6 @@ private:
 			m_mProjection = DirectX::XMMatrixIdentity();
 		}
 	};
-public:
-	CCamera();
-	~CCamera();
-	void Change();
-	void Update();
-	HRESULT Init( ID3D11DeviceContext* _pContext );
-	void Update( ID3D11DeviceContext* _pContext );
 public:
 	ID3D11Buffer*				m_pCbViewProjection;
 	DirectX::XMMATRIX			m_mView;

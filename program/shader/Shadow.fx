@@ -85,15 +85,15 @@ float4 PS( PS_INPUT input) : SV_Target
 	// 最大深度傾斜を求める.
 	float maxDepthSlope = max( abs( ddx( shadowCoord.z ) ), abs( ddy( shadowCoord.z ) ) );
 
-	float shadowThreshold = 1.0f;	// シャドウにするかどうかの閾値です.
-	float bias            = 0.01f;	// 固定バイアスです.
-	float slopeScaledBias = 0.01f;	// 深度傾斜.
-	float depthBiasClamp  = 0.1f;	// バイアスクランプ値.
+	float shadowThreshold	= 1.0f;		// シャドウにするかどうかの閾値です.
+	float bias				= 0.002f;	// 固定バイアスです.
+	float slopeScaledBias	= 0.01f;	// 深度傾斜.
+	float depthBiasClamp	= 0.1f;		// バイアスクランプ値.
 
 	float shadowBias = bias + slopeScaledBias * maxDepthSlope;
 	shadowBias = min( shadowBias, depthBiasClamp );
 
-	float3 shadowColor	= float3( 0.25f, 0.25f, 0.25f );
+	float3 shadowColor	= float3( 0.5f, 0.5f, 0.5f );
 	shadowThreshold 	= g_texShadowMap.SampleLevel( g_sampWorp, shadowCoord.xy, 0 );
 	shadowThreshold		= ( shadowThreshold > ( shadowCoord.z - shadowBias ) ); 
 	shadowColor			= lerp( shadowColor, (float3)1.0f, shadowThreshold );

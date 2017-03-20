@@ -134,6 +134,6 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 	}
 
 	// clear
-	ID3D11ShaderResourceView* reset[2] = { NULL, NULL };
-	_pContext->PSSetShaderResources( 0, 2, reset );
+	ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { NULL, NULL };
+	_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
 }

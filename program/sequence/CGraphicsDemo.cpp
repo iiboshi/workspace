@@ -25,7 +25,7 @@ CGraphicsDemo::CGraphicsDemo()
 	#if defined( USE_SHADOW )
 	m_pcShadowMap	= I_NEW( CShadowMap );
 	#endif
-	#if !defined( SHADOWMAPTEST ) && !defined( SHADOWTEST )
+	#if !defined( SHADOWMAPTEST ) && !defined( SHADOWTEST ) && !defined( SHADOWBLURTEST )
 	m_pcGBuffer		= I_NEW( CGBuffer );
 	m_pcDeferred	= I_NEW( CDeferred );
 	m_pcSSSS		= I_NEW( CSSSS );

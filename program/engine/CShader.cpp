@@ -187,13 +187,15 @@ HRESULT CShader::CreateRenderTarget()
 
 	for( int ii = enRT_ShadowStart; ii < enRT_ShadowEnd; ii++ )
 	{
-		texDesc.SampleDesc		= pcDevice->m_sampleDesc;
+		D3D11_TEXTURE2D_DESC shwDesc = texDesc;
+
+		shwDesc.SampleDesc		= pcDevice->m_sampleDesc;
 		rtvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
 		srvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
 
 		// 2次元テクスチャの生成
 		I_RETURN_M( pcDevice->m_pd3dDevice->CreateTexture2D( 
-			&texDesc, NULL, 
+			&shwDesc, NULL, 
 			&m_stRenderTarget.m_pTexture[ii] ),
 			"Error : ID3D11Device::CreateTexture2D() Failed." );
 

@@ -20,13 +20,21 @@ namespace
 CShadowMap::CShadowMap()
 	: m_pCbUpdateBuffer			( nullptr )
 	, m_pCbUpdateLightBuffer	( nullptr )
+	, m_pCbUpdateShadowBuffer	( nullptr )
 	, m_pSamplerState			( nullptr )
+	, m_pQuadVB					( nullptr )
+	, m_uQuadStride				( 0 )
+	, m_uOffset					( 0 )
 {
-	for( int ii = 0; ii < EnShadow_Max; ii++ )
+	for( int ii = 0; ii < enShadow_Max; ii++ )
 	{
 		m_pVertexShader[ii]	= nullptr;
 		m_pPixelShader[ii]	= nullptr;
 		m_pInputLayout[ii]	= nullptr;
+	}
+	for( int ii = 0; ii < enWeight; ii++ )
+	{
+		m_fTable[ii] = 0.0f;
 	}
 	Init();
 }
@@ -35,7 +43,9 @@ CShadowMap::~CShadowMap()
 {
 	I_RELEASE( m_pCbUpdateBuffer );
 	I_RELEASE( m_pCbUpdateLightBuffer );
+	I_RELEASE( m_pCbUpdateShadowBuffer );
 	I_RELEASE( m_pSamplerState );
+	I_RELEASE( m_pQuadVB );
 }
 
 HRESULT CShadowMap::Init()
@@ -47,18 +57,89 @@ HRESULT CShadowMap::Init()
 	{
 		CShader::Instance()->CreateVertexShader( "shadowmap", L"../shader/ShadowMap.fx" );
 		CShader::Instance()->CreatePixelShader( "shadowmap", L"../shader/ShadowMap.fx" );
-		m_pVertexShader[EnShadow_Map]	= CShader::Instance()->GetVertexShader( "shadowmap" );
-		m_pPixelShader[EnShadow_Map]	= CShader::Instance()->GetPixelShader( "shadowmap" );
-		m_pInputLayout[EnShadow_Map]	= CShader::Instance()->GetInputLayout( "shadowmap" );
+		m_pVertexShader[enShadow_Map]	= CShader::Instance()->GetVertexShader( "shadowmap" );
+		m_pPixelShader[enShadow_Map]	= CShader::Instance()->GetPixelShader( "shadowmap" );
+		m_pInputLayout[enShadow_Map]	= CShader::Instance()->GetInputLayout( "shadowmap" );
 	}
 
 	// Shadow.
 	{
 		CShader::Instance()->CreateVertexShader( "shadow", L"../shader/Shadow.fx" );
 		CShader::Instance()->CreatePixelShader( "shadow", L"../shader/Shadow.fx" );
-		m_pVertexShader[EnShadow_Shadow]	= CShader::Instance()->GetVertexShader( "shadow" );
-		m_pPixelShader[EnShadow_Shadow]	= CShader::Instance()->GetPixelShader( "shadow" );
-		m_pInputLayout[EnShadow_Shadow]	= CShader::Instance()->GetInputLayout( "shadow" );
+		m_pVertexShader[enShadow_Shadow]	= CShader::Instance()->GetVertexShader( "shadow" );
+		m_pPixelShader[enShadow_Shadow]	= CShader::Instance()->GetPixelShader( "shadow" );
+		m_pInputLayout[enShadow_Shadow]	= CShader::Instance()->GetInputLayout( "shadow" );
+	}
+
+	// Blur X.
+	{
+		CShader::Instance()->CreateVertexShader( "shwblurx", L"../shader/BlurX.fx" );
+		CShader::Instance()->CreatePixelShader( "shwblurx", L"../shader/BlurX.fx" );
+		m_pVertexShader[enShadow_BlurX]	= CShader::Instance()->GetVertexShader( "shwblurx" );
+		m_pPixelShader[enShadow_BlurX]	= CShader::Instance()->GetPixelShader( "shwblurx" );
+		m_pInputLayout[enShadow_BlurX]	= CShader::Instance()->GetInputLayout( "shwblurx" );
+	}
+
+	// Blur Y.
+	{
+		CShader::Instance()->CreateVertexShader( "shwblury", L"../shader/BlurY.fx" );
+		CShader::Instance()->CreatePixelShader( "shwblury", L"../shader/BlurY.fx" );
+		m_pVertexShader[enShadow_BlurY]	= CShader::Instance()->GetVertexShader( "shwblury" );
+		m_pPixelShader[enShadow_BlurY]	= CShader::Instance()->GetPixelShader( "shwblury" );
+		m_pInputLayout[enShadow_BlurY]	= CShader::Instance()->GetInputLayout( "shwblury" );
+	}
+
+	// Blur.
+	{
+		// 矩形描画用頂点
+		struct QuadVertex
+		{
+			DirectX::XMFLOAT3 Pos;
+			DirectX::XMFLOAT2 Uv;
+		};
+
+		// 頂点データの設定
+		QuadVertex vertices[] =
+		{
+			{ DirectX::XMFLOAT3( 1.0f, 1.0f, 0.0f ),	DirectX::XMFLOAT2( 1.0f, 0.0f ) },
+			{ DirectX::XMFLOAT3( 1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 1.0f, 1.0f ) },
+			{ DirectX::XMFLOAT3( -1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 0.0f, 1.0f ) },
+
+			{ DirectX::XMFLOAT3( 1.0, 1.0f, 0.0f ),		DirectX::XMFLOAT2( 1.0f, 0.0f ) },
+			{ DirectX::XMFLOAT3( -1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 0.0f, 1.0f ) },
+			{ DirectX::XMFLOAT3( -1.0f, 1.0f, 0.0f ),	DirectX::XMFLOAT2( 0.0f, 0.0f ) },
+		};
+
+		// ストライドの設定
+		m_uQuadStride = sizeof( QuadVertex );
+
+		// 頂点バッファの設定
+		D3D11_BUFFER_DESC bufDesc;
+		memset( &bufDesc, 0, sizeof( bufDesc ) );
+		bufDesc.Usage			= D3D11_USAGE_DEFAULT;
+		bufDesc.BindFlags		= D3D11_BIND_VERTEX_BUFFER;
+		bufDesc.CPUAccessFlags	= 0;
+		bufDesc.ByteWidth		= sizeof( QuadVertex ) * 6;
+
+		// サブリソースデータの設定
+		D3D11_SUBRESOURCE_DATA initData;
+		memset( &initData, 0, sizeof( initData ) );
+		initData.pSysMem = vertices;
+
+		// 頂点バッファ生成
+		I_RETURN_M(
+			pcDevice->m_pd3dDevice->CreateBuffer( &bufDesc, &initData, &m_pQuadVB ),
+			"Error : ID3D11Device::CreateBuffer() Failed" );
+
+		// Buffer.
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory( &bd, sizeof(bd) );
+		bd.Usage			= D3D11_USAGE_DEFAULT;
+		bd.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
+		bd.CPUAccessFlags	= 0;
+
+		bd.ByteWidth		= sizeof( StUpdateShadowBuffer );
+		I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pCbUpdateShadowBuffer ) );
 	}
 
 	// Buffer
@@ -101,14 +182,31 @@ HRESULT CShadowMap::Init()
 	return hr;
 }
 
+void CShadowMap::CalGaussWeight( float num )
+{
+	float total	= 0.0f;
+	
+	for( int i = 0; i < enWeight; i++ )
+	{
+		m_fTable[i]	= pow( 3.14f, -i / ( num + GAUSS_WEIGHT ) );
+		total		+= m_fTable[i] * 2.0f;
+	}
+	
+	// 規格化
+	for( int i = 0; i < enWeight; i++ )
+	{
+		m_fTable[i]	/= total;
+	}
+}
+
 void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 {
-	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	// ShadowMap.
 	{
-		m_stUpdateBuffer.m_mView = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_mView );
-		m_stUpdateBuffer.m_mProjection = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_mProjection );
+		m_stUpdateBuffer.m_mView = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_stShwCam[0].m_mView );
+		m_stUpdateBuffer.m_mProjection = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_stShwCam[0].m_mProjection );
 		#if defined( SHADOWMAPTEST )
 		_pContext->OMSetRenderTargets( 1, &CDevice::Instance()->m_pRenderTargetView, CDevice::Instance()->m_pDepthStencilView );
 		_pContext->ClearRenderTargetView( CDevice::Instance()->m_pRenderTargetView, ClearColor );
@@ -117,9 +215,9 @@ void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 		_pContext->ClearRenderTargetView( CShader::Instance()->m_stRenderTarget.m_pRenderTargetView[CShader::enRT_ShadowMap], ClearColor );
 		#endif
 		_pContext->ClearDepthStencilView( CDevice::Instance()->m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
-		_pContext->IASetInputLayout( m_pInputLayout[EnShadow_Map] );
-		_pContext->VSSetShader( m_pVertexShader[EnShadow_Map], NULL, 0 );
-		_pContext->PSSetShader( m_pPixelShader[EnShadow_Map], NULL, 0 );
+		_pContext->IASetInputLayout( m_pInputLayout[enShadow_Map] );
+		_pContext->VSSetShader( m_pVertexShader[enShadow_Map], NULL, 0 );
+		_pContext->PSSetShader( m_pPixelShader[enShadow_Map], NULL, 0 );
 		_pContext->VSSetConstantBuffers( 0, 1, &m_pCbUpdateBuffer );
 		_pContext->PSSetConstantBuffers( 0, 1, &m_pCbUpdateBuffer );
 		_pContext->PSSetSamplers( 0, CShader::enState_Max, CShader::Instance()->m_pSamplerState );
@@ -141,8 +239,8 @@ void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 			_pContext->IASetPrimitiveTopology( ( *obj )->m_eTopology );
 			_pContext->DrawIndexed( ( *obj )->m_iIndexNum, 0, 0 );
 		}
-		ID3D11ShaderResourceView* reset[2] = { NULL, NULL };
-		_pContext->PSSetShaderResources( 0, 2, reset );
+		ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+		_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
 	}
 
 	// Shadow.
@@ -158,9 +256,9 @@ void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 		_pContext->ClearRenderTargetView( CShader::Instance()->m_stRenderTarget.m_pRenderTargetView[CShader::enRT_Shadow], ClearColor );
 		#endif
 		_pContext->ClearDepthStencilView( CDevice::Instance()->m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
-		_pContext->IASetInputLayout( m_pInputLayout[EnShadow_Shadow] );
-		_pContext->VSSetShader( m_pVertexShader[EnShadow_Shadow], NULL, 0 );
-		_pContext->PSSetShader( m_pPixelShader[EnShadow_Shadow], NULL, 0 );
+		_pContext->IASetInputLayout( m_pInputLayout[enShadow_Shadow] );
+		_pContext->VSSetShader( m_pVertexShader[enShadow_Shadow], NULL, 0 );
+		_pContext->PSSetShader( m_pPixelShader[enShadow_Shadow], NULL, 0 );
 		_pContext->PSSetSamplers( 0, CShader::enState_Max, CShader::Instance()->m_pSamplerState );
 		_pContext->RSSetViewports( 1, &CDevice::Instance()->m_ViewPort );
 		#if defined( USE_MSAA )
@@ -175,7 +273,8 @@ void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 		{
 			_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_ShadowMap] );
 		}
-		m_stUpdateLightBuffer.m_mShadow = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_mView * CShadowCamera::Instance()->m_mProjection * g_mBias );
+		m_stUpdateLightBuffer.m_mShadow = DirectX::XMMatrixTranspose( 
+			CShadowCamera::Instance()->m_stShwCam[0].m_mView * CShadowCamera::Instance()->m_stShwCam[0].m_mProjection * g_mBias );
 
 		_pContext->UpdateSubresource( m_pCbUpdateLightBuffer, 0, NULL, &m_stUpdateLightBuffer, 0, 0 );
 		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateLightBuffer );
@@ -199,7 +298,96 @@ void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 			_pContext->IASetPrimitiveTopology( ( *obj )->m_eTopology );
 			_pContext->DrawIndexed( ( *obj )->m_iIndexNum, 0, 0 );
 		}
-		ID3D11ShaderResourceView* reset[2] = { NULL, NULL };
-		_pContext->PSSetShaderResources( 0, 2, reset );
+		ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+		_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
+	}
+
+	// Blur 共通.
+	{
+		CCamera::Instance()->Update( _pContext );
+
+		// ガウス defo 5
+		CalGaussWeight( 5 );
+		for( int ii = 0; ii < enWeight; ii++ )
+		{
+			m_stUpdateShadowBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
+		}
+		_pContext->UpdateSubresource( m_pCbUpdateShadowBuffer, 0, NULL, &m_stUpdateShadowBuffer, 0, 0 );
+	}
+
+	// Blur X
+	{
+		// デフォルトのレンダーターゲットビューに切り替え
+		_pContext->OMSetRenderTargets( 1, 
+			&CShader::Instance()->m_pWorkRenderTargetView[CShader::enWorkRT0], NULL );
+		// シェーダを設定
+		_pContext->VSSetShader( m_pVertexShader[enShadow_BlurX], NULL, 0 );
+		_pContext->PSSetShader( m_pPixelShader[enShadow_BlurX], NULL, 0 );
+		// Buffer.
+		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
+		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
+		// レンダリングテクスチャを設定
+		#if defined( USE_MSAA )
+		if( CDevice::Instance()->m_sampleDesc.Count > 1 )
+		{
+			_pContext->ResolveSubresource( 
+				CShader::Instance()->m_stRenderTarget.m_pResolveTexture[CShader::enRT_Shadow], 0, 
+				CShader::Instance()->m_stRenderTarget.m_pTexture[CShader::enRT_Shadow], 0, 
+				CShader::Instance()->m_stRenderTarget.m_resolveFormat );
+			_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_stRenderTarget.m_pRenderTextureSRV[CShader::enRT_Shadow] );
+		}
+		else
+		#endif
+		{
+			_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_Shadow] );
+		}
+		// サンプラーステートの設定
+		_pContext->PSSetSamplers( 0, CShader::enState_Max, CShader::Instance()->m_pSamplerState );
+		// レイアウトの切り替え（VSへ送るデータサイズの変更）
+		_pContext->IASetInputLayout( m_pInputLayout[enShadow_BlurX] );
+		// 頂点バッファを設定
+		_pContext->IASetVertexBuffers( 0, 1, &m_pQuadVB, &m_uQuadStride, &m_uOffset );
+		_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+		// Setup the viewport
+		_pContext->RSSetViewports( 1, &CDevice::Instance()->m_ViewPort );
+		// 矩形描画
+		_pContext->Draw( 6, 0 );
+		// 片づけ
+		ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+		_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
+	}
+
+	// Blur Y
+	{
+		// デフォルトのレンダーターゲットビューに切り替え
+		#if defined( SHADOWBLURTEST )
+		_pContext->OMSetRenderTargets( 1, &CDevice::Instance()->m_pRenderTargetView, NULL );
+		_pContext->ClearRenderTargetView( CDevice::Instance()->m_pRenderTargetView, ClearColor );
+		#else
+		_pContext->OMSetRenderTargets( 1, 
+			&CShader::Instance()->m_stRenderTarget.m_pRenderTargetView[CShader::enRT_Shadow] , NULL );
+		#endif
+		// シェーダを設定
+		_pContext->VSSetShader( m_pVertexShader[enShadow_BlurY], NULL, 0 );
+		_pContext->PSSetShader( m_pPixelShader[enShadow_BlurY], NULL, 0 );
+		// Buffer.
+		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
+		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
+		// レンダリングテクスチャを設定
+		_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_pWorkShaderResourceView[CShader::enWorkRT0] );
+		// サンプラーステートの設定
+		_pContext->PSSetSamplers( 0, CShader::enState_Max, CShader::Instance()->m_pSamplerState );
+		// レイアウトの切り替え（VSへ送るデータサイズの変更）
+		_pContext->IASetInputLayout( m_pInputLayout[enShadow_BlurY] );
+		// 頂点バッファを設定
+		_pContext->IASetVertexBuffers( 0, 1, &m_pQuadVB, &m_uQuadStride, &m_uOffset );
+		_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+		// Setup the viewport
+		_pContext->RSSetViewports( 1, &CDevice::Instance()->m_ViewPort );
+		// 矩形描画
+		_pContext->Draw( 6, 0 );
+		// 片づけ
+		ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+		_pContext->PSSetShaderResources( 0, CShader::enRT_SSNum, reset );
 	}
 }

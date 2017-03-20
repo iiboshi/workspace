@@ -140,6 +140,11 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 	_pContext->VSSetShader( m_pVertexShader, NULL, 0 );
 	_pContext->PSSetShader( m_pPixelShader, NULL, 0 );
 
+	#if !defined( USE_SHADOW )
+	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	_pContext->ClearRenderTargetView( CShader::Instance()->m_stRenderTarget.m_pRenderTargetView[CShader::enRT_Shadow], ClearColor );
+	#endif
+
 	// レンダリングテクスチャを設定
 	#if defined( USE_MSAA )
 	if( CDevice::Instance()->m_sampleDesc.Count > 1 )
@@ -191,6 +196,6 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 	_pContext->Draw( 6, 0 );
 
 	// 片づけ
-	ID3D11ShaderResourceView* reset[CShader::enRT_GBEnd] = { NULL, NULL, NULL, NULL };
-	_pContext->PSSetShaderResources( 0, CShader::enRT_GBEnd, reset );
+	ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
+	_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
 }
