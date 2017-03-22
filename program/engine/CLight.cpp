@@ -6,7 +6,7 @@ namespace
 {
 	#if defined( USE_SHADOW )
 	const float g_fMaxPow	= 3.0f;
-	const float g_fMaxSpec	= 1.0f;
+	const float g_fMaxSpec	= 0.5f;
 	#elif 0
 	const float g_fMaxPow	= 15.0f;
 	const float g_fMaxSpec	= 2.0f;

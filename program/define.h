@@ -5,9 +5,12 @@
 
 #define USE_MSAA
 #define USE_SHADOW
+
+#if defined( USE_SHADOW )
 // #define SHADOWMAPTEST
 // #define SHADOWTEST
 // #define SHADOWBLURTEST
+#endif
 
 // Simd
 #undef _XM_SSE_INTRINSICS_
