@@ -81,5 +81,10 @@ HRESULT CGround::Create()
 		pcDevice->m_pd3dDevice, NDefine::g_pcNrmPath[NDefine::enNrmPath_stones_NM_height], 
 		NULL, NULL, &m_pShaderResourceView[enTexType_Normal], NULL ) );
 
+	// Load the TextureMicrogeometry
+	I_RETURN( D3DX11CreateShaderResourceViewFromFile( 
+		pcDevice->m_pd3dDevice, NDefine::g_pcNrmPath[NDefine::enNrmPath_normal], 
+		NULL, NULL, &m_pShaderResourceView[enTexType_Micro], NULL ) );
+
 	return hr;
 }

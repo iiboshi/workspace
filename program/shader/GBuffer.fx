@@ -4,6 +4,8 @@
 	Define
 ----------------------------------------------------------------------------------------------------*/
 
+#define MICROGEOMETRY
+
 /*----------------------------------------------------------------------------------------------------
 	Buffer
 ----------------------------------------------------------------------------------------------------*/
@@ -11,6 +13,7 @@
 // Texture
 Texture2D g_texDiffuse	: register( t0 );
 Texture2D g_texNormal	: register( t1 );
+Texture2D g_texMicro	: register( t2 );
 
 // Sampler
 SamplerState ColorSmpWorp : register( s0 );
@@ -28,7 +31,7 @@ cbuffer cbViewProjection : register( b0 )
 cbuffer cbGBuffer : register( b1 )
 {
 	matrix	g_mWorld;
-	float4	g_f4Param0;	//!< x:Normal•â³.
+	float4	g_f4Param0;	//!< x:Normal•â³ y:Microgeometry‰ñ”, y:Microgeometry‹­“x .
 	float4	g_f4Param1;	//!< x:Roughness y:Fresnel z:SSS.
 };
 
@@ -98,12 +101,25 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 {
 	PS_OUTPUT output;
 
+	// microgeometry.
+	#if defined( MICROGEOMETRY )
+	float fMicroPow = 0.5f;
+	float fMicroLoop = 12.0f;
+	float4 f4Micro = g_texMicro.Sample( ColorSmpWorp, input.Tex * (float2)fMicroLoop );
+	float3 f3MicroNrm = f4Micro.xyz;
+	f3MicroNrm.xy = f3MicroNrm.xy * (float2)2.0f - (float2)1.0f;
+	#endif
+
 	// –@üŒvŽZ.
 	float3 tnrm;
 	tnrm	= g_texNormal.Sample( ColorSmpWorp, input.Tex ).xyz;
 	tnrm.xy	= tnrm.xy * (float2)2.0f - (float2)1.0f;
 	tnrm.xy	*= float2( g_f4Param0.x, -1.0f );
 	tnrm.z	= 1.0f;
+	#if defined( MICROGEOMETRY )
+	tnrm.xy = lerp( tnrm.xy, tnrm.xy + f3MicroNrm.xy, fMicroPow );
+	tnrm	= normalize( tnrm );
+	#endif
 	float3 f3Nrm = normalize( input.Nrm );
 	float3 f3Tan = normalize( input.Tan );
 	float3 f3Bin = normalize( cross( f3Tan, f3Nrm ) );
@@ -117,10 +133,16 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	float depth = input.Pos.z / input.Pos.w;
 
 	// î•ñ‚ð‘—‚é.
+	float3 f3Param = g_f4Param1.xyz;
+	#if defined( MICROGEOMETRY )
+	float fMicroRoughPow = 0.5f;
+	float fMicroRough = min( 1.0f, f3Param.x * ( 1.0f - f4Micro.w ) * 2.0f );
+	f3Param.x = lerp( f3Param.x, fMicroRough, fMicroRoughPow );
+	#endif
 	output.out0 = float4( albedo, 1.0f );
 	output.out1 = float4( tnrm, 1.0f );
 	output.out2 = float4( depth, 1.0f, 0.0f, 1.0f );
-	output.out3 = float4( g_f4Param1.xyz, 1.0f );
+	output.out3 = float4( f3Param.xyz, 1.0f );
 
 	return output;
 }

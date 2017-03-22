@@ -107,6 +107,11 @@ unsigned int WINAPI CHead::Load( LPVOID lpParameter )
 		pcDevice->m_pd3dDevice, "../../model/head/head_n.dds", 
 		NULL, NULL, &pcHead->m_pShaderResourceView[enTexType_Normal], NULL ) );
 
+	// Load the TextureMicrogeometry
+	I_RETURN( D3DX11CreateShaderResourceViewFromFile( 
+		pcDevice->m_pd3dDevice, "../../model/head/microgeometry.dds", 
+		NULL, NULL, &pcHead->m_pShaderResourceView[enTexType_Micro], NULL ) );
+
 	pcHead->m_bDraw = true;
 
 	return hr;

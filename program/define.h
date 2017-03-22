@@ -181,6 +181,7 @@ namespace NDefine
 		enNrmPath_dent_NM_height,
 		enNrmPath_bump_NM_height,
 		enNrmPath_wall_NM_height,
+		enNrmPath_normal,
 	};
 	static const char* g_pcNrmPath[] = 
 	{
@@ -191,6 +192,7 @@ namespace NDefine
 		"../../Media/Textures/dent_NM_height.DDS",
 		"../../Media/Textures/bump_NM_height.DDS",
 		"../../Media/Textures/wall_NM_height.DDS",
+		"../../Media/Textures/normal.dds",
 	};
 }
 

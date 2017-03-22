@@ -13,6 +13,7 @@ public:
 	{
 		enTexType_Albedo,
 		enTexType_Normal,
+		enTexType_Micro,
 		enTexType_Max,
 	};
 	struct SimpleVertex
