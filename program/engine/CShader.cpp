@@ -103,6 +103,13 @@ HRESULT CShader::CreateSampler()
 	I_RETURN( pcDevice->m_pd3dDevice->CreateSamplerState( 
 		&sampDesc, &m_pSamplerState[enState_Mirror] ) );
 
+	// SamplerState Clamp
+	sampDesc.AddressU		= D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressV		= D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressW		= D3D11_TEXTURE_ADDRESS_CLAMP;
+	I_RETURN( pcDevice->m_pd3dDevice->CreateSamplerState( 
+		&sampDesc, &m_pSamplerState[enState_Clamp] ) );
+
 	return hr;
 }
 

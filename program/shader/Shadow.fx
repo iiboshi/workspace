@@ -25,8 +25,9 @@ cbuffer cbShadowViewProjection : register( b1 )
 Texture2D	g_texShadowMap : register( t0 );	//!< ShadowMap.
 
 // Sampler
-SamplerState g_sampWorp : register( s0 );
-SamplerState g_sampMirr : register( s1 );
+SamplerState g_sampWorp		: register( s0 );
+SamplerState g_sampMirr		: register( s1 );
+SamplerState g_sampClamp	: register( s2 );
 
 /*----------------------------------------------------------------------------------------------------
 	Struct
@@ -79,23 +80,6 @@ float4 PS( PS_INPUT input) : SV_Target
 {
 	float4 ret = (float4)1.0f;
 
-#if 0
-	float w = 1.0f / input.shw.w;
-
-	//シャドウマップのZ値を参照
-	float2 tex;
-	tex.x = ( 1.0f + input.shw.x * w ) * 0.5f;
-	tex.y = ( 1.0f - input.shw.y * w ) * 0.5f;
-	float z = g_texShadowMap.SampleLevel( g_sampWorp, tex, 0 ).x;
-
-	float color = 1.0f;
-	if( input.shw.z * w > z + 0.005f )
-	{
-		color = 0.5f;
-	}
-
-	ret = float4( (float3)color, 1.0f );
-#else
 	// シャドウマップの深度値と比較する.
 	float3 shadowCoord = input.shw.xyz / input.shw.w;
 
@@ -115,8 +99,7 @@ float4 PS( PS_INPUT input) : SV_Target
 	shadowThreshold		= ( shadowThreshold > ( shadowCoord.z - shadowBias ) ); 
 	shadowColor			= lerp( shadowColor, (float3)1.0f, shadowThreshold );
 
-	ret = float4( shadowColor, 1.0f );
-#endif
+	ret = float4( shadowColor.xy, input.pos.z / input.pos.w, 1.0f );
 	return ret;
 }
 

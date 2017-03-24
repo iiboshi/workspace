@@ -48,7 +48,9 @@ unsigned int WINAPI CHead::Load( LPVOID lpParameter )
 
 	// Param
 	pcHead->m_fParam0.x = 1.0f;
-	pcHead->m_fParam1.x = 0.42f;
+	pcHead->m_fParam0.y = 10.0f;
+	pcHead->m_fParam0.z = 0.5f;
+	pcHead->m_fParam1.x = 0.45f;
 	pcHead->m_fParam1.y = 0.028f;
 	pcHead->m_fParam1.z = 1.0f;
 

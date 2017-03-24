@@ -1,4 +1,4 @@
-/* Blur X Shader */
+/* Blur Y Shader */
 
 /*----------------------------------------------------------------------------------------------------
 	Define
@@ -8,7 +8,7 @@
 #define LIGNTNUM	2
 #define WEIGHTNUM	8
 
-#define POW 1.0f	//<! ブラー強度.
+#define POW 0.5f	//<! ブラー強度.
 
 #define WCOL0 float4( 0.233f,	0.455f,	0.649f,	1.0f )
 #define WCOL1 float4( 0.1f,		0.336f,	0.344f,	1.0f )
@@ -89,14 +89,14 @@ PS_INPUT VS( VS_INPUT _in )
 	_out.uv = _in.uv;
 
 	// 位置座標
-	_out.uv0 = _in.uv + float2( -1.0f * POW		/ g_f4TexSize.x, 0.0f );
-	_out.uv1 = _in.uv + float2( -3.0f * POW		/ g_f4TexSize.x, 0.0f );
-	_out.uv2 = _in.uv + float2( -5.0f * POW		/ g_f4TexSize.x, 0.0f );
-	_out.uv3 = _in.uv + float2( -7.0f * POW		/ g_f4TexSize.x, 0.0f );
-	_out.uv4 = _in.uv + float2( -9.0f * POW		/ g_f4TexSize.x, 0.0f );
-	_out.uv5 = _in.uv + float2( -11.0f * POW	/ g_f4TexSize.x, 0.0f );
-	_out.uv6 = _in.uv + float2( -13.0f * POW	/ g_f4TexSize.x, 0.0f );
-	_out.uv7 = _in.uv + float2( -15.0f * POW	/ g_f4TexSize.x, 0.0f );
+	_out.uv0 = _in.uv + float2( 0.0f, -1.0f * POW	/ g_f4TexSize.y );
+	_out.uv1 = _in.uv + float2( 0.0f, -3.0f * POW	/ g_f4TexSize.y );
+	_out.uv2 = _in.uv + float2( 0.0f, -5.0f * POW	/ g_f4TexSize.y );
+	_out.uv3 = _in.uv + float2( 0.0f, -7.0f * POW	/ g_f4TexSize.y );
+	_out.uv4 = _in.uv + float2( 0.0f, -9.0f * POW	/ g_f4TexSize.y );
+	_out.uv5 = _in.uv + float2( 0.0f, -11.0f * POW	/ g_f4TexSize.y );
+	_out.uv6 = _in.uv + float2( 0.0f, -13.0f * POW	/ g_f4TexSize.y );
+	_out.uv7 = _in.uv + float2( 0.0f, -15.0f * POW	/ g_f4TexSize.y );
 
 	return _out;
 }
@@ -107,18 +107,18 @@ PS_INPUT VS( VS_INPUT _in )
 
 float4 PS( PS_INPUT _in ) : SV_Target
 {
-	// Blur
-	float3 ret = (float3)0.0f;
-	int offset = 16.0f / g_f4TexSize.x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv0 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv7.x + offset, _in.uv7.y ) ).xyz ) * g_f4Weight[0].xyz;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv1 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv6.x + offset, _in.uv6.y ) ).xyz ) * g_f4Weight[1].xyz;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv2 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv5.x + offset, _in.uv5.y ) ).xyz ) * g_f4Weight[2].xyz;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv3 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv4.x + offset, _in.uv4.y ) ).xyz ) * g_f4Weight[3].xyz;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv4 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv3.x + offset, _in.uv3.y ) ).xyz ) * g_f4Weight[4].xyz;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv5 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv2.x + offset, _in.uv2.y ) ).xyz ) * g_f4Weight[5].xyz;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv6 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv1.x + offset, _in.uv1.y ) ).xyz ) * g_f4Weight[6].xyz;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv7 ).xyz + g_tex0.Sample( g_sampMirr, float2( _in.uv0.x + offset, _in.uv0.y ) ).xyz ) * g_f4Weight[7].xyz;
-	return float4( ret, 1.0f );
+	// Blur	
+	float ret = 0.0f;
+	int offset = 16.0f / g_f4TexSize.y;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv0 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv7.x, _in.uv7.y + offset ) ).x ) * g_f4Weight[0].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv1 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv6.x, _in.uv6.y + offset ) ).x ) * g_f4Weight[1].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv2 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv5.x, _in.uv5.y + offset ) ).x ) * g_f4Weight[2].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv3 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv4.x, _in.uv4.y + offset ) ).x ) * g_f4Weight[3].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv4 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv3.x, _in.uv3.y + offset ) ).x ) * g_f4Weight[4].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv5 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv2.x, _in.uv2.y + offset ) ).x ) * g_f4Weight[5].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv6 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv1.x, _in.uv1.y + offset ) ).x ) * g_f4Weight[6].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv7 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv0.x, _in.uv0.y + offset ) ).x ) * g_f4Weight[7].x;
+	return float4( (float3)ret, 1.0f );
 }
 
 /*----------------------------------------------------------------------------------------------------

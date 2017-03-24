@@ -31,7 +31,7 @@ cbuffer cbViewProjection : register( b0 )
 cbuffer cbGBuffer : register( b1 )
 {
 	matrix	g_mWorld;
-	float4	g_f4Param0;	//!< x:Normal補正 y:Microgeometry回数, y:Microgeometry強度 .
+	float4	g_f4Param0;	//!< x:Normal補正 y:Microgeometry回数 z:Microgeometry強度.
 	float4	g_f4Param1;	//!< x:Roughness y:Fresnel z:SSS.
 };
 
@@ -102,12 +102,12 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	PS_OUTPUT output;
 
 	// microgeometry.
+	float fIntensity = 0.5f;
 	#if defined( MICROGEOMETRY )
-	float fMicroPow = 0.5f;
-	float fMicroLoop = 12.0f;
-	float4 f4Micro = g_texMicro.Sample( ColorSmpWorp, input.Tex * (float2)fMicroLoop );
-	float3 f3MicroNrm = f4Micro.xyz;
-	f3MicroNrm.xy = f3MicroNrm.xy * (float2)2.0f - (float2)1.0f;
+	float4 f4Micro = g_texMicro.Sample( ColorSmpWorp, input.Tex * (float2)g_f4Param0.y );
+	f4Micro.xy = f4Micro.xy * (float2)2.0f - (float2)1.0f;
+	f4Micro.x *= -1;
+	fIntensity = f4Micro.w;
 	#endif
 
 	// 法線計算.
@@ -117,7 +117,7 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	tnrm.xy	*= float2( g_f4Param0.x, -1.0f );
 	tnrm.z	= 1.0f;
 	#if defined( MICROGEOMETRY )
-	tnrm.xy = lerp( tnrm.xy, tnrm.xy + f3MicroNrm.xy, fMicroPow );
+	tnrm.xy = lerp( tnrm.xy, tnrm.xy + f4Micro.xy, g_f4Param0.z );
 	tnrm	= normalize( tnrm );
 	#endif
 	float3 f3Nrm = normalize( input.Nrm );
@@ -133,16 +133,10 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	float depth = input.Pos.z / input.Pos.w;
 
 	// 情報を送る.
-	float3 f3Param = g_f4Param1.xyz;
-	#if defined( MICROGEOMETRY )
-	float fMicroRoughPow = 0.5f;
-	float fMicroRough = min( 1.0f, f3Param.x * ( 1.0f - f4Micro.w ) * 2.0f );
-	f3Param.x = lerp( f3Param.x, fMicroRough, fMicroRoughPow );
-	#endif
 	output.out0 = float4( albedo, 1.0f );
 	output.out1 = float4( tnrm, 1.0f );
-	output.out2 = float4( depth, 1.0f, 0.0f, 1.0f );
-	output.out3 = float4( f3Param.xyz, 1.0f );
+	output.out2 = float4( depth, fIntensity, 1.0f, 1.0f );
+	output.out3 = float4( g_f4Param1.xyz, 1.0f );
 
 	return output;
 }

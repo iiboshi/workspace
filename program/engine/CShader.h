@@ -15,6 +15,7 @@ public:
 	{
 		enState_Wrap,
 		enState_Mirror,
+		enState_Clamp,
 		enState_Max,
 	};
 	enum EnRT

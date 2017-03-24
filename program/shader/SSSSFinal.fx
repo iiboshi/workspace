@@ -23,8 +23,9 @@ Texture2D	g_tex6 : register( t6 );	//!< None.
 Texture2D	g_tex7 : register( t7 );	//!< None.
 
 // Sampler
-SamplerState g_sampWorp : register( s0 );
-SamplerState g_sampMirr : register( s1 );
+SamplerState g_sampWorp		: register( s0 );
+SamplerState g_sampMirr		: register( s1 );
+SamplerState g_sampClamp	: register( s2 );
 
 // Cbuffer
 cbuffer cbViewProjection : register( b0 )

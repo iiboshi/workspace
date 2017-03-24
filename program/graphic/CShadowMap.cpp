@@ -51,6 +51,9 @@ CShadowMap::~CShadowMap()
 HRESULT CShadowMap::Init()
 {
 	HRESULT hr = S_OK;
+
+	CShadowCamera::Instance()->Init();
+
 	CDevice* pcDevice = CDevice::Instance();
 
 	// Shadow Map.
@@ -73,8 +76,8 @@ HRESULT CShadowMap::Init()
 
 	// Blur X.
 	{
-		CShader::Instance()->CreateVertexShader( "shwblurx", L"../shader/BlurX.fx" );
-		CShader::Instance()->CreatePixelShader( "shwblurx", L"../shader/BlurX.fx" );
+		CShader::Instance()->CreateVertexShader( "shwblurx", L"../shader/ShadowBlurX.fx" );
+		CShader::Instance()->CreatePixelShader( "shwblurx", L"../shader/ShadowBlurX.fx" );
 		m_pVertexShader[enShadow_BlurX]	= CShader::Instance()->GetVertexShader( "shwblurx" );
 		m_pPixelShader[enShadow_BlurX]	= CShader::Instance()->GetPixelShader( "shwblurx" );
 		m_pInputLayout[enShadow_BlurX]	= CShader::Instance()->GetInputLayout( "shwblurx" );
@@ -82,8 +85,8 @@ HRESULT CShadowMap::Init()
 
 	// Blur Y.
 	{
-		CShader::Instance()->CreateVertexShader( "shwblury", L"../shader/BlurY.fx" );
-		CShader::Instance()->CreatePixelShader( "shwblury", L"../shader/BlurY.fx" );
+		CShader::Instance()->CreateVertexShader( "shwblury", L"../shader/ShadowBlurY.fx" );
+		CShader::Instance()->CreatePixelShader( "shwblury", L"../shader/ShadowBlurY.fx" );
 		m_pVertexShader[enShadow_BlurY]	= CShader::Instance()->GetVertexShader( "shwblury" );
 		m_pPixelShader[enShadow_BlurY]	= CShader::Instance()->GetPixelShader( "shwblury" );
 		m_pInputLayout[enShadow_BlurY]	= CShader::Instance()->GetInputLayout( "shwblury" );
@@ -203,10 +206,12 @@ void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 {
 	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+	CShadowCamera::Instance()->Change();
+
 	// ShadowMap.
 	{
-		m_stUpdateBuffer.m_mView = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_stShwCam[0].m_mView );
-		m_stUpdateBuffer.m_mProjection = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_stShwCam[0].m_mProjection );
+		m_stUpdateBuffer.m_mView = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_stShwCam.m_mView );
+		m_stUpdateBuffer.m_mProjection = DirectX::XMMatrixTranspose( CShadowCamera::Instance()->m_stShwCam.m_mProjection );
 		#if defined( SHADOWMAPTEST )
 		_pContext->OMSetRenderTargets( 1, &CDevice::Instance()->m_pRenderTargetView, CDevice::Instance()->m_pDepthStencilView );
 		_pContext->ClearRenderTargetView( CDevice::Instance()->m_pRenderTargetView, ClearColor );
@@ -274,7 +279,7 @@ void CShadowMap::Render( ID3D11DeviceContext* _pContext )
 			_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_ShadowMap] );
 		}
 		m_stUpdateLightBuffer.m_mShadow = DirectX::XMMatrixTranspose( 
-			CShadowCamera::Instance()->m_stShwCam[0].m_mView * CShadowCamera::Instance()->m_stShwCam[0].m_mProjection * g_mBias );
+			CShadowCamera::Instance()->m_stShwCam.m_mView * CShadowCamera::Instance()->m_stShwCam.m_mProjection * g_mBias );
 
 		_pContext->UpdateSubresource( m_pCbUpdateLightBuffer, 0, NULL, &m_stUpdateLightBuffer, 0, 0 );
 		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateLightBuffer );

@@ -25,8 +25,9 @@ Texture2D	g_tex6 : register( t6 );	//!< None.
 Texture2D	g_tex7 : register( t7 );	//!< None.
 
 // Sampler
-SamplerState g_sampWorp : register( s0 );
-SamplerState g_sampMirr : register( s1 );
+SamplerState g_sampWorp		: register( s0 );
+SamplerState g_sampMirr		: register( s1 );
+SamplerState g_sampClamp	: register( s2 );
 
 // Cbuffer
 cbuffer cbViewProjection : register( b0 )
@@ -113,7 +114,8 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float3 albedo	= in0.xyz;
 	float3 normal	= in1.xyz;
 	float depth		= in2.x;
-	float draw		= in2.y;
+	float intensity	= in2.y;
+	float draw		= in2.z;
 	float rough		= in3.x;
 	float fresnel	= in3.y;
 	float sss		= in3.z;
@@ -128,6 +130,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	// Specular
 	float3 spec = (float3)CalcSpecular( normal, rough, fresnel ) * shw;
 	spec = lerp( 0.0f, spec, trunc( draw ) );	//!< アンチエリアス自の淵の白いライン制御.
+	spec *= ( intensity * 2.0f );
 
 	// 情報を送る.
 	output.out0 = float4( ret.xyz, 1.0f );
