@@ -20,7 +20,7 @@ Texture2D	g_tex1 : register( t1 );	//!< Normal.
 Texture2D	g_tex2 : register( t2 );	//!< Depth.
 Texture2D	g_tex3 : register( t3 );	//!< Param.
 Texture2D	g_tex4 : register( t4 );	//!< Shadow.
-Texture2D	g_tex5 : register( t5 );	//!< None.
+Texture2D	g_tex5 : register( t5 );	//!< AO.
 Texture2D	g_tex6 : register( t6 );	//!< None.
 Texture2D	g_tex7 : register( t7 );	//!< None.
 
@@ -111,6 +111,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float4 in2 = g_tex2.Sample( g_sampWorp, _in.uv );
 	float4 in3 = g_tex3.Sample( g_sampWorp, _in.uv );
 	float4 in4 = g_tex4.Sample( g_sampWorp, _in.uv );
+	float4 in5 = g_tex5.Sample( g_sampWorp, _in.uv );
 	float3 albedo	= in0.xyz;
 	float3 normal	= in1.xyz;
 	float depth		= in2.x;
@@ -120,12 +121,20 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float fresnel	= in3.y;
 	float sss		= in3.z;
 	float shw		= in4.x;
+	float ao		= in5.x;
 
 	// Normal
 	normal = ( normal * (float3)2.0f ) - (float3)1.0f;
 
 	// Lambert
-	ret.xyz = CalcDiffuse( normal ) * shw * albedo;
+	ret.xyz = CalcDiffuse( normal ) * shw;
+
+	// AO.
+	float an = 0.2f;
+	ret.xyz += an * (float3)ao;
+
+	// Albedo.
+	ret.xyz *= albedo;
 
 	// Specular
 	float3 spec = (float3)CalcSpecular( normal, rough, fresnel ) * shw;

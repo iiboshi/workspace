@@ -97,4 +97,10 @@ unsigned int WINAPI CPreRenderThread::RenderFunction( LPVOID lpParameter )
 void CPreRenderThread::AddRenderThread( CPreRender* _obj )
 {
 	m_listRendrThread.push_back( _obj );
+	
+	// è„å¿ämîF.
+	if( m_listRendrThread.capacity() == enMode_Max )
+	{
+		_ASSERT( 0 );
+	}
 }

@@ -34,16 +34,22 @@ public:
 		enRT_SSParam,
 		enRT_SSEnd,
 		enRT_SSNum			= 4,
-		enRT_ShadowStart	= 8,	//!< Shadow
+		enRT_ShadowStart	= 8,	//!< Shadow.
 		enRT_ShadowMap		= 8,
 		enRT_Shadow,
 		enRT_ShadowEnd,
 		enRT_ShadowNum		= 2,
-		enRT_Max			= 10,
+		enRT_AOStart		= 10,	//!< AO.
+		enRT_AOMap			= 10,
+		enRT_AO,
+		enRT_AOEnd,
+		enRT_AONum			= 2,
+		enRT_Max			= 12,
 	};
 	enum EnWorkRT
 	{
 		enWorkRT0		= 0,
+		enWorkRT1,
 		enWorkRTmax,
 	};
 	struct StVertexShader

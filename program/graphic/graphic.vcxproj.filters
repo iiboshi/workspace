@@ -7,9 +7,10 @@
     <ClCompile Include="CGBuffer.cpp" />
     <ClCompile Include="CGround.cpp" />
     <ClCompile Include="CHead.cpp" />
-    <ClCompile Include="CShadowMap.cpp" />
     <ClCompile Include="CSSSS.cpp" />
     <ClCompile Include="CModelManager.cpp" />
+    <ClCompile Include="CSSAO.cpp" />
+    <ClCompile Include="CShadow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBlur.h" />
@@ -18,9 +19,10 @@
     <ClInclude Include="CGBuffer.h" />
     <ClInclude Include="CGround.h" />
     <ClInclude Include="CHead.h" />
-    <ClInclude Include="CShadowMap.h" />
     <ClInclude Include="CSSSS.h" />
     <ClInclude Include="CModelManager.h" />
+    <ClInclude Include="CSSAO.h" />
+    <ClInclude Include="CShadow.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="shader">
@@ -52,13 +54,16 @@
     <FxCompile Include="..\shader\Shadow.fx">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="..\shader\ShadowMap.fx">
+    <FxCompile Include="..\shader\AO.fx">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="..\shader\ShadowBlurX.fx">
+    <FxCompile Include="..\shader\CommonBlurX.fx">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="..\shader\ShadowBlurY.fx">
+    <FxCompile Include="..\shader\CommonBlurY.fx">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shader\DepthMap.fx">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

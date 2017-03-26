@@ -14,7 +14,7 @@ I_SINGLETON( CPreRenderThread )
 public:
 	enum EnMode
 	{
-		enMode_Max = 3,
+		enMode_Max = 4,
 	};
 	CPreRenderThread();
 	~CPreRenderThread();

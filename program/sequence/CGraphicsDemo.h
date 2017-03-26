@@ -6,7 +6,8 @@
 #include "object\CSequence.h"
 
 class CGBuffer;
-class CShadowMap;
+class CShadow;
+class CSSAO;
 class CDeferred;
 class CSSSS;
 class CBlur;
@@ -18,7 +19,8 @@ public:
 	~CGraphicsDemo();
 private:
 	CGBuffer*	m_pcGBuffer;
-	CShadowMap*	m_pcShadowMap;
+	CShadow*	m_pCShadow;
+	CSSAO*		m_pcSSAO;
 	CDeferred*	m_pcDeferred;
 	CSSSS*		m_pcSSSS;
 	CBlur*		m_pcBlur;

@@ -160,14 +160,20 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 			CShader::Instance()->m_stRenderTarget.m_pResolveTexture[CShader::enRT_Shadow], 0, 
 			CShader::Instance()->m_stRenderTarget.m_pTexture[CShader::enRT_Shadow], 0, 
 			CShader::Instance()->m_stRenderTarget.m_resolveFormat );
+		_pContext->ResolveSubresource( 
+			CShader::Instance()->m_stRenderTarget.m_pResolveTexture[CShader::enRT_AO], 0, 
+			CShader::Instance()->m_stRenderTarget.m_pTexture[CShader::enRT_AO], 0, 
+			CShader::Instance()->m_stRenderTarget.m_resolveFormat );
 		_pContext->PSSetShaderResources( 0, CShader::enRT_GBNum, &CShader::Instance()->m_stRenderTarget.m_pRenderTextureSRV[CShader::enRT_GBStart] );
 		_pContext->PSSetShaderResources( CShader::enRT_GBNum, 1, &CShader::Instance()->m_stRenderTarget.m_pRenderTextureSRV[CShader::enRT_Shadow] );
+		_pContext->PSSetShaderResources( CShader::enRT_GBNum + 1, 1, &CShader::Instance()->m_stRenderTarget.m_pRenderTextureSRV[CShader::enRT_AO] );
 	}
 	else
 	#endif
 	{
 		_pContext->PSSetShaderResources( 0, CShader::enRT_GBNum, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_GBStart] );
 		_pContext->PSSetShaderResources( CShader::enRT_GBNum, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_Shadow] );
+		_pContext->PSSetShaderResources( CShader::enRT_GBNum + 1, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_AO] );
 	}
 
 	// サンプラーステートの設定

@@ -47,12 +47,12 @@ unsigned int WINAPI CHead::Load( LPVOID lpParameter )
 	pcHead->m_mWorldMatrix._43 += 1.0f;
 
 	// Param
-	pcHead->m_fParam0.x = 1.0f;
-	pcHead->m_fParam0.y = 10.0f;
-	pcHead->m_fParam0.z = 0.5f;
-	pcHead->m_fParam1.x = 0.45f;
-	pcHead->m_fParam1.y = 0.028f;
-	pcHead->m_fParam1.z = 1.0f;
+	pcHead->m_fParam0.x = 1.0f;		//<! x:Normal X 補正.
+	pcHead->m_fParam0.y = 12.0f;	//<! Detail 回数.
+	pcHead->m_fParam0.z = 0.6f;		//<! Detail 強度.
+	pcHead->m_fParam1.x = 0.45f;	//<! Roughness.
+	pcHead->m_fParam1.y = 0.028f;	//<! Fresnel.
+	pcHead->m_fParam1.z = 1.0f;		//<! SSS.
 
 	// バッファーデスク
 	D3D11_BUFFER_DESC		bd;

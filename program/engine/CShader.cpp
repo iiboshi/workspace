@@ -219,6 +219,33 @@ HRESULT CShader::CreateRenderTarget()
 			"ID3D11Device::CreateShaderResourceView() Failed." );
 	}
 
+	for( int ii = enRT_AOStart; ii < enRT_AOEnd; ii++ )
+	{
+		D3D11_TEXTURE2D_DESC shwDesc = texDesc;
+
+		shwDesc.SampleDesc		= pcDevice->m_sampleDesc;
+		rtvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
+		srvDesc.ViewDimension	= ( pcDevice->m_sampleDesc.Count > 1 )? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
+
+		// 2次元テクスチャの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateTexture2D( 
+			&shwDesc, NULL, 
+			&m_stRenderTarget.m_pTexture[ii] ),
+			"Error : ID3D11Device::CreateTexture2D() Failed." );
+
+		// レンダーターゲットビューの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateRenderTargetView( 
+			m_stRenderTarget.m_pTexture[ii], &rtvDesc, 
+			&m_stRenderTarget.m_pRenderTargetView[ii] ),
+			"ID3D11Device::CreateRenderTargetView() Failed." );
+	
+		// シェーダリソースビューの生成
+		I_RETURN_M( pcDevice->m_pd3dDevice->CreateShaderResourceView( 
+			m_stRenderTarget.m_pTexture[ii], &srvDesc,
+			&m_stRenderTarget.m_pShaderResourceView[ii] ),
+			"ID3D11Device::CreateShaderResourceView() Failed." );
+	}
+
 	for( int ii = 0; ii < enWorkRTmax; ii++ )
 	{
 		texDesc.SampleDesc.Count	= 1;
@@ -306,6 +333,12 @@ HRESULT CShader::CompileShaderFromFile(
 
 HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 {
+	// 同名確認.
+	for( auto obj = m_listVertexShader.begin(); obj != m_listVertexShader.end(); obj++ )
+	{
+		_ASSERT( strcmp( (*obj)->name.data(), _filename ) );
+	}
+
 	HRESULT hr;
 	CDevice* pcDevice = CDevice::Instance();
 
@@ -456,6 +489,12 @@ HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 
 HRESULT CShader::CreatePixelShader( char* _filename, LPCWSTR _filePath )
 {
+	// 同名確認.
+	for( auto obj = m_listPixelShader.begin(); obj != m_listPixelShader.end(); obj++ )
+	{
+		_ASSERT( strcmp( (*obj)->name.data(), _filename ) );
+	}
+
 	HRESULT hr;
 	CDevice* pcDevice = CDevice::Instance();
 
