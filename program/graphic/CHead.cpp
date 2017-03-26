@@ -50,7 +50,7 @@ unsigned int WINAPI CHead::Load( LPVOID lpParameter )
 	pcHead->m_fParam0.x = 1.0f;		//<! x:Normal X •â³.
 	pcHead->m_fParam0.y = 12.0f;	//<! Detail ‰ñ”.
 	pcHead->m_fParam0.z = 0.6f;		//<! Detail ‹­“x.
-	pcHead->m_fParam1.x = 0.45f;	//<! Roughness.
+	pcHead->m_fParam1.x = 0.42f;	//<! Roughness.
 	pcHead->m_fParam1.y = 0.028f;	//<! Fresnel.
 	pcHead->m_fParam1.z = 1.0f;		//<! SSS.
 

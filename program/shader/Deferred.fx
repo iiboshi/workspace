@@ -130,7 +130,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	ret.xyz = CalcDiffuse( normal ) * shw;
 
 	// AO.
-	float an = 0.2f;
+	float an = 0.15f;
 	ret.xyz += an * (float3)ao;
 
 	// Albedo.

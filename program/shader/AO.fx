@@ -56,6 +56,14 @@ struct PS_INPUT
 	Front Function
 ----------------------------------------------------------------------------------------------------*/
 
+float3 randomNormal(float2 tex) 
+{ 
+	float noiseX = (frac(sin(dot(tex, float2(15.8989f, 76.132f)*1.0f))*46336.23745f)); 
+	float noiseY = (frac(sin(dot(tex, float2(11.9899f, 62.223f)*2.0f))*34748.34744f)); 
+	float noiseZ = (frac(sin(dot(tex, float2(13.3238f, 63.122f)*3.0f))*59998.47362f)); 
+	return normalize(float3(noiseX, noiseY, noiseZ)); 
+}
+
 /*----------------------------------------------------------------------------------------------------
 	Vertex Shader
 ----------------------------------------------------------------------------------------------------*/
@@ -75,14 +83,6 @@ PS_INPUT VS( VS_INPUT input )
 /*----------------------------------------------------------------------------------------------------
 	Pixel Shader Function
 ----------------------------------------------------------------------------------------------------*/
-
-float3 randomNormal(float2 tex) 
-{ 
-	float noiseX = (frac(sin(dot(tex, float2(15.8989f, 76.132f)*1.0f))*46336.23745f)); 
-	float noiseY = (frac(sin(dot(tex, float2(11.9899f, 62.223f)*2.0f))*34748.34744f)); 
-	float noiseZ = (frac(sin(dot(tex, float2(13.3238f, 63.122f)*3.0f))*59998.47362f)); 
-	return normalize(float3(noiseX, noiseY, noiseZ)); 
-}
 
 float4 PS( PS_INPUT input) : SV_Target
 {
