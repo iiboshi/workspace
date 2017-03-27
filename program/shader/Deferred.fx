@@ -130,7 +130,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	// Lambert
 	float3 diff = CalcDiffuse( normal ) * (float3)shw;
 
-	// AO.
+	// AO Color Bleeding.
 	diff += g_f4AO.w * lerp( ao, pow( ao, 1.0 - g_f4AO.xyz ), sss );
 
 	// Albedo.
