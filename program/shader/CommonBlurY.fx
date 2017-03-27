@@ -42,10 +42,6 @@ cbuffer cbViewProjection : register( b0 )
 // Deferred
 cbuffer cbDeferred : register( b1 )
 {
-	float4	g_f4ViewVec;
-	float4	g_f4MainCol;
-	float4	g_f4LightVec[LIGNTNUM];
-	float4	g_f4LightCol[LIGNTNUM];
 	float4	g_f4Weight[WEIGHTNUM];
 };
 

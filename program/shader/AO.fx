@@ -92,11 +92,11 @@ float4 PS( PS_INPUT input) : SV_Target
 	// SSAOサンプル数。 0～16、これはsampleSphereには16個の要素しかないため.
 	const unsigned int samples = 16; 
 	
-	const float samplerRadius	= 0.02f;	// SSAO半径				0.00005f
-	const float strength		= 2.0f;		// ステップ当たりの強さ	1.0f
-	const float totalStrength	= 4.0f;		// 総強度				3.0f
+	const float samplerRadius	= 0.03f;	// SSAO半径				0.00005f
+	const float strength		= 3.0f;		// ステップ当たりの強さ	1.0f
+	const float totalStrength	= 9.0f;		// 総強度				3.0f
 	const float falloffMin		= 0.0f;		// 深さ減衰量の最小値	0.00001f
-	const float falloffMax		= 0.1f;		// 深さ減衰量の最大値	0.006f
+	const float falloffMax		= 0.2f;		// 深さ減衰量の最大値	0.006f
 	const float3 sampleSphere[] = { 
 		float3( 0.2024537f, 0.841204f, -0.9060141f), 
 		float3(-0.2200423f, 0.6282339f,-0.8275437f), 

@@ -45,22 +45,11 @@ private:
 			m_mAO = DirectX::XMMatrixIdentity();
 		}
 	};
-	struct StUpdateAOBuffer
+	struct StUpdateBlurBuffer
 	{
-		DirectX::XMFLOAT4 m_f4ViewVec;
-		DirectX::XMFLOAT4 m_f4MainCol;
-		DirectX::XMFLOAT4 m_f4LightVec[CLight::enLightNum];
-		DirectX::XMFLOAT4 m_f4LightCol[CLight::enLightNum];
 		DirectX::XMFLOAT4 m_f4Weight[enWeight];
-		StUpdateAOBuffer()
+		StUpdateBlurBuffer()
 		{
-			m_f4ViewVec = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-			m_f4MainCol = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-			for( int ii = 0; ii < CLight::enLightNum; ii++ )
-			{
-				m_f4LightVec[ii] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-				m_f4LightCol[ii] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-			}
 			for( int ii = 0; ii < enWeight; ii++ )
 			{
 				m_f4Weight[ii] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -76,13 +65,13 @@ public:
 private:
 	StUpdateBuffer			m_stUpdateBuffer;
 	StUpdateLightBuffer		m_stUpdateLightBuffer;
-	StUpdateAOBuffer		m_stUpdateAOBuffer;
+	StUpdateBlurBuffer		m_stUpdateBlurBuffer;
 	ID3D11VertexShader*		m_pVertexShader[enAO_Max];
 	ID3D11PixelShader*		m_pPixelShader[enAO_Max];
 	ID3D11InputLayout*		m_pInputLayout[enAO_Max];
 	ID3D11Buffer*			m_pCbUpdateBuffer;
 	ID3D11Buffer*			m_pCbUpdateLightBuffer;
-	ID3D11Buffer*			m_pCbUpdateAOBuffer;
+	ID3D11Buffer*			m_pCbUpdateBlurBuffer;
 	ID3D11SamplerState*		m_pSamplerState;
 	ID3D11Buffer*			m_pQuadVB;
 	UINT					m_uQuadStride;

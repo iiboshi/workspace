@@ -45,6 +45,7 @@ cbuffer cbDeferred : register( b1 )
 	float4	g_f4MainCol;
 	float4	g_f4LightVec[LIGNTNUM];
 	float4	g_f4LightCol[LIGNTNUM];
+	float4	g_f4AO;
 	float4	g_f4Weight[WEIGHTNUM];
 };
 
@@ -121,23 +122,22 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float fresnel	= in3.y;
 	float sss		= in3.z;
 	float shw		= in4.x;
-	float ao		= in5.x;
+	float3 ao		= in5.xyz;
 
 	// Normal
 	normal = ( normal * (float3)2.0f ) - (float3)1.0f;
 
 	// Lambert
-	ret.xyz = CalcDiffuse( normal ) * shw;
+	float3 diff = CalcDiffuse( normal ) * (float3)shw;
 
 	// AO.
-	float an = 0.15f;
-	ret.xyz += an * (float3)ao;
+	diff += g_f4AO.w * lerp( ao, pow( ao, 1.0 - g_f4AO.xyz ), sss );
 
 	// Albedo.
-	ret.xyz *= albedo;
+	ret.xyz = diff * albedo;
 
 	// Specular
-	float3 spec = (float3)CalcSpecular( normal, rough, fresnel ) * shw;
+	float3 spec = (float3)CalcSpecular( normal, rough, fresnel ) * (float3)shw;
 	spec = lerp( 0.0f, spec, trunc( draw ) );	//!< アンチエリアス自の淵の白いライン制御.
 	spec *= ( intensity * 2.0f );
 

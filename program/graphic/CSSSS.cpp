@@ -6,9 +6,10 @@
 #include "engine\CDevice.h"
 
 CSSSS::CSSSS()
-	: m_pQuadVB			( nullptr )
-	, m_uQuadStride		( 0 )
-	, m_uOffset			( 0 )
+	: m_pQuadVB				( nullptr )
+	, m_pCbUpdateBlurBuffer	( nullptr )
+	, m_uQuadStride			( 0 )
+	, m_uOffset				( 0 )
 {
 	for( int ii = 0; ii < enShader_Max; ii++ )
 	{
@@ -22,6 +23,7 @@ CSSSS::CSSSS()
 CSSSS::~CSSSS()
 {
 	I_RELEASE( m_pQuadVB );
+	I_RELEASE( m_pCbUpdateBlurBuffer );
 }
 
 HRESULT CSSSS::Init()
@@ -87,21 +89,52 @@ HRESULT CSSSS::Init()
 	m_pPixelShader[enShader_SSSS]	= CShader::Instance()->GetPixelShader( "ssss" );
 	m_pInputLayout[enShader_SSSS]	= CShader::Instance()->GetInputLayout( "ssss" );
 
+	// Buffer.
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory( &bd, sizeof(bd) );
+	bd.Usage			= D3D11_USAGE_DEFAULT;
+	bd.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
+	bd.CPUAccessFlags	= 0;
 
-	// Light
-	m_f4MainCol = DirectX::XMFLOAT4( 4.0f, 4.0f, 4.0f, 1.0f );
-	m_f4LightVec[0] = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-	m_f4LightVec[1] = DirectX::XMFLOAT4( -1.0f, 1.0f, -1.0f, 1.0f );
-	m_f4LightCol[0] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4LightCol[1] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	bd.ByteWidth		= sizeof( StUpdateBlurBuffer );
+	I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pCbUpdateBlurBuffer ) );
 
 	return hr;
+}
+
+void CSSSS::CalGaussWeight( float num )
+{
+	float total	= 0.0f;
+	
+	for( int i = 0; i < enWeight; i++ )
+	{
+		m_fTable[i]	= pow( 3.14f, -i / ( num + GAUSS_WEIGHT ) );
+		total		+= m_fTable[i] * 2.0f;
+	}
+	
+	// 規格化
+	for( int i = 0; i < enWeight; i++ )
+	{
+		m_fTable[i]	/= total;
+	}
 }
 
 void CSSSS::Render( ID3D11DeviceContext* _pContext )
 {
 	CCamera::Instance()->Update( _pContext );
 
+	// Blur 共通.
+	{
+		CCamera::Instance()->Update( _pContext );
+
+		// ガウス defo 5
+		CalGaussWeight( 5 );
+		for( int ii = 0; ii < enWeight; ii++ )
+		{
+			m_stUpdateBlurBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
+		}
+		_pContext->UpdateSubresource( m_pCbUpdateBlurBuffer, 0, NULL, &m_stUpdateBlurBuffer, 0, 0 );
+	}
 
 	// Blur X
 	{
@@ -111,6 +144,9 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// シェーダを設定
 		_pContext->VSSetShader( m_pVertexShader[enShader_BlurX], NULL, 0 );
 		_pContext->PSSetShader( m_pPixelShader[enShader_BlurX], NULL, 0 );
+		// Buffer.
+		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
+		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
 		// レンダリングテクスチャを設定
 		_pContext->PSSetShaderResources( 0, CShader::enRT_SSNum, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_SSStart] );
 		// サンプラーステートの設定
@@ -136,6 +172,9 @@ void CSSSS::Render( ID3D11DeviceContext* _pContext )
 		// シェーダを設定
 		_pContext->VSSetShader( m_pVertexShader[enShader_BlurY], NULL, 0 );
 		_pContext->PSSetShader( m_pPixelShader[enShader_BlurY], NULL, 0 );
+		// Buffer.
+		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
+		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
 		// レンダリングテクスチャを設定
 		_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_pWorkShaderResourceView[CShader::enWorkRT0] );
 		_pContext->PSSetShaderResources( 1, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_SSColor] );

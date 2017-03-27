@@ -45,7 +45,7 @@ HRESULT CDeferred::Init()
 	// 頂点データの設定
 	QuadVertex vertices[] =
 	{
-		{ DirectX::XMFLOAT3( 1.0f, 1.0f, 0.0f ),		DirectX::XMFLOAT2( 1.0f, 0.0f ) },
+		{ DirectX::XMFLOAT3( 1.0f, 1.0f, 0.0f ),	DirectX::XMFLOAT2( 1.0f, 0.0f ) },
 		{ DirectX::XMFLOAT3( 1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 1.0f, 1.0f ) },
 		{ DirectX::XMFLOAT3( -1.0f, -1.0f, 0.0f ),	DirectX::XMFLOAT2( 0.0f, 1.0f ) },
 
@@ -129,6 +129,7 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 		m_stUpdateBuffer.m_f4LightVec[ii] = CLight::Instance()->m_f4LightVec[ii];
 		m_stUpdateBuffer.m_f4LightCol[ii] = CLight::Instance()->m_f4LightCol[ii];
 	}
+	m_stUpdateBuffer.m_f4AO = CLight::Instance()->m_f4AO;
 
 	// 自前のレンダーターゲットビューに切り替え
 	_pContext->OMSetRenderTargets( 

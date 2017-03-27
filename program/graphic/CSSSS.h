@@ -11,12 +11,24 @@
 
 class CSSSS : public CRender
 {
-public:
+private:
 	enum
 	{
 		enLightNum	= 2,
-		enWeight	= 8,
+		enWeight = 8,
 	};
+	struct StUpdateBlurBuffer
+	{
+		DirectX::XMFLOAT4 m_f4Weight[enWeight];
+		StUpdateBlurBuffer()
+		{
+			for( int ii = 0; ii < enWeight; ii++ )
+			{
+				m_f4Weight[ii] = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+			}
+		}
+	};
+public:
 	enum EnShader
 	{
 		enShader_BlurX,
@@ -27,17 +39,18 @@ public:
 	CSSSS();
 	~CSSSS();
 	HRESULT Init();
+	void CalGaussWeight( float num );
 	void Render( ID3D11DeviceContext* _pContext );
 private:
 	ID3D11Buffer*		m_pQuadVB;
+	ID3D11Buffer*		m_pCbUpdateBlurBuffer;
 	UINT				m_uQuadStride;
 	UINT				m_uOffset;
 	ID3D11VertexShader*	m_pVertexShader[enShader_Max];
 	ID3D11PixelShader*	m_pPixelShader[enShader_Max];
 	ID3D11InputLayout*	m_pInputLayout[enShader_Max];
-	DirectX::XMFLOAT4	m_f4MainCol;
-	DirectX::XMFLOAT4	m_f4LightVec[enLightNum];
-	DirectX::XMFLOAT4	m_f4LightCol[enLightNum];
+	StUpdateBlurBuffer	m_stUpdateBlurBuffer;
+	float				m_fTable[enWeight];
 };
 
 #endif

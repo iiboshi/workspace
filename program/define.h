@@ -137,7 +137,7 @@ public:								\
 #define WINDOWCLASSNAME	"WindowClass"
 #define WINDOWNAME		"GraphicsDemo"
 #define WIDTH			1280
-#define HEIGHT			920
+#define HEIGHT			800
 #define STRNUM			128
 
 namespace NDefine

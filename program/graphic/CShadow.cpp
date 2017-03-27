@@ -20,7 +20,7 @@ namespace
 CShadow::CShadow()
 	: m_pCbUpdateBuffer			( nullptr )
 	, m_pCbUpdateLightBuffer	( nullptr )
-	, m_pCbUpdateShadowBuffer	( nullptr )
+	, m_pCbUpdateBlurBuffer		( nullptr )
 	, m_pSamplerState			( nullptr )
 	, m_pQuadVB					( nullptr )
 	, m_uQuadStride				( 0 )
@@ -43,7 +43,7 @@ CShadow::~CShadow()
 {
 	I_RELEASE( m_pCbUpdateBuffer );
 	I_RELEASE( m_pCbUpdateLightBuffer );
-	I_RELEASE( m_pCbUpdateShadowBuffer );
+	I_RELEASE( m_pCbUpdateBlurBuffer );
 	I_RELEASE( m_pSamplerState );
 	I_RELEASE( m_pQuadVB );
 }
@@ -135,8 +135,8 @@ HRESULT CShadow::Init()
 		bd.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
 		bd.CPUAccessFlags	= 0;
 
-		bd.ByteWidth		= sizeof( StUpdateShadowBuffer );
-		I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pCbUpdateShadowBuffer ) );
+		bd.ByteWidth		= sizeof( StUpdateBlurBuffer );
+		I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pCbUpdateBlurBuffer ) );
 	}
 
 	// Buffer
@@ -309,9 +309,9 @@ void CShadow::Render( ID3D11DeviceContext* _pContext )
 		CalGaussWeight( 5 );
 		for( int ii = 0; ii < enWeight; ii++ )
 		{
-			m_stUpdateShadowBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
+			m_stUpdateBlurBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
 		}
-		_pContext->UpdateSubresource( m_pCbUpdateShadowBuffer, 0, NULL, &m_stUpdateShadowBuffer, 0, 0 );
+		_pContext->UpdateSubresource( m_pCbUpdateBlurBuffer, 0, NULL, &m_stUpdateBlurBuffer, 0, 0 );
 	}
 
 	// Blur X
@@ -323,8 +323,8 @@ void CShadow::Render( ID3D11DeviceContext* _pContext )
 		_pContext->VSSetShader( m_pVertexShader[enShadow_BlurX], NULL, 0 );
 		_pContext->PSSetShader( m_pPixelShader[enShadow_BlurX], NULL, 0 );
 		// Buffer.
-		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
-		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
+		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
+		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
 		// レンダリングテクスチャを設定
 		#if defined( USE_MSAA )
 		if( CDevice::Instance()->m_sampleDesc.Count > 1 )
@@ -370,8 +370,8 @@ void CShadow::Render( ID3D11DeviceContext* _pContext )
 		_pContext->VSSetShader( m_pVertexShader[enShadow_BlurY], NULL, 0 );
 		_pContext->PSSetShader( m_pPixelShader[enShadow_BlurY], NULL, 0 );
 		// Buffer.
-		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
-		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateShadowBuffer );
+		_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
+		_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateBlurBuffer );
 		// レンダリングテクスチャを設定
 		_pContext->PSSetShaderResources( 0, 1, &CShader::Instance()->m_pWorkShaderResourceView[CShader::enWorkRT0] );
 		// サンプラーステートの設定
