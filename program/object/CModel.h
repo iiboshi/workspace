@@ -28,6 +28,7 @@ public:
 	virtual ~CModel();
 public:
 	ID3D11ShaderResourceView*	m_pShaderResourceView[enTexType_Max];
+	ID3D11ShaderResourceView*	m_pShaderResourceViewCube;
 	DirectX::XMMATRIX			m_mWorldMatrix;
 	ID3D11Buffer*				m_pVertexBuffer;
 	ID3D11Buffer*				m_pIndexBuffer;
@@ -38,6 +39,7 @@ public:
 	ID3D11RasterizerState*		m_hpRasterizerState;
 	DirectX::XMFLOAT4			m_fParam0;	//!< x:Normal•â³.
 	DirectX::XMFLOAT4			m_fParam1;	//!< x:Roughness y:Fresnel z:SSS.
+	DirectX::XMFLOAT4			m_fParam2;	//!< x:Cube.
 	bool						m_bDraw;	//!< ÅŒã‚É m_bDraw ‚ð true.
 };
 

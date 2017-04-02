@@ -1,6 +1,7 @@
 /* GraphicDemo class */
 
 #include "CGraphicsDemo.h"
+#include "graphic\CSky.h"
 #include "graphic\CGround.h"
 #include "graphic\CBox.h"
 #include "graphic\CHead.h"
@@ -26,6 +27,7 @@ CGraphicsDemo::CGraphicsDemo()
 	CShader::Instance()->CreateShader( "commonblurx", L"../shader/CommonBlurX.fx" );
 	CShader::Instance()->CreateShader( "commonblury", L"../shader/CommonBlurY.fx" );
 
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CSky ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHead ) );

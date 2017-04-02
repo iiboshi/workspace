@@ -17,11 +17,13 @@ public:
 		DirectX::XMMATRIX m_mWorld;
 		DirectX::XMFLOAT4 m_f4Param0;	//!< x:Normal•â³.
 		DirectX::XMFLOAT4 m_f4Param1;	//!< x:Roughness y:Fresnel z:SSS.
+		DirectX::XMFLOAT4 m_f4Param2;	//!< x:Cube.
 		StUpdateBuffer()
 		{
 			m_mWorld = DirectX::XMMatrixIdentity();
 			m_f4Param0 = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 			m_f4Param1 = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+			m_f4Param2 = DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 		}
 	};
 	CGBuffer();

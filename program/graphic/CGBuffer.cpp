@@ -105,6 +105,10 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 
 		// Texture
 		_pContext->PSSetShaderResources( 0, CModel::enTexType_Max, ( *obj )->m_pShaderResourceView );
+		if( ( *obj )->m_pShaderResourceViewCube != nullptr )
+		{
+			_pContext->PSSetShaderResources( CModel::enTexType_Max, 1, &( *obj )->m_pShaderResourceViewCube );
+		}
 
 		// World Matrix
 		m_stUpdateBuffer.m_mWorld = DirectX::XMMatrixTranspose( ( *obj )->m_mWorldMatrix );
@@ -112,6 +116,7 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 		// Param.
 		m_stUpdateBuffer.m_f4Param0 = ( *obj )->m_fParam0;
 		m_stUpdateBuffer.m_f4Param1 = ( *obj )->m_fParam1;
+		m_stUpdateBuffer.m_f4Param2 = ( *obj )->m_fParam2;
 
 		// Update
 		_pContext->UpdateSubresource( 
@@ -133,6 +138,6 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 	}
 
 	// clear
-	ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { NULL, NULL };
+	ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
 	_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
 }

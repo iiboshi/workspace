@@ -12,7 +12,7 @@ namespace
 	const float g_fMaxSpec	= 0.8f;
 	const float g_fMaxAO	= 0.15f;
 	#else
-	const float g_fMaxPow	= 3.0f;
+	const float g_fMaxPow	= 2.0f;
 	const float g_fMaxSpec	= 0.8f;
 	const float g_fMaxAO	= 0.15f;
 	#endif
@@ -55,7 +55,7 @@ CLight::~CLight()
 
 void CLight::Update()
 {
-	#if 1
+	#if 0
 	m_f4LightVec[enLight0].x = cosf( m_fRot ) * 1.0f;
 	m_f4LightVec[enLight0].z = sinf( m_fRot ) * 1.0f;
 	m_fRot += 0.01f;

@@ -116,6 +116,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float4 in4 = g_tex4.Sample( g_sampWorp, _in.uv );
 	float4 in5 = g_tex5.Sample( g_sampWorp, _in.uv );
 	float3 albedo	= in0.xyz;
+	float only		= in0.w;
 	float3 normal	= in1.xyz;
 	float depth		= in2.x;
 	float intensity	= in2.y;
@@ -142,6 +143,10 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	float3 spec = (float3)CalcSpecular( normal, rough, fresnel, sss ) * (float3)shw;
 	spec = lerp( 0.0f, spec, trunc( draw ) );	//!< アンチエリアス自の淵の白いライン制御.
 	spec *= ( intensity * 2.0f );
+
+	// w:Albedo Only.
+	ret.xyz = lerp( ret.xyz, albedo, only );
+	spec = lerp( spec, 0.0f, only );
 
 	// 情報を送る.
 	output.out0 = float4( ret.xyz, 1.0f );

@@ -11,12 +11,15 @@
 ----------------------------------------------------------------------------------------------------*/
 
 // Texture
-Texture2D g_texDiffuse	: register( t0 );
-Texture2D g_texNormal	: register( t1 );
-Texture2D g_texMicro	: register( t2 );
+Texture2D	g_texDiffuse	: register( t0 );
+Texture2D	g_texNormal		: register( t1 );
+Texture2D	g_texMicro		: register( t2 );
+TextureCube	g_texCube		: register( t3 );
 
 // Sampler
-SamplerState ColorSmpWorp : register( s0 );
+SamplerState g_sampWorp		: register( s0 );
+SamplerState g_sampMirr		: register( s1 );
+SamplerState g_sampClamp	: register( s2 );
 
 // Cbuffer
 cbuffer cbViewProjection : register( b0 )
@@ -31,8 +34,9 @@ cbuffer cbViewProjection : register( b0 )
 cbuffer cbGBuffer : register( b1 )
 {
 	matrix	g_mWorld;
-	float4	g_f4Param0;	//!< x:Normal補正 y:Microgeometry回数 z:Microgeometry強度.
+	float4	g_f4Param0;	//!< x:Normal補正 y:Microgeometry回数 z:Microgeometry強度 w:Albedo Only.
 	float4	g_f4Param1;	//!< x:Roughness y:Fresnel z:SSS w:Use Roughness Tex.
+	float4	g_f4Param2;	//!< x:Cube.
 };
 
 /*----------------------------------------------------------------------------------------------------
@@ -104,7 +108,7 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	// microgeometry.
 	float fIntensity = 0.5f;
 	#if defined( MICROGEOMETRY )
-	float4 f4Micro = g_texMicro.Sample( ColorSmpWorp, input.Tex * (float2)g_f4Param0.y );
+	float4 f4Micro = g_texMicro.Sample( g_sampWorp, input.Tex * (float2)g_f4Param0.y );
 	f4Micro.xy = f4Micro.xy * (float2)2.0f - (float2)1.0f;
 	f4Micro.x *= -1;
 	fIntensity = f4Micro.w;
@@ -113,7 +117,7 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 
 	// 法線計算.
 	float3 tnrm;
-	tnrm	= g_texNormal.Sample( ColorSmpWorp, input.Tex ).xyz;
+	tnrm	= g_texNormal.Sample( g_sampWorp, input.Tex ).xyz;
 	tnrm.xy	= tnrm.xy * (float2)2.0f - (float2)1.0f;
 	tnrm.xy	*= float2( g_f4Param0.x, -1.0f );
 	tnrm.z	= 1.0f;
@@ -128,21 +132,29 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	tnrm = ( tnrm + (float3)1.0f ) * (float3)0.5f;
 
 	// albedo
-	float3 albedo = g_texDiffuse.Sample( ColorSmpWorp, input.Tex ).xyz;
+	float3 albedo = g_texDiffuse.Sample( g_sampWorp, input.Tex ).xyz;
 
 	// depth
 	float depth = input.Pos.z / input.Pos.w;
 
 	// Roughness.
 	float rough		= g_f4Param1.x;
-	float roughTex	= 1.0f - g_texNormal.Sample( ColorSmpWorp, input.Tex ).w;
+	float roughTex	= 1.0f - g_texNormal.Sample( g_sampWorp, input.Tex ).w;
 	rough = lerp( rough, roughTex * rough, g_f4Param1.w );
 
+	// w:Albedo Only.
+	float only = g_f4Param0.w;
+
+	// Cube.
+	float3 ref = reflect( normalize( input.Vew ), normalize( input.Nrm ) );
+	float3 cube = g_texCube.Sample( g_sampWorp,  normalize( input.Nrm ) ).xyz;
+	albedo = lerp( albedo, cube, g_f4Param2.x );
+
 	// 情報を送る.
-	output.out0 = float4( albedo, 1.0f );
-	output.out1 = float4( tnrm, 1.0f );
-	output.out2 = float4( depth, fIntensity, 1.0f, 1.0f );
-	output.out3 = float4( rough, g_f4Param1.yz, 1.0f );
+	output.out0 = float4( albedo, only );
+	output.out1 = float4( tnrm, 0.0f );
+	output.out2 = float4( depth, fIntensity, 1.0f, 0.0f );
+	output.out3 = float4( rough, g_f4Param1.yz, 0.0f );
 
 	return output;
 }

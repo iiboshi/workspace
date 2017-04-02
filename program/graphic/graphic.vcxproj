@@ -165,6 +165,7 @@
     <ClCompile Include="CHead.cpp" />
     <ClCompile Include="CModelManager.cpp" />
     <ClCompile Include="CShadow.cpp" />
+    <ClCompile Include="CSky.cpp" />
     <ClCompile Include="CSSAO.cpp" />
     <ClCompile Include="CSSSS.cpp" />
   </ItemGroup>
@@ -177,6 +178,7 @@
     <ClInclude Include="CHead.h" />
     <ClInclude Include="CModelManager.h" />
     <ClInclude Include="CShadow.h" />
+    <ClInclude Include="CSky.h" />
     <ClInclude Include="CSSAO.h" />
     <ClInclude Include="CSSSS.h" />
   </ItemGroup>

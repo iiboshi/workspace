@@ -11,6 +11,7 @@
     <ClCompile Include="CModelManager.cpp" />
     <ClCompile Include="CSSAO.cpp" />
     <ClCompile Include="CShadow.cpp" />
+    <ClCompile Include="CSky.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBlur.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="CModelManager.h" />
     <ClInclude Include="CSSAO.h" />
     <ClInclude Include="CShadow.h" />
+    <ClInclude Include="CSky.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="shader">
