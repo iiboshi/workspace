@@ -331,6 +331,14 @@ HRESULT CShader::CompileShaderFromFile(
 	return S_OK;
 }
 
+HRESULT CShader::CreateShader( char* _filename, LPCWSTR _filePath )
+{
+	HRESULT hr = S_OK;
+	CreateVertexShader( _filename, _filePath );
+	CreatePixelShader( _filename, _filePath );
+	return hr;
+}
+
 HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 {
 	// “¯–¼Šm”F.

@@ -15,7 +15,8 @@ class CDeferred : public CRender
 public:
 	enum
 	{
-		enWeight	= 8,
+		enWeight		= 8,
+		enBeckmannSlot	= 8,
 	};
 	struct StUpdateBuffer
 	{
@@ -44,7 +45,6 @@ public:
 	CDeferred();
 	~CDeferred();
 	HRESULT Init();
-	void CalGaussWeight( float num );
 	void Render( ID3D11DeviceContext* _pContext );
 private:
 	ID3D11Buffer*				m_pQuadVB;
@@ -55,7 +55,7 @@ private:
 	ID3D11PixelShader*			m_pPixelShader;
 	ID3D11InputLayout*			m_pInputLayout;
 	StUpdateBuffer				m_stUpdateBuffer;
-	float						m_fTable[enWeight];
+	ID3D11ShaderResourceView*	m_pBeckmannTexture;
 };
 
 #endif

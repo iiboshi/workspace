@@ -4,6 +4,7 @@
 #include "engine\CCamera.h"
 #include "engine\CShader.h"
 #include "engine\CDevice.h"
+#include "engine\DDSTextureLoader.h"
 
 CDeferred::CDeferred()
 	: m_pQuadVB				( nullptr )
@@ -13,11 +14,8 @@ CDeferred::CDeferred()
 	, m_pVertexShader		( nullptr )
 	, m_pPixelShader		( nullptr )
 	, m_pInputLayout		( nullptr )
+	, m_pBeckmannTexture	( nullptr )
 {
-	for( int ii = 0; ii < enWeight; ii++ )
-	{
-		m_fTable[ii] = 0.0f;
-	}
 	Init();
 }
 
@@ -25,6 +23,7 @@ CDeferred::~CDeferred()
 {
 	I_RELEASE( m_pQuadVB );
 	I_RELEASE( m_pUpdateBuffer );
+	I_RELEASE( m_pBeckmannTexture );
 }
 
 HRESULT CDeferred::Init()
@@ -32,8 +31,7 @@ HRESULT CDeferred::Init()
 	HRESULT hr = S_OK;
 	CDevice* pcDevice = CDevice::Instance();
 
-	CShader::Instance()->CreateVertexShader( "deferred", L"../shader/Deferred.fx" );
-	CShader::Instance()->CreatePixelShader( "deferred", L"../shader/Deferred.fx" );
+	CShader::Instance()->CreateShader( "deferred", L"../shader/Deferred.fx" );
 
 	// 矩形描画用頂点
 	struct QuadVertex
@@ -90,36 +88,17 @@ HRESULT CDeferred::Init()
 	bd.ByteWidth		= sizeof( StUpdateBuffer );
 	I_RETURN( pcDevice->m_pd3dDevice->CreateBuffer( &bd, NULL, &m_pUpdateBuffer ) );
 
-	return hr;
-}
+	// Load the TextureMicrogeometry
+	I_RETURN( D3DX11CreateShaderResourceViewFromFile( 
+		pcDevice->m_pd3dDevice, "../../model/head/beckmannTex.dds", 
+		NULL, NULL, &m_pBeckmannTexture, NULL ) );
 
-void CDeferred::CalGaussWeight( float num )
-{
-	float total	= 0.0f;
-	
-	for( int i = 0; i < enWeight; i++ )
-	{
-		m_fTable[i]	= pow( 3.14f, -i / ( num + GAUSS_WEIGHT ) );
-		total		+= m_fTable[i] * 2.0f;
-	}
-	
-	// 規格化
-	for( int i = 0; i < enWeight; i++ )
-	{
-		m_fTable[i]	/= total;
-	}
+	return hr;
 }
 
 void CDeferred::Render( ID3D11DeviceContext* _pContext )
 {
 	CCamera::Instance()->Update( _pContext );
-
-	// ガウス defo 5
-	CalGaussWeight( 5 );
-	for( int ii = 0; ii < enWeight; ii++ )
-	{
-		m_stUpdateBuffer.m_f4Weight[ii] = DirectX::XMFLOAT4( m_fTable[ii], m_fTable[ii], m_fTable[ii], 1.0f );
-	}
 
 	// Light
 	m_stUpdateBuffer.m_f4ViewVec = CCamera::Instance()->m_f4CamPos;
@@ -177,6 +156,9 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 		_pContext->PSSetShaderResources( CShader::enRT_GBNum + 1, 1, &CShader::Instance()->m_stRenderTarget.m_pShaderResourceView[CShader::enRT_AO] );
 	}
 
+	// Beckmann Texture.
+	_pContext->PSSetShaderResources( enBeckmannSlot, 1, &m_pBeckmannTexture );
+
 	// サンプラーステートの設定
 	_pContext->PSSetSamplers( 0, CShader::enState_Max, CShader::Instance()->m_pSamplerState );
 
@@ -205,4 +187,5 @@ void CDeferred::Render( ID3D11DeviceContext* _pContext )
 	// 片づけ
 	ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };
 	_pContext->PSSetShaderResources( 0, CShader::enRT_Max, reset );
+	_pContext->PSSetShaderResources( enBeckmannSlot, 1, &reset[0] );
 }

@@ -55,7 +55,7 @@ CLight::~CLight()
 
 void CLight::Update()
 {
-	#if 0
+	#if 1
 	m_f4LightVec[enLight0].x = cosf( m_fRot ) * 1.0f;
 	m_f4LightVec[enLight0].z = sinf( m_fRot ) * 1.0f;
 	m_fRot += 0.01f;

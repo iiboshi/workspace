@@ -93,6 +93,7 @@ public:
 		LPCSTR szEntryPoint,
 		LPCSTR szShaderModel,
 		ID3DBlob** ppBlobOut );
+	HRESULT CreateShader( char* _filename, LPCWSTR _filePath );
 	HRESULT CreateVertexShader( char* _filename, LPCWSTR _filePath );
 	HRESULT CreatePixelShader( char* _filename, LPCWSTR _filePath );
 	ID3D11InputLayout*	GetInputLayout( char* _filename );

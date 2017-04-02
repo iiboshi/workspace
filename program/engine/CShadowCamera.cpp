@@ -52,16 +52,18 @@ void CShadowCamera::Change()
 		m_stShwCam.m_f4CamPos.z = g_f4DefPos.z * pcLight->m_f4LightVec[CLight::enLight0].z;
 	}
 
+	float fZoom = CCamera::Instance()->m_fZoom;
+
 	// Initialize the view matrix
-	DirectX::XMVECTOR Eye		= DirectX::XMVectorSet( m_stShwCam.m_f4CamPos.x, m_stShwCam.m_f4CamPos.y, m_stShwCam.m_f4CamPos.z, 0.0f );
-	DirectX::XMVECTOR At		= DirectX::XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
-	DirectX::XMVECTOR Up		= DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+	DirectX::XMVECTOR Eye	= DirectX::XMVectorSet( m_stShwCam.m_f4CamPos.x, m_stShwCam.m_f4CamPos.y, m_stShwCam.m_f4CamPos.z, 0.0f );
+	DirectX::XMVECTOR At	= DirectX::XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
+	DirectX::XMVECTOR Up	= DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
 	m_stShwCam.m_mView		= DirectX::XMMatrixLookAtLH( Eye, At, Up );
 
 	// Initialize the projection matrix
 	m_stShwCam.m_mProjection = DirectX::XMMatrixOrthographicLH(
-		static_cast<FLOAT>( m_uWidth ) * 0.02f,
-		static_cast<FLOAT>( m_uHeight ) * 0.02f, 
+		static_cast<FLOAT>( m_uWidth ) * 0.02f * fZoom,
+		static_cast<FLOAT>( m_uHeight ) * 0.02f * fZoom, 
 		-20.0f, 
 		20.0f );
 }

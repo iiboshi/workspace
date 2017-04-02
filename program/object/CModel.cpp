@@ -19,7 +19,7 @@ CModel::CModel()
 	}
 	m_mWorldMatrix = DirectX::XMMatrixIdentity();
 	m_fParam0 = DirectX::XMFLOAT4( -1.0f, 0.0f, 0.0f, 0.0f );
-	m_fParam1 = DirectX::XMFLOAT4( 0.5f, 0.1f, 0.0f, 0.0f );
+	m_fParam1 = DirectX::XMFLOAT4( 1.0f, 0.1f, 0.0f, 0.0f );
 }
 
 CModel::~CModel()

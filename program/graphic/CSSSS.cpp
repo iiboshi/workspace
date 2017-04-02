@@ -31,12 +31,9 @@ HRESULT CSSSS::Init()
 	HRESULT hr = S_OK;
 	CDevice* pcDevice = CDevice::Instance();
 
-	CShader::Instance()->CreateVertexShader( "blurx", L"../shader/SSSSBlurX.fx" );
-	CShader::Instance()->CreatePixelShader( "blurx", L"../shader/SSSSBlurX.fx" );
-	CShader::Instance()->CreateVertexShader( "blury", L"../shader/SSSSBlurY.fx" );
-	CShader::Instance()->CreatePixelShader( "blury", L"../shader/SSSSBlurY.fx" );
-	CShader::Instance()->CreateVertexShader( "ssss", L"../shader/SSSSFinal.fx" );
-	CShader::Instance()->CreatePixelShader( "ssss", L"../shader/SSSSFinal.fx" );
+	CShader::Instance()->CreateShader( "blurx", L"../shader/SSSSBlurX.fx" );
+	CShader::Instance()->CreateShader( "blury", L"../shader/SSSSBlurY.fx" );
+	CShader::Instance()->CreateShader( "ssss", L"../shader/SSSSFinal.fx" );
 
 	// ‹éŒ`•`‰æ—p’¸“_
 	struct QuadVertex

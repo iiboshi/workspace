@@ -37,11 +37,11 @@ HRESULT CGround::Create()
 	#define KATA	0.0f
 	SimpleVertex vertices[] =
 	{
-		// POSITION							// TEXCOORD				// NORMAL							// TANGENT						// COLOR
-		{ DirectX::XMFLOAT3( -TNUM, -1.8f, -TNUM ),	DirectX::XMFLOAT2( UNUM, 0.0f ),	DirectX::XMFLOAT3( -KATA, 1.0f, -KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ DirectX::XMFLOAT3(  TNUM, -1.8f, -TNUM ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3(  KATA, 1.0f, -KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ DirectX::XMFLOAT3(  TNUM, -1.8f,  TNUM ),	DirectX::XMFLOAT2( 0.0f, UNUM ),	DirectX::XMFLOAT3(  KATA, 1.0f,  KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
-		{ DirectX::XMFLOAT3( -TNUM, -1.8f,  TNUM ),	DirectX::XMFLOAT2( UNUM, UNUM ),	DirectX::XMFLOAT3( -KATA, 1.0f,  KATA ),		DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		// POSITION									// TEXCOORD							// NORMAL									// TANGENT								// COLOR
+		{ DirectX::XMFLOAT3( -TNUM, -1.8f, -TNUM ),	DirectX::XMFLOAT2( UNUM, 0.0f ),	DirectX::XMFLOAT3( -KATA, 1.0f, -KATA ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  TNUM, -1.8f, -TNUM ),	DirectX::XMFLOAT2( 0.0f, 0.0f ),	DirectX::XMFLOAT3(  KATA, 1.0f, -KATA ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3(  TNUM, -1.8f,  TNUM ),	DirectX::XMFLOAT2( 0.0f, UNUM ),	DirectX::XMFLOAT3(  KATA, 1.0f,  KATA ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
+		{ DirectX::XMFLOAT3( -TNUM, -1.8f,  TNUM ),	DirectX::XMFLOAT2( UNUM, UNUM ),	DirectX::XMFLOAT3( -KATA, 1.0f,  KATA ),	DirectX::XMFLOAT3( 1.0f, 0.0f, 0.0f ),	DirectX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
 	};
 
 	ZeroMemory( &bd, sizeof(bd) );

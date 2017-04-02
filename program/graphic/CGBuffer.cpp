@@ -26,8 +26,7 @@ HRESULT CGBuffer::Init()
 	HRESULT hr = S_OK;
 	CDevice* pcDevice = CDevice::Instance();
 
-	CShader::Instance()->CreateVertexShader( "gbuffer", L"../shader/GBuffer.fx" );
-	CShader::Instance()->CreatePixelShader( "gbuffer", L"../shader/GBuffer.fx" );
+	CShader::Instance()->CreateShader( "gbuffer", L"../shader/GBuffer.fx" );
 
 	// Set
 	m_pVertexShader	= CShader::Instance()->GetVertexShader( "gbuffer" );

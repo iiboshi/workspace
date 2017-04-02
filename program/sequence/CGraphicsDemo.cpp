@@ -22,12 +22,9 @@ CGraphicsDemo::CGraphicsDemo()
 	, m_pcBlur		( nullptr )
 {
 	// Common Shader.
-	CShader::Instance()->CreateVertexShader( "depthmap", L"../shader/DepthMap.fx" );
-	CShader::Instance()->CreatePixelShader( "depthmap", L"../shader/DepthMap.fx" );
-	CShader::Instance()->CreateVertexShader( "commonblurx", L"../shader/CommonBlurX.fx" );
-	CShader::Instance()->CreatePixelShader( "commonblurx", L"../shader/CommonBlurX.fx" );
-	CShader::Instance()->CreateVertexShader( "commonblury", L"../shader/CommonBlurY.fx" );
-	CShader::Instance()->CreatePixelShader( "commonblury", L"../shader/CommonBlurY.fx" );
+	CShader::Instance()->CreateShader( "depthmap", L"../shader/DepthMap.fx" );
+	CShader::Instance()->CreateShader( "commonblurx", L"../shader/CommonBlurX.fx" );
+	CShader::Instance()->CreateShader( "commonblury", L"../shader/CommonBlurY.fx" );
 
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );

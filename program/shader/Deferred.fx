@@ -24,6 +24,8 @@ Texture2D	g_tex5 : register( t5 );	//!< AO.
 Texture2D	g_tex6 : register( t6 );	//!< None.
 Texture2D	g_tex7 : register( t7 );	//!< None.
 
+Texture2D	g_texBeck : register( t8 );	//!< Beckmann Texture.
+
 // Sampler
 SamplerState g_sampWorp		: register( s0 );
 SamplerState g_sampMirr		: register( s1 );
@@ -74,7 +76,7 @@ float GGX( float3 N, float3 V, float3 L, float roughness, float F0 );	// GGX
 float Lambert( float3 normal, float3 lightVec );						// Lambert
 float HalfLambert( float3 normal, float3 lightVec );					// Half Lambert
 float3 CalcDiffuse( float3 normal );									// Calc Diffuse.
-float3 CalcSpecular( float3 normal, float rough, float F0 );			// Calc Specular.
+float3 CalcSpecular( float3 normal, float rough, float F0, float sss );	// Calc Specular.
 
 /*----------------------------------------------------------------------------------------------------
 	Vertex Shader
@@ -137,7 +139,7 @@ PS_OUTPUT PS( PS_INPUT _in ) : SV_Target
 	ret.xyz = diff * albedo;
 
 	// Specular
-	float3 spec = (float3)CalcSpecular( normal, rough, fresnel ) * (float3)shw;
+	float3 spec = (float3)CalcSpecular( normal, rough, fresnel, sss ) * (float3)shw;
 	spec = lerp( 0.0f, spec, trunc( draw ) );	//!< アンチエリアス自の淵の白いライン制御.
 	spec *= ( intensity * 2.0f );
 
@@ -196,6 +198,35 @@ float GGX( float3 N, float3 V, float3 L, float roughness, float F0 )
 	return dotNL * D * F * vis;
 }
 
+ float fresnelReflectance( float3 H, float3 V, float F0 )
+{
+	float base = 1.0f - dot( V, H );
+	float exponential = pow( base, 5.0f );
+	return exponential + F0 * ( 1.0f - exponential );
+}
+
+float KS_Skin_Specular(
+	float3 N,	// Bumped surface normal
+	float3 V,	// Points to eye
+	float3 L,	// Points to light
+	float m,	// Roughness
+	float F0 )	// Fresnal
+{  
+	float result = 0.0f;
+	float ndotl = dot( N, L );
+	if( ndotl > 0.0f )
+	{  
+		float3 h = L + V;	// Unnormalized half-way vector
+		float3 H = normalize( h );
+		float ndoth = max( 0.0f, dot( N, H ) );
+		float PH = pow( 2.0f* g_texBeck.Sample( g_sampClamp,float2(ndoth,m)).x, 10.0f );
+		float F = fresnelReflectance( H, V, F0 );
+		float frSpec = max( PH * F / dot( h, h ), 0.0f );
+		result = ndotl * frSpec;	// BRDF * dot(N,L)
+	 }
+	 return result;
+}
+
 // Lambert
 float Lambert( float3 normal, float3 lightVec )
 {
@@ -221,12 +252,19 @@ float3 CalcDiffuse( float3 normal )
 }
 
 // Diffuse.
-float3 CalcSpecular( float3 normal, float rough, float F0 )
+float3 CalcSpecular( float3 normal, float rough, float F0, float sss )
 {
 	float3 view = normalize( g_f4ViewVec.xyz );
-	float ret =	GGX( normal, view, view, rough, F0 ) * g_f4MainCol.w +
-				GGX( normal, view, normalize( g_f4LightVec[0].xyz ), rough, F0 ) * g_f4LightCol[0].w +
-				GGX( normal, view, normalize( g_f4LightVec[1].xyz ), rough, F0 ) * g_f4LightCol[1].w;
+	float retGGX =	GGX( normal, view, view, rough, F0 ) * g_f4MainCol.w +
+					GGX( normal, view, normalize( g_f4LightVec[0].xyz ), rough, F0 ) * g_f4LightCol[0].w +
+					GGX( normal, view, normalize( g_f4LightVec[1].xyz ), rough, F0 ) * g_f4LightCol[1].w;
+
+	float retKSB =	KS_Skin_Specular( normal, view, view, rough, F0 ) * g_f4MainCol.w +
+					KS_Skin_Specular( normal, view, normalize( g_f4LightVec[0].xyz ), rough, F0 ) * g_f4LightCol[0].w +
+					KS_Skin_Specular( normal, view, normalize( g_f4LightVec[1].xyz ), rough, F0 ) * g_f4LightCol[1].w;
+
+	float ret = lerp( retGGX, retKSB, sss );
+
 	return (float3)ret;
 }
 

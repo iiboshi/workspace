@@ -81,7 +81,7 @@ PS_INPUT VS( VS_INPUT _in )
 	_out.uv = _in.uv;
 
 	// à íuç¿ïW
-	float pix = 10.0f / g_f4TexSize.x;
+	float pix = 5.0f / g_f4TexSize.x;
 	_out.uv0 = float2( pix * 0.0064f,	0.0f );
 	_out.uv1 = float2( pix * 0.0484f,	0.0f );
 	_out.uv2 = float2( pix * 0.187f,	0.0f );
@@ -101,6 +101,7 @@ float4 PS( PS_INPUT _in ) : SV_Target
 	// èÓïÒÇÃéÊìæ.
 	float4 ret = float4( g_tex0.Sample( g_sampWorp, _in.uv ).xyz, 1.0f );
 	float2 in3 = g_tex3.Sample( g_sampWorp, _in.uv ).xy;	//!< sss, depth.
+	in3.y = 1.0f - pow( 1.0f - in3.y, 2.0f );
 
 	// Blur
 	if( in3.x ) {

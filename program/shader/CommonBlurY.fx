@@ -10,13 +10,6 @@
 
 #define POW 0.5f	//<! ƒuƒ‰[‹­“x.
 
-#define WCOL0 float4( 0.233f,	0.455f,	0.649f,	1.0f )
-#define WCOL1 float4( 0.1f,		0.336f,	0.344f,	1.0f )
-#define WCOL2 float4( 0.118f,	0.198f,	0.0f,	1.0f )
-#define WCOL3 float4( 0.113f,	0.007f,	0.007f,	1.0f )
-#define WCOL4 float4( 0.358f,	0.004f,	0.0f,	1.0f )
-#define WCOL5 float4( 0.078f,	0.0f,	0.0f,	1.0f )
-
 /*----------------------------------------------------------------------------------------------------
 	Buffer
 ----------------------------------------------------------------------------------------------------*/
@@ -68,6 +61,15 @@ struct PS_INPUT
 	float2 uv5	: TEXCOORD6;
 	float2 uv6	: TEXCOORD7;
 	float2 uv7	: TEXCOORD8;
+
+	float2 uv8	: TEXCOORD9;
+	float2 uv9	: TEXCOORD10;
+	float2 uv10	: TEXCOORD11;
+	float2 uv11	: TEXCOORD12;
+	float2 uv12	: TEXCOORD13;
+	float2 uv13	: TEXCOORD14;
+	float2 uv14	: TEXCOORD15;
+	float2 uv15	: TEXCOORD16;
 };
 
 /*----------------------------------------------------------------------------------------------------
@@ -94,6 +96,15 @@ PS_INPUT VS( VS_INPUT _in )
 	_out.uv6 = _in.uv + float2( 0.0f, -13.0f * POW	/ g_f4TexSize.y );
 	_out.uv7 = _in.uv + float2( 0.0f, -15.0f * POW	/ g_f4TexSize.y );
 
+	_out.uv8 = _in.uv + float2( 0.0f, 1.0f * POW	/ g_f4TexSize.y );
+	_out.uv9 = _in.uv + float2( 0.0f, 3.0f * POW	/ g_f4TexSize.y );
+	_out.uv10 = _in.uv + float2( 0.0f, 5.0f * POW	/ g_f4TexSize.y );
+	_out.uv11 = _in.uv + float2( 0.0f, 7.0f * POW	/ g_f4TexSize.y );
+	_out.uv12 = _in.uv + float2( 0.0f, 9.0f * POW	/ g_f4TexSize.y );
+	_out.uv13 = _in.uv + float2( 0.0f, 11.0f * POW	/ g_f4TexSize.y );
+	_out.uv14 = _in.uv + float2( 0.0f, 13.0f * POW	/ g_f4TexSize.y );
+	_out.uv15 = _in.uv + float2( 0.0f, 15.0f * POW	/ g_f4TexSize.y );
+
 	return _out;
 }
 
@@ -103,17 +114,15 @@ PS_INPUT VS( VS_INPUT _in )
 
 float4 PS( PS_INPUT _in ) : SV_Target
 {
-	// Blur	
 	float ret = 0.0f;
-	int offset = 16.0f / g_f4TexSize.y;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv0 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv7.x, _in.uv7.y + offset ) ).x ) * g_f4Weight[0].x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv1 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv6.x, _in.uv6.y + offset ) ).x ) * g_f4Weight[1].x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv2 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv5.x, _in.uv5.y + offset ) ).x ) * g_f4Weight[2].x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv3 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv4.x, _in.uv4.y + offset ) ).x ) * g_f4Weight[3].x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv4 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv3.x, _in.uv3.y + offset ) ).x ) * g_f4Weight[4].x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv5 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv2.x, _in.uv2.y + offset ) ).x ) * g_f4Weight[5].x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv6 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv1.x, _in.uv1.y + offset ) ).x ) * g_f4Weight[6].x;
-	ret += ( g_tex0.Sample( g_sampMirr, _in.uv7 ).x + g_tex0.Sample( g_sampMirr, float2( _in.uv0.x, _in.uv0.y + offset ) ).x ) * g_f4Weight[7].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv0 ).x + g_tex0.Sample( g_sampMirr, _in.uv15 ).x ) * g_f4Weight[0].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv1 ).x + g_tex0.Sample( g_sampMirr, _in.uv14 ).x ) * g_f4Weight[1].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv2 ).x + g_tex0.Sample( g_sampMirr, _in.uv13 ).x ) * g_f4Weight[2].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv3 ).x + g_tex0.Sample( g_sampMirr, _in.uv12 ).x ) * g_f4Weight[3].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv4 ).x + g_tex0.Sample( g_sampMirr, _in.uv11 ).x ) * g_f4Weight[4].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv5 ).x + g_tex0.Sample( g_sampMirr, _in.uv10 ).x ) * g_f4Weight[5].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv6 ).x + g_tex0.Sample( g_sampMirr, _in.uv9 ).x ) * g_f4Weight[6].x;
+	ret += ( g_tex0.Sample( g_sampMirr, _in.uv7 ).x + g_tex0.Sample( g_sampMirr, _in.uv8 ).x ) * g_f4Weight[7].x;
 	return float4( (float3)ret, 1.0f );
 }
 

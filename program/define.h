@@ -10,7 +10,7 @@
 #if defined( USE_SHADOW )
 // #define SHADOWMAPTEST
 // #define SHADOWTEST
-// #define SHADOWBLURTEST
+// define SHADOWBLURTEST
 #endif
 
 #if defined( USE_AO )

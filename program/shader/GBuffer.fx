@@ -32,7 +32,7 @@ cbuffer cbGBuffer : register( b1 )
 {
 	matrix	g_mWorld;
 	float4	g_f4Param0;	//!< x:Normal•â³ y:Microgeometry‰ñ” z:Microgeometry‹­“x.
-	float4	g_f4Param1;	//!< x:Roughness y:Fresnel z:SSS.
+	float4	g_f4Param1;	//!< x:Roughness y:Fresnel z:SSS w:Use Roughness Tex.
 };
 
 /*----------------------------------------------------------------------------------------------------
@@ -108,6 +108,7 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	f4Micro.xy = f4Micro.xy * (float2)2.0f - (float2)1.0f;
 	f4Micro.x *= -1;
 	fIntensity = f4Micro.w;
+	float fMicroMask = 1.0f - f4Micro.w;
 	#endif
 
 	// –@üŒvŽZ.
@@ -117,7 +118,7 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	tnrm.xy	*= float2( g_f4Param0.x, -1.0f );
 	tnrm.z	= 1.0f;
 	#if defined( MICROGEOMETRY )
-	tnrm.xy = lerp( tnrm.xy, tnrm.xy + f4Micro.xy, g_f4Param0.z );
+	tnrm.xy = lerp( tnrm.xy, tnrm.xy + f4Micro.xy, g_f4Param0.z * fMicroMask );
 	tnrm	= normalize( tnrm );
 	#endif
 	float3 f3Nrm = normalize( input.Nrm );
@@ -132,11 +133,16 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	// depth
 	float depth = input.Pos.z / input.Pos.w;
 
+	// Roughness.
+	float rough		= g_f4Param1.x;
+	float roughTex	= 1.0f - g_texNormal.Sample( ColorSmpWorp, input.Tex ).w;
+	rough = lerp( rough, roughTex * rough, g_f4Param1.w );
+
 	// î•ñ‚ð‘—‚é.
 	output.out0 = float4( albedo, 1.0f );
 	output.out1 = float4( tnrm, 1.0f );
 	output.out2 = float4( depth, fIntensity, 1.0f, 1.0f );
-	output.out3 = float4( g_f4Param1.xyz, 1.0f );
+	output.out3 = float4( rough, g_f4Param1.yz, 1.0f );
 
 	return output;
 }
