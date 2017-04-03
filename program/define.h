@@ -143,6 +143,8 @@ public:								\
 namespace NDefine
 {
 	enum EnTexPath {
+		enTexPath_black,
+		enTexPath_white,
 		enTexPath_wood,
 		enTexPath_floor,
 		enTexPath_concrete,
@@ -151,6 +153,8 @@ namespace NDefine
 		enTexPath_stones,
 		enTexPath_wall };
 	static const char* g_pcTexPath[] = {
+		"../../Media/Textures/black.dds",
+		"../../Media/Textures/white.dds",
 		"../../Media/Textures/wood.dds",
 		"../../Media/Textures/floor.dds",
 		"../../Media/Textures/concrete.dds",

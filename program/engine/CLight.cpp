@@ -14,7 +14,7 @@ namespace
 	#else
 	const float g_fMaxPow	= 2.0f;
 	const float g_fMaxSpec	= 0.8f;
-	const float g_fMaxAO	= 0.15f;
+	const float g_fMaxAO	= 1.0f;
 	#endif
 
 	const DirectX::XMFLOAT4 g_f4MaxAO = DirectX::XMFLOAT4( 0.4f, 0.15f, 0.13f, 0.15f );	// xyz:Color w:Pow
@@ -55,7 +55,7 @@ CLight::~CLight()
 
 void CLight::Update()
 {
-	#if 0
+	#if 1
 	m_f4LightVec[enLight0].x = cosf( m_fRot ) * 1.0f;
 	m_f4LightVec[enLight0].z = sinf( m_fRot ) * 1.0f;
 	m_fRot += 0.01f;

@@ -18,8 +18,8 @@ HRESULT CSky::Create()
 	HRESULT hr;
 	CDevice* pcDevice = CDevice::Instance();
 
-	m_mWorldMatrix = DirectX::XMMatrixRotationY( I_PI * 0.5f );
-	m_mWorldMatrix._42 = 0.0f;
+	m_mWorldMatrix = DirectX::XMMatrixRotationY( I_PI );
+	m_mWorldMatrix._42 = 10.0f;
 
 	// Param
 	m_fParam0.w = 1.0f;	//!< w:Albedo Only.
@@ -123,12 +123,12 @@ HRESULT CSky::Create()
 
 	// Load the Texture
 	I_RETURN( D3DX11CreateShaderResourceViewFromFile( 
-		pcDevice->m_pd3dDevice, NDefine::g_pcTexPath[NDefine::enTexPath_wall], 
+		pcDevice->m_pd3dDevice, NDefine::g_pcTexPath[NDefine::enTexPath_white], 
 		NULL, NULL, &m_pShaderResourceView[enTexType_Albedo], NULL ) );
 
 	// Load the TextureNormal
 	I_RETURN( D3DX11CreateShaderResourceViewFromFile( 
-		pcDevice->m_pd3dDevice, NDefine::g_pcNrmPath[NDefine::enNrmPath_wall_NM_height], 
+		pcDevice->m_pd3dDevice, NDefine::g_pcNrmPath[NDefine::enNrmPath_normal], 
 		NULL, NULL, &m_pShaderResourceView[enTexType_Normal], NULL ) );
 
 	// Load the TextureMicrogeometry

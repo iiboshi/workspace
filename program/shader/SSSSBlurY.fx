@@ -81,7 +81,7 @@ PS_INPUT VS( VS_INPUT _in )
 	_out.uv = _in.uv;
 
 	// à íuç¿ïW
-	float pix = 5.0f / g_f4TexSize.y;
+	float pix = 10.0f / g_f4TexSize.y;
 	_out.uv0 = float2( 0.0f, pix * 0.0064f	);
 	_out.uv1 = float2( 0.0f, pix * 0.0484f	);
 	_out.uv2 = float2( 0.0f, pix * 0.187f	);
