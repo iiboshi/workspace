@@ -16,7 +16,7 @@ namespace
 CCamera::CCamera()
 	: m_pCbViewProjection	( nullptr )
 	, m_fRot				( 0.0f )
-	, m_fZoom				( 0.0f )
+	, m_fZoom				( 1.0f )
 	, m_uWidth				( 0 )
 	, m_uHeight				( 0 )
 	, m_bRotation			( false )

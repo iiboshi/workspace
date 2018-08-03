@@ -90,14 +90,14 @@ float4 PS( PS_INPUT input) : SV_Target
 	input.tex = input.aoc.xy / input.aoc.w;
 
 	// SSAOサンプル数。 0～16、これはsampleSphereには16個の要素しかないため.
-	const unsigned int samples = 16; 
+	static const unsigned int samples = 16; 
 	
-	const float samplerRadius	= 0.03f;	// SSAO半径				0.00005f
-	const float strength		= 3.0f;		// ステップ当たりの強さ	1.0f
-	const float totalStrength	= 9.0f;		// 総強度				3.0f
-	const float falloffMin		= 0.0f;		// 深さ減衰量の最小値	0.00001f
-	const float falloffMax		= 0.2f;		// 深さ減衰量の最大値	0.006f
-	const float3 sampleSphere[] = { 
+	static const float samplerRadius	= 0.03f;	// SSAO半径				0.00005f
+	static const float strength			= 3.0f;		// ステップ当たりの強さ	1.0f
+	static const float totalStrength	= 9.0f;		// 総強度				3.0f
+	static const float falloffMin		= 0.02f;	// 深さ減衰量の最小値	0.00001f
+	static const float falloffMax		= 0.2f;		// 深さ減衰量の最大値	0.006f
+	static const float3 sampleSphere[] = { 
 		float3( 0.2024537f, 0.841204f, -0.9060141f), 
 		float3(-0.2200423f, 0.6282339f,-0.8275437f), 
 		float3( 0.3677659f, 0.1086345f,-0.4466777f), 
@@ -116,16 +116,19 @@ float4 PS( PS_INPUT input) : SV_Target
 		float3(-0.0001783f, 0.2834622f, 0.8343929f), }; 
 
 	// ランダムなサンプルカーネル.
-	float3 randNor = randomNormal(input.tex);									// ランダムノーマルを取得する.
-	float depth = 1.0f - g_texAOMap.Sample(g_sampWorp, input.tex).x;			// 線の深さを取得する.
-	float3 normal = float3(g_texAOMap.Sample(g_sampWorp, input.tex).yz, 1.0f);	// ビュー空間を通常にする.
-	normal.xy = normal.xy * (float2)2.0f - (float2)1.0f;
+	float4 texAOMap = g_texAOMap.Sample(g_sampWorp, input.tex);
+	float3 randNor = randomNormal(input.tex);						// ランダムノーマルを取得する.
+	float depth = 1.0f- texAOMap.w;									// 線の深さを取得する.
+	float3 normal = texAOMap.xyz;									// ビュー空間を通常にする.
+	normal = normal * (float3)2.0f - (float3)1.0f;
 	
 	// 私たちは2D空間で作業していますが、距離を基準にして半径をスケーリングする必要があります。深みのあるシーンの錯覚を維持する。
 	float radius = samplerRadius / depth; 
 	
 	float3 centerPos = float3(input.tex, depth); 
 	float occ = 0.0f; 
+
+	[unroll]
 	for( unsigned int i = 0; i < samples; ++i ) 
 	{ 
 		// 半球をY軸上に反転させる。テクスチャ座標は上から下に向かって増加し、ビューの法線の反対の点は、
@@ -141,12 +144,14 @@ float4 PS( PS_INPUT input) : SV_Target
 		if((saturate(ray.x) != ray.x)||(saturate(ray.y) != ray.y)) 
 			continue;
 
+		float4 texAOMapWork = g_texAOMap.Sample(g_sampWorp, ray.xy);
+
 		// ray.xyの線の深さを取得する.
-		float occDepth = 1.0f - g_texAOMap.SampleLevel(g_sampWorp, ray.xy, 0).x; 
+		float occDepth = 1.0f - texAOMapWork.w; 
 
 		// ray.xyのビュー空間法線を取得します。
-		float3 occNormal = float3(g_texAOMap.SampleLevel(g_sampWorp, ray.xy, 0).yz, 1.0f); 
-		occNormal.xy = occNormal.xy * (float2)2.0f - (float2)1.0f;
+		float3 occNormal = texAOMapWork.xyz; 
+		occNormal = occNormal * (float3)2.0f - (float3)1.0f;
 		
 		// 深さとオクルーダの深さの差。 
 		float depthDifference = (centerPos.z - occDepth); 

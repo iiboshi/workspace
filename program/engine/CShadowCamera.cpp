@@ -62,8 +62,8 @@ void CShadowCamera::Change()
 
 	// Initialize the projection matrix
 	m_stShwCam.m_mProjection = DirectX::XMMatrixOrthographicLH(
-		static_cast<FLOAT>( m_uWidth ) * 0.02f * fZoom,
-		static_cast<FLOAT>( m_uHeight ) * 0.02f * fZoom, 
+		static_cast<FLOAT>( m_uWidth ) * 0.03f * fZoom,
+		static_cast<FLOAT>( m_uHeight ) * 0.03f * fZoom, 
 		-20.0f, 
 		20.0f );
 }

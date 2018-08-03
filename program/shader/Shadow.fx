@@ -95,7 +95,7 @@ float4 PS( PS_INPUT input) : SV_Target
 	shadowBias = min( shadowBias, depthBiasClamp );
 
 	float3 shadowColor	= float3( 0.0f, 0.0f, 0.0f );
-	shadowThreshold 	= g_texShadowMap.SampleLevel( g_sampWorp, shadowCoord.xy, 0 ).x;
+	shadowThreshold 	= g_texShadowMap.SampleLevel( g_sampWorp, shadowCoord.xy, 0 ).w;
 	shadowThreshold		= ( shadowThreshold > ( shadowCoord.z - shadowBias ) ); 
 	shadowColor			= lerp( shadowColor, (float3)1.0f, shadowThreshold );
 

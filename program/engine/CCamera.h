@@ -36,15 +36,16 @@ public:
 	ID3D11Buffer*				m_pCbViewProjection;
 	DirectX::XMMATRIX			m_mView;
 	DirectX::XMMATRIX			m_mProjection;
-	DirectX::XMFLOAT4			m_f4CalPos;	//!< ŒvŽZ—p.
+	DirectX::XMFLOAT4			m_f4CalPos;		//!< ŒvŽZ—p.
 	DirectX::XMFLOAT4			m_f4CamPos;
 	DirectX::XMFLOAT4			m_f4Lookat;
-	float				m_fRot;
-	float				m_fZoom;
-	StViewProjection	m_stViewProjections;
-	UINT				m_uWidth;
-	UINT				m_uHeight;
-	bool				m_bRotation;
+	float						m_fRot;
+	float						m_fZoom;
+	StViewProjection			m_stViewProjections;
+	UINT						m_uWidth;
+	UINT						m_uHeight;
+	bool						m_bRotation;
+	DirectX::XMMATRIX			m_mCameraMatrix;
 };
 
 #endif
