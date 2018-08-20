@@ -135,6 +135,9 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 
 	// albedo
 	float3 albedo = g_texDiffuse.SampleBias( g_sampWorp, input.Tex, fBias ).xyz;
+	#if defined( MICROGEOMETRY )
+	albedo = lerp( albedo, albedo * albedo, fMicroMask );
+	#endif
 
 	// depth
 	float depth = input.Pos.z / input.Pos.w;
