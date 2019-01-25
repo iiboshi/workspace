@@ -87,7 +87,7 @@ float4 PS( PS_INPUT input) : SV_Target
 	float maxDepthSlope = max( abs( ddx( shadowCoord.z ) ), abs( ddy( shadowCoord.z ) ) );
 
 	float shadowThreshold	= 1.0f;		// シャドウにするかどうかの閾値です.
-	float bias				= 0.002f;	// 固定バイアスです.
+	float bias				= 0.003f;	// 固定バイアスです.
 	float slopeScaledBias	= 0.01f;	// 深度傾斜.
 	float depthBiasClamp	= 0.1f;		// バイアスクランプ値.
 
