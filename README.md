@@ -1,8 +1,8 @@
 # workspace
-DirectX11のRendering Pipelineのテストで作成しました。
+DirectX11のRendering Pipeline、Microgeometryを使用したSkinShaderのテストで作成。
 
 Buildのexeフォルダ内に実行ファイルが入っております。
 
-SSSS、SSAO、ShadwMap等が入っており、BRDFはSkinはBeckmann、
-無機物はGGXになってます。
+SSSS、SSAO、ShadwMap等も入っており、BRDFはSkinはBeckmann、
+無機物はGGXになっております。
 
