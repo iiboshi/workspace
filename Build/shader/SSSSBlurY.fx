@@ -15,6 +15,8 @@
 #define WCOL4 ( float3( 0.358f,	0.004f,	0.0f	) * 0.5f )
 #define WCOL5 ( float3( 0.078f,	0.0f,	0.0f	) * 0.5f )
 
+#define WIDTH 0.5f
+
 /*----------------------------------------------------------------------------------------------------
 	Buffer
 ----------------------------------------------------------------------------------------------------*/
@@ -105,12 +107,12 @@ float4 PS( PS_INPUT _in ) : SV_Target
 
 	// Blur
 	if( in3.x ) {
-		_in.uv0 *= in3.y;
-		_in.uv1 *= in3.y;
-		_in.uv2 *= in3.y;
-		_in.uv3 *= in3.y;
-		_in.uv4 *= in3.y;
-		_in.uv5 *= in3.y;
+		_in.uv0 *= in3.y * WIDTH;
+		_in.uv1 *= in3.y * WIDTH;
+		_in.uv2 *= in3.y * WIDTH;
+		_in.uv3 *= in3.y * WIDTH;
+		_in.uv4 *= in3.y * WIDTH;
+		_in.uv5 *= in3.y * WIDTH;
 		ret.xyz = (float3)0.0f;
 		ret.xyz += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv0 ).xyz + g_tex0.Sample( g_sampMirr, _in.uv - _in.uv0 ).xyz ) * WCOL0;
 		ret.xyz += ( g_tex0.Sample( g_sampMirr, _in.uv + _in.uv1 ).xyz + g_tex0.Sample( g_sampMirr, _in.uv - _in.uv1 ).xyz ) * WCOL1;
