@@ -12,6 +12,7 @@
     <ClCompile Include="CSSAO.cpp" />
     <ClCompile Include="CShadow.cpp" />
     <ClCompile Include="CSky.cpp" />
+    <ClCompile Include="CHeadBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBlur.h" />
@@ -25,48 +26,6 @@
     <ClInclude Include="CSSAO.h" />
     <ClInclude Include="CShadow.h" />
     <ClInclude Include="CSky.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="shader">
-      <UniqueIdentifier>{1d440298-5421-43ef-a56e-802b91293838}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\shader\BlurX.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\BlurY.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\Deferred.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\GBuffer.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\SSSSBlurX.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\SSSSBlurY.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\SSSSFinal.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\Shadow.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\AO.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\CommonBlurX.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\CommonBlurY.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\shader\DepthMap.fx">
-      <Filter>shader</Filter>
-    </FxCompile>
+    <ClInclude Include="CHeadBox.h" />
   </ItemGroup>
 </Project>

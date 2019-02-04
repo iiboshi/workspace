@@ -118,7 +118,7 @@ HRESULT CSky::Create()
 
 	// Cube.
 	I_RETURN( D3DX11CreateShaderResourceViewFromFile( 
-		pcDevice->m_pd3dDevice, "../../Media/Textures/sky0.dds", 
+		pcDevice->m_pd3dDevice, "../../media/Textures/sky0.dds",
 		NULL, NULL, &m_pShaderResourceViewCube, NULL ) );
 
 	// Load the Texture

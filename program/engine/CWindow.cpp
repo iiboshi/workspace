@@ -41,6 +41,22 @@ HRESULT CWindow::InitWindow( HINSTANCE hInstance, int nCmdShow )
 	m_hInst = hInstance;
 	RECT rc = { 0, 0, WIDTH, HEIGHT };
 	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
+
+	#if 1	//!< CreateWindowA.
+	int posX = 0;
+	int posY = 0;
+	m_hWnd = CreateWindowA(
+		WINDOWCLASSNAME,
+		WINDOWNAME,
+		WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE,
+		posX,
+		posY,
+		rc.right - rc.left,
+		rc.bottom - rc.top,
+		NULL, NULL,
+		hInstance,
+		NULL);
+	#else
 	m_hWnd = CreateWindow(
 		WINDOWCLASSNAME,
 		WINDOWNAME,
@@ -52,15 +68,15 @@ HRESULT CWindow::InitWindow( HINSTANCE hInstance, int nCmdShow )
 		NULL, NULL,
 		hInstance,
 		NULL );
+	#endif
 
 	if( !m_hWnd )
 	{
 		return E_FAIL;
 	}
 
-	ShowWindow( m_hWnd, nCmdShow );
-
-	return S_OK;
+	BOOL bRet = ShowWindow( m_hWnd, nCmdShow );
+	return bRet ? S_OK : E_FAIL;
 }
 
 LRESULT CALLBACK CWindow::WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )

@@ -2,6 +2,24 @@
 
 #include "CLight.h"
 
+namespace
+{
+	#if defined( USE_SHADOW )
+	const float g_fMaxPow	= 2.5f;
+	const float g_fMaxSpec	= 0.8f;
+	#elif 0
+	const float g_fMaxPow	= 15.0f;
+	const float g_fMaxSpec	= 0.8f;
+	const float g_fMaxAO	= 0.15f;
+	#else
+	const float g_fMaxPow	= 2.0f;
+	const float g_fMaxSpec	= 0.8f;
+	const float g_fMaxAO	= 1.0f;
+	#endif
+
+	const DirectX::XMFLOAT4 g_f4MaxAO = DirectX::XMFLOAT4( 0.4f, 0.15f, 0.13f, 0.15f );	// xyz:Color w:Pow
+}
+
 CLight::CLight()
 	: m_fRot ( 0.0f )
 {
@@ -13,21 +31,21 @@ CLight::CLight()
 	// Color
 	#if defined( USE_SHADOW )
 	m_f4MainCol				= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4LightCol[enLight0]	= DirectX::XMFLOAT4( 3.5f, 3.5f, 3.5f, 1.0f );
+	m_f4LightCol[enLight0]	= DirectX::XMFLOAT4( g_fMaxPow, g_fMaxPow, g_fMaxPow, g_fMaxSpec );
 	m_f4LightCol[enLight1]	= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4AO					= DirectX::XMFLOAT4( 0.4f, 0.15f, 0.13f, 0.15f );	// xyz:Color w:Pow;
+	m_f4AO					= g_f4MaxAO;
 	#elif 0
-	float fPow				= 15.0f / ( enLightNum + 1 ) / 3.0f;
-	float fSpec				= 0.8f / ( enLightNum + 1 );
+	float fPow				= g_fMaxPow / ( enLightNum + 1 ) / 3.0f;
+	float fSpec				= g_fMaxSpec / ( enLightNum + 1 );
 	m_f4MainCol				= DirectX::XMFLOAT4( fPow, fPow, fPow, fSpec );
 	m_f4LightCol[enLight0]	= DirectX::XMFLOAT4( fPow, fPow, fPow, fSpec );
-	m_f4LightCol[enLight1]	= DirectX::XMFLOAT4( 0.4f, 0.15f, 0.13f, 0.2f );
+	m_f4LightCol[enLight1]	= DirectX::XMFLOAT4( fPow, fPow, fPow, fSpec );
 	m_f4AO					= g_f4MaxAO;
 	#else
-	m_f4MainCol				= DirectX::XMFLOAT4( 2.0f, 2.0f, 2.0f, 0.8f );
+	m_f4MainCol				= DirectX::XMFLOAT4( g_fMaxPow, g_fMaxPow, g_fMaxPow, g_fMaxSpec );
 	m_f4LightCol[enLight0]	= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 	m_f4LightCol[enLight1]	= DirectX::XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-	m_f4AO					= DirectX::XMFLOAT4( 0.4f, 0.15f, 0.13f, 0.2f );
+	m_f4AO					= g_f4MaxAO;
 	#endif
 }
 

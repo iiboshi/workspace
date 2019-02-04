@@ -105,12 +105,10 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 {
 	PS_OUTPUT output;
 
-	float fBias = -0.5f;
-
 	// microgeometry.
 	float fIntensity = 0.5f;
 	#if defined( MICROGEOMETRY )
-	float4 f4Micro = g_texMicro.SampleBias( g_sampWorp, input.Tex * (float2)g_f4Param0.y, fBias );
+	float4 f4Micro = g_texMicro.Sample( g_sampWorp, input.Tex * (float2)g_f4Param0.y );
 	f4Micro.xy = f4Micro.xy * (float2)2.0f - (float2)1.0f;
 	f4Micro.x *= -1;
 	fIntensity = f4Micro.w;
@@ -119,7 +117,7 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 
 	// ñ@ê¸åvéZ.
 	float3 tnrm;
-	tnrm	= g_texNormal.SampleBias( g_sampWorp, input.Tex, fBias ).xyz;
+	tnrm	= g_texNormal.Sample( g_sampWorp, input.Tex ).xyz;
 	tnrm.xy	= tnrm.xy * (float2)2.0f - (float2)1.0f;
 	tnrm.xy	*= float2( g_f4Param0.x, -1.0f );
 	tnrm.z	= 1.0f;
@@ -134,7 +132,7 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	tnrm = ( tnrm + (float3)1.0f ) * (float3)0.5f;
 
 	// albedo
-	float3 albedo = g_texDiffuse.SampleBias( g_sampWorp, input.Tex, fBias ).xyz;
+	float3 albedo = g_texDiffuse.Sample( g_sampWorp, input.Tex ).xyz;
 	#if defined( MICROGEOMETRY )
 	albedo = lerp( albedo, albedo * albedo, fMicroMask );
 	#endif
@@ -144,14 +142,14 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 
 	// Roughness.
 	float rough		= g_f4Param1.x;
-	float roughTex	= 1.0f - g_texNormal.SampleBias( g_sampWorp, input.Tex, fBias ).w;
+	float roughTex	= 1.0f - g_texNormal.Sample( g_sampWorp, input.Tex ).w;
 	rough = lerp( rough, roughTex * rough, g_f4Param1.w );
 
 	// w:Albedo Only.
 	float only = g_f4Param0.w;
 
 	// Cube.
-	float3 ref = reflect( normalize( input.Vew ), normalize( input.Nrm ) );
+	float3 ref = reflect( normalize( input.Vew ).xyz, normalize( input.Nrm ) );
 	float3 cube = g_texCube.Sample( g_sampWorp,  normalize( input.Nrm ) ).xyz;
 	albedo = lerp( albedo, cube, g_f4Param2.x );
 

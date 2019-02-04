@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphic", "graphic\graphic.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sequence", "sequence\sequence.vcxproj", "{048A6B26-FED1-4579-9466-7B0A31892434}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shader", "shader\shader.vcxproj", "{C87821A0-C622-4F41-A91E-50F5FB59AACE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,8 +63,19 @@ Global
 		{048A6B26-FED1-4579-9466-7B0A31892434}.Release|Win32.Build.0 = Release|Win32
 		{048A6B26-FED1-4579-9466-7B0A31892434}.Release|x64.ActiveCfg = Release|x64
 		{048A6B26-FED1-4579-9466-7B0A31892434}.Release|x64.Build.0 = Release|x64
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Debug|Win32.Build.0 = Debug|Win32
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Debug|x64.ActiveCfg = Debug|x64
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Debug|x64.Build.0 = Debug|x64
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Release|Win32.ActiveCfg = Release|Win32
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Release|Win32.Build.0 = Release|Win32
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Release|x64.ActiveCfg = Release|x64
+		{C87821A0-C622-4F41-A91E-50F5FB59AACE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15815B06-72A8-413F-8BA7-82E642B48057}
 	EndGlobalSection
 EndGlobal

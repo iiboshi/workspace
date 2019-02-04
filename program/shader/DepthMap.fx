@@ -64,7 +64,7 @@ PS_INPUT VS( VS_INPUT input )
 float4 PS( PS_INPUT input) : SV_Target
 {
 	float depth = input.pos.z / input.pos.w;
-	return float4( input.nrm.xyz, depth );
+	return float4( depth, input.nrm.xy, 1.0f );
 }
 
 /*----------------------------------------------------------------------------------------------------

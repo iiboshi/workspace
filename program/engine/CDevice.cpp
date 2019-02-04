@@ -35,7 +35,7 @@ HRESULT CDevice::InitDevice()
 	m_uHeight					= rc.bottom - rc.top;
 	UINT	createDeviceFlags	= 0;
 
-	#ifdef DEBUG
+	#if 0 // defined( DEBUG )	//!< ¬Œ÷‚µ‚È‚¢.
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 	#endif
 

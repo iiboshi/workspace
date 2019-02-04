@@ -4,6 +4,7 @@
 #include "graphic\CSky.h"
 #include "graphic\CGround.h"
 #include "graphic\CBox.h"
+#include "graphic\CHeadBox.h"
 #include "graphic\CHead.h"
 #include "graphic\CModelManager.h"
 #include "graphic\CGBuffer.h"
@@ -30,6 +31,7 @@ CGraphicsDemo::CGraphicsDemo()
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CSky ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CBox ) );
+	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHeadBox ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CHead ) );
 
 	#if defined( USE_SHADOW )

@@ -10,7 +10,7 @@
 #if defined( USE_SHADOW )
 // #define SHADOWMAPTEST
 // #define SHADOWTEST
-// define SHADOWBLURTEST
+// #define SHADOWBLURTEST
 #endif
 
 #if defined( USE_AO )
@@ -153,15 +153,16 @@ namespace NDefine
 		enTexPath_stones,
 		enTexPath_wall };
 	static const char* g_pcTexPath[] = {
-		"../../Media/Textures/black.dds",
-		"../../Media/Textures/white.dds",
-		"../../Media/Textures/wood.dds",
-		"../../Media/Textures/floor.dds",
-		"../../Media/Textures/concrete.dds",
-		"../../Media/Textures/Particle.dds",
-		"../../Media/Textures/rocks.dds",
-		"../../Media/Textures/stones.dds",
-		"../../Media/Textures/wall.dds" };
+		"../../media/Textures/black.dds",
+		"../../media/Textures/white.dds",
+		"../../media/Textures/wood.dds",
+		"../../media/Textures/floor.dds",
+		"../../media/Textures/concrete.dds",
+		"../../media/Textures/Particle.dds",
+		"../../media/Textures/rocks.dds",
+		"../../media/Textures/stones.dds",
+		"../../media/Textures/wall.dds"
+	};
 	enum EnNrmPath {
 		enNrmPath_stones_NM_height,
 		enNrmPath_saint_NM_height,
@@ -172,14 +173,15 @@ namespace NDefine
 		enNrmPath_wall_NM_height,
 		enNrmPath_normal };
 	static const char* g_pcNrmPath[] = {
-		"../../Media/Textures/stones_NM_height.dds",
-		"../../Media/Textures/saint_NM_height.DDS",
-		"../../Media/Textures/rocks_NM_height.dds",
-		"../../Media/Textures/four_NM_height.DDS",
-		"../../Media/Textures/dent_NM_height.DDS",
-		"../../Media/Textures/bump_NM_height.DDS",
-		"../../Media/Textures/wall_NM_height.DDS",
-		"../../Media/Textures/normal.dds" };
+		"../../media/Textures/stones_NM_height.dds",
+		"../../media/Textures/saint_NM_height.DDS",
+		"../../media/Textures/rocks_NM_height.dds",
+		"../../media/Textures/four_NM_height.DDS",
+		"../../media/Textures/dent_NM_height.DDS",
+		"../../media/Textures/bump_NM_height.DDS",
+		"../../media/Textures/wall_NM_height.DDS",
+		"../../media/Textures/normal.dds"
+	};
 }
 
 #endif
