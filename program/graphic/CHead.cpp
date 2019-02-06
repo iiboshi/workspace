@@ -53,6 +53,7 @@ unsigned int WINAPI CHead::Load( LPVOID lpParameter )
 	pcHead->m_fParam1.x = 0.8f;		//<! Roughness.
 	pcHead->m_fParam1.y = 0.028f;	//<! Fresnel.
 	pcHead->m_fParam1.z = 1.0f;		//<! SSS.
+	pcHead->m_fParam2.y = 1.0f;		//<! Microgeometry Mask.
 
 	// バッファーデスク
 	D3D11_BUFFER_DESC		bd;

@@ -39,7 +39,7 @@ public:
 	ID3D11RasterizerState*		m_hpRasterizerState;
 	DirectX::XMFLOAT4			m_fParam0;	//!< x:Normal•â³.
 	DirectX::XMFLOAT4			m_fParam1;	//!< x:Roughness y:Fresnel z:SSS.
-	DirectX::XMFLOAT4			m_fParam2;	//!< x:Cube.
+	DirectX::XMFLOAT4			m_fParam2;	//!< x:Cube y:Microgeometry Mask.
 	bool						m_bDraw;	//!< ÅŒã‚É m_bDraw ‚ð true.
 };
 
