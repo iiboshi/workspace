@@ -115,6 +115,15 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	float fMicroMask = 1.0f - f4Micro.w;
 	#endif
 
+	// albedo
+	float4 albedoAndMask = g_texDiffuse.Sample( g_sampWorp, input.Tex );
+	float3 albedo = albedoAndMask.xyz;
+	#if defined( MICROGEOMETRY )
+	float mask = lerp( 1.0f, albedoAndMask.w, g_f4Param2.y );
+	fMicroMask *= mask;
+	albedo = lerp( albedo, albedo * albedo, fMicroMask );
+	#endif
+
 	// ñ@ê¸åvéZ.
 	float3 tnrm;
 	tnrm	= g_texNormal.Sample( g_sampWorp, input.Tex ).xyz;
@@ -130,12 +139,6 @@ PS_OUTPUT PS( PS_INPUT input) : SV_Target
 	float3 f3Bin = normalize( cross( f3Tan, f3Nrm ) );
 	tnrm = normalize( tnrm.x * f3Tan + tnrm.y * f3Bin + tnrm.z * f3Nrm );
 	tnrm = ( tnrm + (float3)1.0f ) * (float3)0.5f;
-
-	// albedo
-	float3 albedo = g_texDiffuse.Sample( g_sampWorp, input.Tex ).xyz;
-	#if defined( MICROGEOMETRY )
-	albedo = lerp( albedo, albedo * albedo, fMicroMask );
-	#endif
 
 	// depth
 	float depth = input.Pos.z / input.Pos.w;
