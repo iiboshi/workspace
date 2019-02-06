@@ -1,5 +1,5 @@
 # workspace
-DirectX11のRendering Pipeline、Microgeometryを使用したSkinShaderのテストで作成。
+DirectX11のRendering Pipeline、Microgeometryを使用したSkinShaderのデモを作成しました。
 
 Buildのexeフォルダ内に実行ファイルが入っております。
 
