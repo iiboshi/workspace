@@ -62,7 +62,7 @@ HRESULT CSSAO::Init()
 
 	// AO.
 	{
-		CShader::Instance()->CreateShader( "ao", L"../shader/AO.fx" );
+		CShader::Instance()->CreateShader( "ao", SHADE_RPATH( AO ) );
 		m_pVertexShader[enAO_AO]	= CShader::Instance()->GetVertexShader( "ao" );
 		m_pPixelShader[enAO_AO]		= CShader::Instance()->GetPixelShader( "ao" );
 		m_pInputLayout[enAO_AO]		= CShader::Instance()->GetInputLayout( "ao" );

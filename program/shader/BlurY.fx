@@ -55,7 +55,7 @@ struct VS_INPUT
 	float2 uv	: TEXCOORD;
 };
 
-struct PS_INPUT
+struct VS_OUTPUT
 {
 	float4 pos	: SV_POSITION;
 	float2 uv	: TEXCOORD0;
@@ -78,9 +78,9 @@ struct PS_INPUT
 	Vertex Shader
 ----------------------------------------------------------------------------------------------------*/
 
-PS_INPUT VS( VS_INPUT _in )
+VS_OUTPUT VS( VS_INPUT _in )
 {
-	PS_INPUT _out = (PS_INPUT)0;
+	VS_OUTPUT _out = (VS_OUTPUT)0;
 	_out.pos = float4( _in.pos, 1.0f );
 	_out.uv = _in.uv;
 
@@ -101,7 +101,7 @@ PS_INPUT VS( VS_INPUT _in )
 	Pixel Shader Function
 ----------------------------------------------------------------------------------------------------*/
 
-float4 PS( PS_INPUT _in ) : SV_Target
+float4 PS( VS_OUTPUT _in ) : SV_Target
 {
 	// Blur	
 	float3 ret = (float3)0.0f;

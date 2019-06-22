@@ -65,7 +65,7 @@ HRESULT CShadow::Init()
 
 	// Shadow.
 	{
-		CShader::Instance()->CreateShader( "shadow", L"../shader/Shadow.fx" );
+		CShader::Instance()->CreateShader( "shadow", SHADE_RPATH( Shadow ) );
 		m_pVertexShader[enShadow_Shadow]	= CShader::Instance()->GetVertexShader( "shadow" );
 		m_pPixelShader[enShadow_Shadow]		= CShader::Instance()->GetPixelShader( "shadow" );
 		m_pInputLayout[enShadow_Shadow]		= CShader::Instance()->GetInputLayout( "shadow" );

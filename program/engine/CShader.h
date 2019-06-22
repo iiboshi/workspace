@@ -72,6 +72,24 @@ public:
 			pPixelShader = nullptr;
 		}
 	};
+	struct StHullShader
+	{
+		std::string name;
+		ID3D11HullShader*	pHullShader;
+		StHullShader()
+		{
+			pHullShader = nullptr;
+		}
+	};
+	struct StDomainShader
+	{
+		std::string name;
+		ID3D11DomainShader*	pDomainShader;
+		StDomainShader()
+		{
+			pDomainShader = nullptr;
+		}
+	};
 	struct StRenderTarget
 	{
 		ID3D11Texture2D*			m_pTexture[enRT_Max];
@@ -94,15 +112,22 @@ public:
 		LPCSTR szShaderModel,
 		ID3DBlob** ppBlobOut );
 	HRESULT CreateShader( char* _filename, LPCWSTR _filePath );
+	HRESULT CreateTessellationShader( char* _filename, LPCWSTR _filePath );
 	HRESULT CreateVertexShader( char* _filename, LPCWSTR _filePath );
 	HRESULT CreatePixelShader( char* _filename, LPCWSTR _filePath );
+	HRESULT CreateHullShader( char* _filename, LPCWSTR _filePath );
+	HRESULT CreateDomainShader( char* _filename, LPCWSTR _filePath );
 	ID3D11InputLayout*	GetInputLayout( char* _filename );
 	ID3D11VertexShader*	GetVertexShader( char* _filename );
 	ID3D11PixelShader*	GetPixelShader( char* _filename );
+	ID3D11HullShader*	GetHullShader( char* _filename );
+	ID3D11DomainShader*	GetDomainShader( char* _filename );
 	ID3D11SamplerState*	GetSamplerState( EnState _en );
 public:
 	std::vector<StVertexShader*>	m_listVertexShader;
 	std::vector<StPixelShader*>		m_listPixelShader;
+	std::vector<StHullShader*>		m_listHullShader;
+	std::vector<StDomainShader*>	m_listDomainShader;
 	ID3D11SamplerState*				m_pSamplerState[enState_Max];
 	StRenderTarget					m_stRenderTarget;
 	ID3D11Texture2D*				m_pWorkTexture[enWorkRTmax];

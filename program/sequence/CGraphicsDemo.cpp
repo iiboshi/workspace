@@ -24,9 +24,9 @@ CGraphicsDemo::CGraphicsDemo()
 	, m_pcBlur		( nullptr )
 {
 	// Common Shader.
-	CShader::Instance()->CreateShader( "depthmap", L"../shader/DepthMap.fx" );
-	CShader::Instance()->CreateShader( "commonblurx", L"../shader/CommonBlurX.fx" );
-	CShader::Instance()->CreateShader( "commonblury", L"../shader/CommonBlurY.fx" );
+	CShader::Instance()->CreateShader( "depthmap", SHADE_RPATH( DepthMap ) );
+	CShader::Instance()->CreateShader( "commonblurx", SHADE_RPATH( CommonBlurX ) );
+	CShader::Instance()->CreateShader( "commonblury", SHADE_RPATH( CommonBlurY ) );
 
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CSky ) );
 	CModelManager::Instance()->m_listModel.push_back( I_NEW( CGround ) );

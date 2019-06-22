@@ -339,6 +339,14 @@ HRESULT CShader::CreateShader( char* _filename, LPCWSTR _filePath )
 	return hr;
 }
 
+HRESULT CShader::CreateTessellationShader( char* _filename, LPCWSTR _filePath )
+{
+	HRESULT hr = S_OK;
+	CreateHullShader( _filename, _filePath );
+	CreateDomainShader( _filename, _filePath );
+	return hr;
+}
+
 HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 {
 	// 同名確認.
@@ -353,7 +361,7 @@ HRESULT CShader::CreateVertexShader( char* _filename, LPCWSTR _filePath )
 	// Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
 	I_RETURN_MFNC( CompileShaderFromFile( 
-		_filePath, "VS", "vs_4_0", &pVSBlob ),
+		_filePath, "VS", "vs_5_0", &pVSBlob ),
 		"VertexShader not found.",
 		pVSBlob->Release() );
  
@@ -508,7 +516,7 @@ HRESULT CShader::CreatePixelShader( char* _filename, LPCWSTR _filePath )
 
 	// Compile the pixel shader
 	ID3DBlob* pPSBlob = nullptr;
-	I_RETURN_MFNC( CompileShaderFromFile( _filePath, "PS", "ps_4_0", &pPSBlob ),
+	I_RETURN_MFNC( CompileShaderFromFile( _filePath, "PS", "ps_5_0", &pPSBlob ),
 		"PixelShader not found.", pPSBlob->Release() );
 
 	// Create the pixel shader
@@ -525,6 +533,80 @@ HRESULT CShader::CreatePixelShader( char* _filename, LPCWSTR _filePath )
 	pStPixelShader->name = _filename;
 	pStPixelShader->pPixelShader = pPixelShader;
 	m_listPixelShader.push_back( pStPixelShader );
+
+	// Relese
+	pPSBlob->Release();
+
+	return hr;
+}
+
+HRESULT CShader::CreateHullShader( char* _filename, LPCWSTR _filePath )
+{
+	// 同名確認.
+	for( auto obj = m_listHullShader.begin(); obj != m_listHullShader.end(); obj++ )
+	{
+		_ASSERT( strcmp( (*obj)->name.data(), _filename ) );
+	}
+
+	HRESULT hr;
+	CDevice* pcDevice = CDevice::Instance();
+
+	// Compile the hull shader
+	ID3DBlob* pPSBlob = nullptr;
+	I_RETURN_MFNC( CompileShaderFromFile( _filePath, "HS", "hs_5_0", &pPSBlob ),
+		"HullShader not found.", pPSBlob->Release() );
+
+	// Create the hull shader
+	ID3D11HullShader* pHullShader = nullptr;
+	I_RETURN_FNC( pcDevice->m_pd3dDevice->CreateHullShader( 
+		pPSBlob->GetBufferPointer(),
+		pPSBlob->GetBufferSize(),
+		NULL,
+		&pHullShader ),
+		pPSBlob->Release() );
+
+	// Set
+	StHullShader* pStHullShader = I_NEW( StHullShader );
+	pStHullShader->name = _filename;
+	pStHullShader->pHullShader = pHullShader;
+	m_listHullShader.push_back( pStHullShader );
+
+	// Relese
+	pPSBlob->Release();
+
+	return hr;
+}
+
+HRESULT CShader::CreateDomainShader( char* _filename, LPCWSTR _filePath )
+{
+	// 同名確認.
+	for( auto obj = m_listDomainShader.begin(); obj != m_listDomainShader.end(); obj++ )
+	{
+		_ASSERT( strcmp( (*obj)->name.data(), _filename ) );
+	}
+
+	HRESULT hr;
+	CDevice* pcDevice = CDevice::Instance();
+
+	// Compile the domain shader
+	ID3DBlob* pPSBlob = nullptr;
+	I_RETURN_MFNC( CompileShaderFromFile( _filePath, "DS", "ds_5_0", &pPSBlob ),
+		"DomainShader not found.", pPSBlob->Release() );
+
+	// Create the domain shader
+	ID3D11DomainShader* pDomainShader = nullptr;
+	I_RETURN_FNC( pcDevice->m_pd3dDevice->CreateDomainShader( 
+		pPSBlob->GetBufferPointer(),
+		pPSBlob->GetBufferSize(),
+		NULL,
+		&pDomainShader ),
+		pPSBlob->Release() );
+
+	// Set
+	StDomainShader* pStDomainShader = I_NEW( StDomainShader );
+	pStDomainShader->name = _filename;
+	pStDomainShader->pDomainShader = pDomainShader;
+	m_listDomainShader.push_back( pStDomainShader );
 
 	// Relese
 	pPSBlob->Release();
@@ -574,6 +656,38 @@ ID3D11PixelShader* CShader::GetPixelShader( char* _filename )
 			if( name == (*obj)->name )
 			{
 				return (*obj)->pPixelShader;
+			}
+		}
+	}
+	return nullptr;
+}
+
+ID3D11HullShader* CShader::GetHullShader( char* _filename )
+{
+	std::string name = _filename;
+	for( auto obj = m_listHullShader.begin(); obj != m_listHullShader.end(); obj++ )
+	{
+		if( *obj != nullptr )
+		{
+			if( name == (*obj)->name )
+			{
+				return (*obj)->pHullShader;
+			}
+		}
+	}
+	return nullptr;
+}
+
+ID3D11DomainShader* CShader::GetDomainShader( char* _filename )
+{
+	std::string name = _filename;
+	for( auto obj = m_listDomainShader.begin(); obj != m_listDomainShader.end(); obj++ )
+	{
+		if( *obj != nullptr )
+		{
+			if( name == (*obj)->name )
+			{
+				return (*obj)->pDomainShader;
 			}
 		}
 	}

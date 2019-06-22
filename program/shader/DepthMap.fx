@@ -29,7 +29,7 @@ struct VS_INPUT
 	float4 col : COLOR0;
 };
 
-struct PS_INPUT
+struct VS_OUTPUT
 {
 	float4 pos : SV_POSITION;
 	float2 tex : TEXCOORD0;
@@ -46,9 +46,9 @@ struct PS_INPUT
 	Vertex Shader
 ----------------------------------------------------------------------------------------------------*/
 
-PS_INPUT VS( VS_INPUT input )
+VS_OUTPUT VS( VS_INPUT input )
 {
-	PS_INPUT output = (PS_INPUT)0;
+	VS_OUTPUT output = (VS_OUTPUT)0;
 	output.pos = mul( float4( input.pos, 1.0f ), g_mWorld );
 	output.pos = mul( output.pos, g_mView );
 	output.pos = mul( output.pos, g_mProjection );
@@ -61,7 +61,7 @@ PS_INPUT VS( VS_INPUT input )
 	Pixel Shader Function
 ----------------------------------------------------------------------------------------------------*/
 
-float4 PS( PS_INPUT input) : SV_Target
+float4 PS( VS_OUTPUT input) : SV_Target
 {
 	float depth = input.pos.z / input.pos.w;
 	return float4( depth, input.nrm.xy, 1.0f );

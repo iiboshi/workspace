@@ -31,7 +31,7 @@ HRESULT CDeferred::Init()
 	HRESULT hr = S_OK;
 	CDevice* pcDevice = CDevice::Instance();
 
-	CShader::Instance()->CreateShader( "deferred", L"../shader/Deferred.fx" );
+	CShader::Instance()->CreateShader( "deferred", SHADE_RPATH( Deferred ) );
 
 	// ‹éŒ`•`‰æ—p’¸“_
 	struct QuadVertex

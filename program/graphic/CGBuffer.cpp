@@ -7,6 +7,8 @@
 #include "engine\CCamera.h"
 #include "object\CModel.h"
 
+// #define USE_TESSELLATION
+
 CGBuffer::CGBuffer()
 	: m_pVertexShader	( nullptr )
 	, m_pPixelShader	( nullptr )
@@ -26,11 +28,16 @@ HRESULT CGBuffer::Init()
 	HRESULT hr = S_OK;
 	CDevice* pcDevice = CDevice::Instance();
 
-	CShader::Instance()->CreateShader( "gbuffer", L"../shader/GBuffer.fx" );
+	CShader::Instance()->CreateShader( "gbuffer",SHADE_RPATH( GBuffer ) );
+#if defined( USE_TESSELLATION )
+	CShader::Instance()->CreateTessellationShader( "gbuffer", SHADE_RPATH( GBuffer ) );
+#endif
 
 	// Set
 	m_pVertexShader	= CShader::Instance()->GetVertexShader( "gbuffer" );
 	m_pPixelShader	= CShader::Instance()->GetPixelShader( "gbuffer" );
+	m_pHulllShader	= CShader::Instance()->GetHullShader( "gbuffer" );
+	m_pDomainShader	= CShader::Instance()->GetDomainShader( "gbuffer" );
 	m_pInputLayout	= CShader::Instance()->GetInputLayout( "gbuffer" );
 
 	// Buffer
@@ -50,7 +57,7 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 {
 	CCamera::Instance()->Update( _pContext );
 
-	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float ClearColor[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
 
 	// 自前のレンダーターゲットビューに切り替え
 	_pContext->OMSetRenderTargets( 
@@ -72,10 +79,18 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 
 	// Shader
 	_pContext->VSSetShader( m_pVertexShader, NULL, 0 );
+#if defined( USE_TESSELLATION )
+	_pContext->HSSetShader( m_pHulllShader, NULL, 0 );
+	_pContext->DSSetShader( m_pDomainShader, NULL, 0 );
+#endif
 	_pContext->PSSetShader( m_pPixelShader, NULL, 0 );
 
 	// Const Buffer
 	_pContext->VSSetConstantBuffers( 1, 1, &m_pCbUpdateBuffer );
+#if defined( USE_TESSELLATION )
+	_pContext->HSSetConstantBuffers( 1, 1, &m_pCbUpdateBuffer );
+	_pContext->DSSetConstantBuffers( 1, 1, &m_pCbUpdateBuffer );
+#endif
 	_pContext->PSSetConstantBuffers( 1, 1, &m_pCbUpdateBuffer );
 
 	// サンプラーステートの設定
@@ -131,11 +146,24 @@ void CGBuffer::Render( ID3D11DeviceContext* _pContext )
 		_pContext->IASetIndexBuffer( ( *obj )->m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0 );
 
 		// Set primitive topology
+#if defined( USE_TESSELLATION )
+		_pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST );
+#else
 		 _pContext->IASetPrimitiveTopology( ( *obj )->m_eTopology );
+#endif
 
 		// 描画
 		_pContext->DrawIndexed( ( *obj )->m_iIndexNum, 0, 0 );
 	}
+
+#if defined( USE_TESSELLATION )
+	//! 解除.
+	ID3D11Buffer* pBuff = NULL;
+	_pContext->HSSetConstantBuffers( 1, 1, &pBuff );
+	_pContext->DSSetConstantBuffers( 1, 1, &pBuff );
+	_pContext->HSSetShader( NULL, NULL, 0 );
+	_pContext->DSSetShader( NULL, NULL, 0 );
+#endif
 
 	// clear
 	ID3D11ShaderResourceView* reset[CShader::enRT_Max] = { 0 };

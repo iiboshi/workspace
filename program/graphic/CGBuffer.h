@@ -34,6 +34,8 @@ private:
 	StUpdateBuffer			m_stUpdateBuffer;
 	ID3D11VertexShader*		m_pVertexShader;
 	ID3D11PixelShader*		m_pPixelShader;
+	ID3D11HullShader*		m_pHulllShader;
+	ID3D11DomainShader*		m_pDomainShader;
 	ID3D11InputLayout*		m_pInputLayout;
 	ID3D11Buffer*			m_pCbUpdateBuffer;
 };

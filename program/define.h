@@ -7,6 +7,13 @@
 #define USE_SHADOW
 #define USE_AO
 
+// #define USE_MASTAR_SHADER
+#if defined( USE_MASTAR_SHADER )
+#define SHADE_RPATH( path ) L"../shader/bin/" #path ".fx"
+#else
+#define SHADE_RPATH( path ) L"../shader/" #path ".fx"
+#endif
+
 #if defined( USE_SHADOW )
 // #define SHADOWMAPTEST
 // #define SHADOWTEST
